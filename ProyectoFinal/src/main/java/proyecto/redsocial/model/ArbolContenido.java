@@ -1,4 +1,4 @@
-package proyecto.redsocial.Model;
+package proyecto.redsocial.model;
 
 import lombok.Data;
 
@@ -8,10 +8,10 @@ import java.util.TreeMap;
 
 @Data
 public class ArbolContenido {
-    private TreeMap<String,Contenido> map = new TreeMap<>();
+    private TreeMap<String,Contenido> raiz = new TreeMap<>();
 
     public void insertarContenido(Contenido contenido) {
-        map.put(contenido.getAutor(),contenido);
+        raiz.put(contenido.getAutor(),contenido);
     }
     public Contenido buscarPorTema(String tema) {
         return null;
@@ -21,7 +21,7 @@ public class ArbolContenido {
     }
 
     public List<Contenido> inOrden() {
-        return new ArrayList<>(map.values());
+        return new ArrayList<>(raiz.values());
     }
 
 }

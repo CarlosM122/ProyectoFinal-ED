@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="21.0.2" class="java.beans.XMLDecoder">
+ <object class="proyecto.redsocial.model.Sistema" id="Sistema0">
+  <void property="estudiantes">
+   <void method="add">
+    <object class="proyecto.redsocial.model.Estudiante">
+     <void property="contrasenia">
+      <string>8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92</string>
+     </void>
+     <void property="correo">
+      <string>July@edu.co</string>
+     </void>
+     <void property="nombre">
+      <string>July</string>
+     </void>
+    </object>
+   </void>
+   <void method="add">
+    <object class="proyecto.redsocial.model.Estudiante">
+     <void property="contrasenia">
+      <string>da837697041edb6592e84ff05d5dc42f8883c7e15a7f18c21332ecf1c73f754a</string>
+     </void>
+     <void property="correo">
+      <string>Cansona@edu.co</string>
+     </void>
+     <void property="id">
+      <int>2</int>
+     </void>
+     <void property="nombre">
+      <string>Maria Jose</string>
+     </void>
+    </object>
+   </void>
+  </void>
+ </object>
+</java>

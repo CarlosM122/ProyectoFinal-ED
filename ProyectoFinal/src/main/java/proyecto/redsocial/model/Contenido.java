@@ -1,4 +1,4 @@
-package proyecto.redsocial.Model;
+package proyecto.redsocial.model;
 
 import lombok.Data;
 

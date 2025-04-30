@@ -1,11 +1,11 @@
-package proyecto.redsocial.Model;
+package proyecto.redsocial.model;
 
 import lombok.Data;
 
 import java.util.List;
 @Data
 public class Estudiante {
-    private String id;
+    private int id;
     private String nombre;
     private String correo;
     private String contrasenia;
