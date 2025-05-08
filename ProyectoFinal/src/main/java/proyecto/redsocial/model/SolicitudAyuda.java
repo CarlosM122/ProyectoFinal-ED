@@ -6,10 +6,11 @@ import lombok.Data;
 public class SolicitudAyuda implements Comparable<SolicitudAyuda> {
     private String tema;
     private Estudiante estudiante;
-    private int urgencia;
+    private String urgencia;
+    private String descripcion;
 
     @Override
     public int compareTo(SolicitudAyuda o) {
-        return this.urgencia - o.urgencia;
+        return this.urgencia.compareTo(o.getUrgencia());
     }
 }

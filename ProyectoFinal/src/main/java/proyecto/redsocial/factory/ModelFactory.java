@@ -2,6 +2,7 @@ package proyecto.redsocial.factory;
 
 import proyecto.redsocial.model.Estudiante;
 import proyecto.redsocial.model.Sistema;
+import proyecto.redsocial.model.SolicitudAyuda;
 import proyecto.redsocial.utils.Persistencia;
 import proyecto.redsocial.utils.RedSocialUtils;
 
@@ -17,6 +18,12 @@ public class ModelFactory {
             registrado = true;
         }
         return registrado;
+    }
+
+    public void guardarSolicitud(SolicitudAyuda solicitudAyuda) {
+        sistema.getColaPrioridadAyuda().agregarSolicitud(solicitudAyuda);
+        guardarRecursosXML();
+
     }
 
     private static class SingletonHolder {
@@ -56,4 +63,6 @@ public class ModelFactory {
         }
         return respuesta;
     }
+
+
 }

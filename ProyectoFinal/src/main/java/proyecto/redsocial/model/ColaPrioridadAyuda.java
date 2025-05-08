@@ -8,6 +8,10 @@ public class ColaPrioridadAyuda {
 
     private PriorityQueue<SolicitudAyuda> cola;
 
+    public ColaPrioridadAyuda() {
+        this.cola = new PriorityQueue<>();
+    }
+
     public void  agregarSolicitud(SolicitudAyuda solicitudAyuda){
         cola.offer(solicitudAyuda);
     }

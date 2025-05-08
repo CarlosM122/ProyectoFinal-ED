@@ -4,7 +4,7 @@ import proyecto.redsocial.model.Sistema;
 
 public class Persistencia {
 
-    private static final String RUTA_MODELO_XML = "src/main/resources/proyecto/redsocial/persistencia/model.xml";
+    private static final String RUTA_MODELO_XML = "data/model.xml";
 
     public static void guardarRecursosXML(Sistema sistema) {
         try {

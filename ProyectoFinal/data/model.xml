@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <java version="21.0.2" class="java.beans.XMLDecoder">
  <object class="proyecto.redsocial.model.Sistema" id="Sistema0">
+  <void id="ColaPrioridadAyuda0" property="colaPrioridadAyuda">
+   <void property="cola">
+    <void method="add">
+     <object class="proyecto.redsocial.model.SolicitudAyuda">
+      <void property="descripcion">
+       <string>a</string>
+      </void>
+      <void property="tema">
+       <string>Error al acceder a un grupo</string>
+      </void>
+      <void property="urgencia">
+       <string>Baja</string>
+      </void>
+     </object>
+    </void>
+   </void>
+  </void>
   <void property="estudiantes">
    <void method="add">
     <object class="proyecto.redsocial.model.Estudiante">

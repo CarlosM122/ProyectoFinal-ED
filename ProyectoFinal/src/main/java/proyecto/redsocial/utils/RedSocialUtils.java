@@ -1,5 +1,6 @@
 package proyecto.redsocial.utils;
 
+import proyecto.redsocial.model.ColaPrioridadAyuda;
 import proyecto.redsocial.model.Estudiante;
 import proyecto.redsocial.model.Sistema;
 
