@@ -12,10 +12,11 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import proyecto.redsocial.RedSocialApplication;
 import proyecto.redsocial.factory.ModelFactory;
+import proyecto.redsocial.model.Estudiante;
 
 import java.io.IOException;
 
-public class LoginView {
+public class LoginController {
 
     private ModelFactory modelFactory;
 
@@ -38,7 +39,7 @@ public class LoginView {
 
     @FXML
     void onRegistrar(ActionEvent event) {
-        cargarVista();
+        cargarVistaRegistro();
         cerrarVentanaLogin();
     }
 
@@ -52,7 +53,10 @@ public class LoginView {
             String contrasenia = txtContrasenia.getText();
             String correo = txtUsuario.getText();
             if(modelFactory.verificarCredenciales(correo,contrasenia)){
+                Estudiante estudiante = modelFactory.obtnerUsuario(correo);
                 System.out.println("Usuario Ingresado Correctamente");
+                cargarVistaPrincipal(estudiante);
+                cerrarVentanaLogin();
             }else {
                 mostrarMensaje("Error","Error Inicio De Sesion","Usuario o contraseña incorrectos.",Alert.AlertType.ERROR);
             }
@@ -63,22 +67,38 @@ public class LoginView {
         }
     }
 
-    private void cargarVista() {
+    private void cargarVistaPrincipal(Estudiante estudiante) {
         try {
-            FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/registro-view.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/mainPage-view.fxml"));
             Parent root = fxmlLoader.load();
+
+            MainPageController mainPageController = fxmlLoader.getController();
+            mainPageController.cargarDatosVista(estudiante);
+
             Stage nuevaVentana = new Stage();
             Scene scene = new Scene(root);
-            nuevaVentana.setTitle("Registro");
+            nuevaVentana.setTitle("Nombre Web");
             nuevaVentana.setScene(scene);
+            nuevaVentana.setMaximized(true);
             nuevaVentana.show();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void cargarVistaRegistro() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/registro-view.fxml"));
+            CargaVentana(fxmlLoader);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private boolean validarDatos() {
-        return !txtContrasenia.getText().isEmpty() || !txtUsuario.getText().isEmpty();
+        return !txtContrasenia.getText().isEmpty() && !txtUsuario.getText().isEmpty();
     }
 
     private void mostrarMensaje(String titulo, String header, String contenido, Alert.AlertType alertType) {
@@ -87,6 +107,16 @@ public class LoginView {
         alert.setHeaderText(header);
         alert.setContentText(contenido);
         alert.show();
+    }
+
+    private void CargaVentana(FXMLLoader fxmlLoader) throws IOException {
+        Parent root = fxmlLoader.load();
+        Stage nuevaVentana = new Stage();
+        Scene scene = new Scene(root);
+        nuevaVentana.setTitle("Nombre Web");
+        nuevaVentana.setScene(scene);
+        nuevaVentana.setMaximized(true);
+        nuevaVentana.show();
     }
 
     private void cerrarVentanaLogin() {

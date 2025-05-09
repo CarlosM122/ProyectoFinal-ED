@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/estiloMainPage.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyecto.redsocial.controller.MainPageController">
+
+    <!-- Barra superior -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="50" styleClass="top-bar" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="10" left="20" right="20" top="10" />
+            </padding>
+            <AnchorPane prefHeight="13.0" prefWidth="143.0">
+                <children>
+                    <!-- Logo -->
+                    <ImageView fitHeight="80.0" fitWidth="83.0" layoutX="26.0" layoutY="11.0" preserveRatio="true">
+                        <image>
+                            <Image url="@../images/Logo2.png" />
+                        </image>
+                    </ImageView>
+                </children>
+            </AnchorPane>
+
+            <!-- Botones de navegación -->
+            <HBox alignment="CENTER" prefHeight="98.0" prefWidth="1141.0" spacing="30" styleClass="nav-buttons">
+                <children>
+                    <VBox fx:id="VboxInicio" alignment="CENTER" onMousePressed="#onInicio" styleClass="nav-button">
+                        <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/casa.png" />
+                            </image>
+                        </ImageView>
+                        <Label styleClass="nav-label" text="Inicio" />
+                    </VBox>
+                    <VBox alignment="CENTER" maxWidth="106.0" onMousePressed="#onNotificaciones" prefHeight="98.0" prefWidth="106.0" styleClass="nav-button">
+                        <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/notificacion.png" />
+                            </image>
+                        </ImageView>
+                        <Label styleClass="nav-label" text="Notificaciones" />
+                    </VBox>
+                    <VBox alignment="CENTER" onMousePressed="#onAmigos" styleClass="nav-button">
+                        <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/personas.png" />
+                            </image>
+                        </ImageView>
+                        <Label styleClass="nav-label" text="Amigos" />
+                    </VBox>
+                    <VBox alignment="CENTER" onMousePressed="#Onmensajes" styleClass="nav-button">
+                        <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/conversacion.png" />
+                            </image>
+                        </ImageView>
+                        <Label styleClass="nav-label" text="Mensajes" />
+                    </VBox>
+                    <VBox alignment="CENTER" onMousePressed="#OnAyuda" styleClass="nav-button">
+                        <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/ayudar.png" />
+                            </image>
+                        </ImageView>
+                        <Label styleClass="nav-label" text="Ayuda" />
+                    </VBox>
+                </children>
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- Panel izquierdo -->
+    <left>
+        <VBox alignment="TOP_CENTER" prefHeight="455.0" prefWidth="199.0" spacing="10" styleClass="side-bar" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="20" />
+            </padding>
+            <VBox alignment="CENTER">
+                <ImageView fitHeight="95.0" fitWidth="107.0" preserveRatio="true">
+                    <image>
+                        <Image url="@../images/usuario.png" />
+                    </image>
+                </ImageView>
+                <Label fx:id="txtNombre" styleClass="profile-name" text="Nombre" />
+                <Label fx:id="txtInformacion" styleClass="profile-info" text="informacion" />
+            </VBox>
+
+            <!-- Grupos -->
+            <VBox alignment="CENTER" onMousePressed="#OnGrupos" styleClass="nav-button">
+                <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                    <image>
+                        <Image url="@../images/red.png" />
+                    </image>
+                </ImageView>
+                <Label styleClass="nav-label" text="Tus grupos" />
+            </VBox>
+        </VBox>
+    </left>
+
+    <!-- Contenido principal -->
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="content-area" BorderPane.alignment="CENTER">
+            <content>
+                <VBox alignment="TOP_CENTER" spacing="15">
+                    <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                    </padding>
+                    <HBox prefHeight="100.0" prefWidth="200.0">
+                        <children>
+                            <AnchorPane prefHeight="100.0" prefWidth="122.0">
+                                <children>
+                                    <ImageView fitHeight="64.0" fitWidth="57.0" layoutX="35.0" layoutY="22.0" preserveRatio="true">
+                                        <image>
+                                            <Image url="@../images/usuario.png" />
+                                        </image>
+                                    </ImageView>
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="100.0" prefWidth="535.0">
+                                <children>
+                                    <Label fx:id="LbPublicacion" layoutX="16.0" layoutY="27.0" onMousePressed="#onPublicar" prefHeight="42.0" prefWidth="506.0" style="-fx-border-color: black; -fx-border-radius: 90; -fx-background-color: transparent;" text="    Crear Publicación">
+                              <cursor>
+                                 <Cursor fx:constant="HAND" />
+                              </cursor></Label>
+                                </children>
+                            </AnchorPane>
+                        </children>
+                    </HBox>
+                    <!-- Aquí irían publicaciones o contenido dinámico -->
+                    <Label text="Contenido principal aquí..." />
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
+
+    <!-- Panel derecho -->
+    <right>
+        <VBox alignment="TOP_CENTER" prefWidth="200" spacing="10" styleClass="side-bar" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="20" />
+            </padding>
+            <Label text="Sugerencias" />
+            <Label text="Anuncios" />
+        </VBox>
+    </right>
+
+</BorderPane>

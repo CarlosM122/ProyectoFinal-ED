@@ -10,7 +10,7 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import proyecto.redsocial.factory.ModelFactory;
 
-public class RegistroView {
+public class RegistroController {
 
     private ModelFactory modelFactory;
 
@@ -18,10 +18,10 @@ public class RegistroView {
     private ResourceBundle resources;
 
     @FXML
-    private Button btnRegistro;
+    private URL location;
 
     @FXML
-    private URL location;
+    private Button btnRegistro;
 
     @FXML
     private PasswordField txtContrasenia;

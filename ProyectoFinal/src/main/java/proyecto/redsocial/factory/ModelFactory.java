@@ -9,23 +9,6 @@ import proyecto.redsocial.utils.RedSocialUtils;
 public class ModelFactory {
     private Sistema sistema;
 
-    public boolean registrarUsuario(String nombre, String correo, String contrasenia) {
-        boolean registrado = false;
-        Estudiante estudiante = sistema.buscarEstudiante(correo);
-        if (estudiante == null) {
-            sistema.guardarEstudiante(nombre,correo,contrasenia);
-            guardarRecursosXML();
-            registrado = true;
-        }
-        return registrado;
-    }
-
-    public void guardarSolicitud(SolicitudAyuda solicitudAyuda) {
-        sistema.getColaPrioridadAyuda().agregarSolicitud(solicitudAyuda);
-        guardarRecursosXML();
-
-    }
-
     private static class SingletonHolder {
         private final static ModelFactory eINSTANCE = new ModelFactory();
     }
@@ -64,5 +47,25 @@ public class ModelFactory {
         return respuesta;
     }
 
+    public boolean registrarUsuario(String nombre, String correo, String contrasenia) {
+        boolean registrado = false;
+        Estudiante estudiante = sistema.buscarEstudiante(correo);
+        if (estudiante == null) {
+            sistema.guardarEstudiante(nombre,correo,contrasenia);
+            guardarRecursosXML();
+            registrado = true;
+        }
+        return registrado;
+    }
+
+    public void guardarSolicitud(SolicitudAyuda solicitudAyuda) {
+        sistema.getColaPrioridadAyuda().agregarSolicitud(solicitudAyuda);
+        guardarRecursosXML();
+
+    }
+
+    public Estudiante obtnerUsuario(String correo) {
+        return sistema.buscarEstudiante(correo);
+    }
 
 }

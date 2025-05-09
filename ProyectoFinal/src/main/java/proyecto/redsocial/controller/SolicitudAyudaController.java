@@ -13,7 +13,7 @@ import javafx.scene.control.TextArea;
 import proyecto.redsocial.factory.ModelFactory;
 import proyecto.redsocial.model.SolicitudAyuda;
 
-public class SolicitudAyudaView {
+public class SolicitudAyudaController {
     private ModelFactory modelFactory = ModelFactory.getInstance();
 
     @FXML

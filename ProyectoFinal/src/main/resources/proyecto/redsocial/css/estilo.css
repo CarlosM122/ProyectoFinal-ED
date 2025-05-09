@@ -1,0 +1,44 @@
+.root {
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-background-color: #f0f4f8;
+}
+
+.label {
+    -fx-text-fill: #333333;
+    -fx-font-size: 18px;
+}
+
+.text-field,
+.password-field {
+    -fx-pref-width: 300px;
+    -fx-background-radius: 6;
+    -fx-padding: 10;
+    -fx-background-color: white;
+    -fx-border-color: #cce4f7;
+    -fx-border-width: 1;
+    -fx-border-radius: 6;
+    -fx-text-fill: #333333;
+}
+
+.text-field:focused,
+.password-field:focused {
+    -fx-border-color: #2196F3;
+    -fx-border-width: 2;
+}
+
+.button {
+    -fx-background-radius: 6;
+    -fx-padding: 10 20;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+#btnRegistro {
+    -fx-background-color: #4CAF50;
+    -fx-text-fill: white;
+}
+
+#btnRegistro:hover {
+    -fx-background-color: #45a049;
+}
