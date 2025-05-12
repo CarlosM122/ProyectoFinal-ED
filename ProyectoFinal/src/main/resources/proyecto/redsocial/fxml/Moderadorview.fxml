@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" alignment="CENTER" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="proyecto.redsocial.controller.ModeradorController">
+    <padding>
+        <Insets top="40" right="40" bottom="40" left="40"/>
+    </padding>
+
+    <Text fx:id="lblBienvenida" text="Bienvenido, moderador"/>
+
+    <Button text="Gestionar usuarios" onAction="#gestionarUsuarios"/>
+    <Button text="Revisar publicaciones" onAction="#revisarPublicaciones"/>
+    <Button text="Cerrar sesión" onAction="#cerrarSesion"/>
+</VBox>
