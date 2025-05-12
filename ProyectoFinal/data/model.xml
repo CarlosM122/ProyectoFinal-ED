@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <java version="21.0.2" class="java.beans.XMLDecoder">
  <object class="proyecto.redsocial.model.Sistema" id="Sistema0">
-  <void id="ColaPrioridadAyuda0" property="colaPrioridadAyuda">
-   <void property="cola">
-    <void method="add">
-     <object class="proyecto.redsocial.model.SolicitudAyuda">
-      <void property="descripcion">
-       <string>a</string>
-      </void>
-      <void property="tema">
-       <string>Error al acceder a un grupo</string>
-      </void>
-      <void property="urgencia">
-       <string>Baja</string>
-      </void>
-     </object>
-    </void>
-   </void>
-  </void>
   <void property="estudiantes">
    <void method="add">
-    <object class="proyecto.redsocial.model.Estudiante">
+    <object class="proyecto.redsocial.model.Estudiante" id="Estudiante0">
+     <void property="contenidosPublicados">
+      <void method="add">
+       <object class="proyecto.redsocial.model.Publicacion" id="Publicacion0">
+        <void property="autor">
+         <object idref="Estudiante0"/>
+        </void>
+        <void property="fechaPublicacion">
+         <string>2025-05-09</string>
+        </void>
+        <void property="idContenido">
+         <int>2255068</int>
+        </void>
+        <void property="tema">
+         <string>Política</string>
+        </void>
+        <void property="texto">
+         <string>Hola</string>
+        </void>
+       </object>
+      </void>
+     </void>
      <void property="contrasenia">
       <string>8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92</string>
      </void>
@@ -35,18 +39,23 @@
    <void method="add">
     <object class="proyecto.redsocial.model.Estudiante">
      <void property="contrasenia">
-      <string>da837697041edb6592e84ff05d5dc42f8883c7e15a7f18c21332ecf1c73f754a</string>
+      <string>926b4b8a00cfab44b758450fa6bf188d4bf8541c2fd6b3d9b93d152d43a99f64</string>
      </void>
      <void property="correo">
-      <string>Cansona@edu.co</string>
+      <string>Sara@edu.co</string>
      </void>
      <void property="id">
       <int>2</int>
      </void>
      <void property="nombre">
-      <string>Maria Jose</string>
+      <string>Sara Sofia</string>
      </void>
     </object>
+   </void>
+  </void>
+  <void property="publicacions">
+   <void method="add">
+    <object idref="Publicacion0"/>
    </void>
   </void>
  </object>

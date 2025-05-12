@@ -2,6 +2,7 @@ package proyecto.redsocial.model;
 
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 @Data
 public class Estudiante {
@@ -11,17 +12,25 @@ public class Estudiante {
     private String contrasenia;
     private List<Estudiante> amigos;
     private ColaPrioridadAyuda solicitudes;
-    private List<Contenido> contenidosPublicados;
+    private List<Publicacion> contenidosPublicados;
     private List<Valoracion> valoracions;
     private List<GrupoEstudio> gruposEstudio;
 
-    public void publicarContenido(Contenido contenido){
-        contenidosPublicados.add(contenido);
+    public Estudiante() {
+        this.amigos = new ArrayList<>();
+        this.solicitudes = new ColaPrioridadAyuda();
+        this.contenidosPublicados = new ArrayList<>();
+        this.valoracions = new ArrayList<>();
+        this.gruposEstudio = new ArrayList<>();
     }
 
-    public void valorarContenido(int valoracion, Contenido contenido,String comentario ){
+    public void publicarContenido(Publicacion publicacion){
+        contenidosPublicados.add(publicacion);
+    }
+
+    public void valorarContenido(int valoracion, Publicacion publicacion, String comentario ){
         Valoracion v = new Valoracion();
-        v.setContenido(contenido);
+        v.setPublicacion(publicacion);
         v.setValoracion(valoracion);
         v.setComentario(comentario);
         valoracions.add(v);

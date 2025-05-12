@@ -16,6 +16,44 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 5, 0, 0, 2);
 }
 
+.group-suggestion-label {
+    -fx-background-color: linear-gradient(to right, #f9d423, #ff4e50);
+    -fx-background-radius: 90;
+    -fx-padding: 6 16 6 16;
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+.friends-suggestion-label {
+    -fx-background-color: linear-gradient(to right, #f9d423, #ff4e50);
+    -fx-background-radius: 90;
+    -fx-padding: 6 16 6 16;
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+.publicaciones-label {
+    -fx-background-color: linear-gradient(to right, #f9d423, #ff4e50);
+    -fx-background-radius: 90;
+    -fx-padding: 6 16 6 16;
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
+
+.barra-busqueda {
+    -fx-background-color: linear-gradient(to right, #f9d423, #ff4e50);
+    -fx-background-radius: 90;
+    -fx-padding: 6 16 6 16;
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-prompt-text-fill: #333333;
+}
+
 /* Navigation Buttons (HBox y SideBar) */
 .nav-button {
     -fx-alignment: center;
@@ -31,13 +69,13 @@
 }
 
 .nav-button:hover {
-    -fx-background-color: #e8f0fe; /* Azul muy claro */
-    -fx-border-color: #c3dafe;
+    -fx-background-color: #ffd18b;
+    -fx-border-color: #ffd18b;
     -fx-border-width: 1;
 }
 
 .nav-button:hover .nav-label {
-    -fx-text-fill: #0073b1;
+    -fx-text-fill: #4b3d28;
     -fx-font-weight: bold;
 }
 
@@ -111,4 +149,64 @@
 .scroll-bar .thumb {
     -fx-background-color: #cfd8dc;
     -fx-background-radius: 5;
+}
+
+/* NUEVAS CLASES */
+
+/* Botones de publicación */
+.boton-post {
+    -fx-background-color: #e8f0fe;
+    -fx-border-color: #c3dafe;
+    -fx-border-width: 1;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-padding: 6 14;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #1a73e8;
+    -fx-cursor: hand;
+    -fx-transition: all 0.2s ease-in-out;
+}
+
+.boton-post:hover {
+    -fx-background-color: #d2e3fc;
+}
+
+/* Título de secciones */
+.titulo-seccion {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0073b1;
+    -fx-padding: 10 0 5 0;
+}
+
+/* Etiquetas de grupo o sugerencias */
+.grupo-asignado,
+.sugerencia-grupo {
+    -fx-background-color: #f1f8ff;
+    -fx-border-color: #bbdefb;
+    -fx-border-width: 1;
+    -fx-border-radius: 12;
+    -fx-background-radius: 12;
+    -fx-padding: 6 12;
+    -fx-text-fill: #1565c0;
+    -fx-font-size: 12px;
+}
+
+/* Estado de conexión en los chats */
+.estado-chat {
+    -fx-text-fill: #4caf50;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+/* Área de texto de publicación */
+#LbPublicacion {
+    -fx-border-color: #cfd8dc;
+    -fx-border-radius: 15;
+    -fx-background-radius: 15;
+    -fx-padding: 10;
+    -fx-font-size: 14px;
+    -fx-text-fill: #444;
+    -fx-background-color: #ffffff;
 }

@@ -14,6 +14,8 @@ public class RegistroController {
 
     private ModelFactory modelFactory;
 
+
+
     @FXML
     private ResourceBundle resources;
 

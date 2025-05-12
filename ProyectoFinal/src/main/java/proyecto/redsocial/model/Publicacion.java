@@ -5,13 +5,14 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.util.List;
 @Data
-public class Contenido {
-    private String idContenido;
-    private String titulo;
+public class Publicacion {
+    private int idContenido;
     private String tema;
-    private String autor;
+    private String texto;
+    private Estudiante autor;
     private List<Valoracion> valoraciones;
-    private LocalDate fechaPublicacion;
+    private String fechaPublicacion;
+    private String archivoAdjunto;
 
     public double calcularPromedioValoracion(){
         return 0;

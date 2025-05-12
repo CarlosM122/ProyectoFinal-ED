@@ -54,7 +54,6 @@ public class LoginController {
             String correo = txtUsuario.getText();
             if(modelFactory.verificarCredenciales(correo,contrasenia)){
                 Estudiante estudiante = modelFactory.obtnerUsuario(correo);
-                System.out.println("Usuario Ingresado Correctamente");
                 cargarVistaPrincipal(estudiante);
                 cerrarVentanaLogin();
             }else {

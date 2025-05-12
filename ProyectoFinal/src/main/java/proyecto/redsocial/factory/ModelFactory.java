@@ -1,10 +1,13 @@
 package proyecto.redsocial.factory;
 
+import proyecto.redsocial.model.Publicacion;
 import proyecto.redsocial.model.Estudiante;
 import proyecto.redsocial.model.Sistema;
 import proyecto.redsocial.model.SolicitudAyuda;
 import proyecto.redsocial.utils.Persistencia;
 import proyecto.redsocial.utils.RedSocialUtils;
+
+import java.util.List;
 
 public class ModelFactory {
     private Sistema sistema;
@@ -66,6 +69,18 @@ public class ModelFactory {
 
     public Estudiante obtnerUsuario(String correo) {
         return sistema.buscarEstudiante(correo);
+    }
+
+    public void guardarPublicacion(Publicacion publicacion) {
+        sistema.getPublicacions().add(publicacion);
+        sistema.getArbolPublicaciones().insertar(publicacion);
+        Estudiante estudiante = publicacion.getAutor();
+        estudiante.publicarContenido(publicacion);
+        guardarRecursosXML();
+    }
+
+    public List<Publicacion> obtenerPublicaciones() {
+        return sistema.cargarPublicaciones();
     }
 
 }

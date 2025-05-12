@@ -4,6 +4,7 @@
 <?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -19,10 +20,10 @@
             <padding>
                 <Insets bottom="10" left="20" right="20" top="10" />
             </padding>
-            <AnchorPane prefHeight="13.0" prefWidth="143.0">
+            <AnchorPane prefHeight="98.0" prefWidth="145.0">
                 <children>
                     <!-- Logo -->
-                    <ImageView fitHeight="80.0" fitWidth="83.0" layoutX="26.0" layoutY="11.0" preserveRatio="true">
+                    <ImageView fitHeight="52.0" fitWidth="55.0" layoutX="58.0" layoutY="23.0" preserveRatio="true">
                         <image>
                             <Image url="@../images/Logo2.png" />
                         </image>
@@ -33,6 +34,11 @@
             <!-- Botones de navegación -->
             <HBox alignment="CENTER" prefHeight="98.0" prefWidth="1141.0" spacing="30" styleClass="nav-buttons">
                 <children>
+               <AnchorPane prefHeight="98.0" prefWidth="367.0">
+                  <children>
+                     <TextField fx:id="txtBusqueda" layoutX="14.0" layoutY="31.0" prefHeight="36.0" prefWidth="348.0" promptText="Buscar" styleClass="barra-busqueda" />
+                  </children>
+               </AnchorPane>
                     <VBox fx:id="VboxInicio" alignment="CENTER" onMousePressed="#onInicio" styleClass="nav-button">
                         <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
                             <image>
@@ -84,25 +90,24 @@
             <padding>
                 <Insets bottom="10" left="10" right="10" top="20" />
             </padding>
-            <VBox alignment="CENTER">
-                <ImageView fitHeight="95.0" fitWidth="107.0" preserveRatio="true">
-                    <image>
-                        <Image url="@../images/usuario.png" />
-                    </image>
-                </ImageView>
-                <Label fx:id="txtNombre" styleClass="profile-name" text="Nombre" />
-                <Label fx:id="txtInformacion" styleClass="profile-info" text="informacion" />
-            </VBox>
-
-            <!-- Grupos -->
-            <VBox alignment="CENTER" onMousePressed="#OnGrupos" styleClass="nav-button">
-                <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
-                    <image>
-                        <Image url="@../images/red.png" />
-                    </image>
-                </ImageView>
-                <Label styleClass="nav-label" text="Tus grupos" />
-            </VBox>
+         <AnchorPane prefHeight="208.0" prefWidth="158.0">
+            <children>
+                  <VBox alignment="CENTER" prefHeight="178.0" prefWidth="158.0">
+                      <ImageView fitHeight="95.0" fitWidth="107.0" preserveRatio="true">
+                          <image>
+                              <Image url="@../images/usuario.png" />
+                          </image>
+                      </ImageView>
+                      <Label fx:id="txtNombre" styleClass="profile-name" text="Nombre" />
+                      <Label fx:id="txtInformacion" styleClass="profile-info" text="informacion" />
+                  </VBox>
+            </children>
+         </AnchorPane>
+         <VBox fx:id="VBoxGrupos" alignment="TOP_CENTER" prefHeight="415.0" prefWidth="199.0">
+            <children>
+               <Label alignment="CENTER" prefHeight="44.0" prefWidth="161.0" styleClass="group-suggestion-label" text="Tus Grupos" textAlignment="CENTER" />
+            </children>
+         </VBox>
         </VBox>
     </left>
 
@@ -127,7 +132,7 @@
                             </AnchorPane>
                             <AnchorPane prefHeight="100.0" prefWidth="535.0">
                                 <children>
-                                    <Label fx:id="LbPublicacion" layoutX="16.0" layoutY="27.0" onMousePressed="#onPublicar" prefHeight="42.0" prefWidth="506.0" style="-fx-border-color: black; -fx-border-radius: 90; -fx-background-color: transparent;" text="    Crear Publicación">
+                                    <Label fx:id="LbPublicacion" layoutX="14.0" layoutY="28.0" onMousePressed="#onPublicar" prefHeight="42.0" prefWidth="506.0" style="-fx-border-color: black; -fx-border-radius: 90; -fx-background-color: transparent;" text="    Crear Publicación">
                               <cursor>
                                  <Cursor fx:constant="HAND" />
                               </cursor></Label>
@@ -135,8 +140,8 @@
                             </AnchorPane>
                         </children>
                     </HBox>
-                    <!-- Aquí irían publicaciones o contenido dinámico -->
-                    <Label text="Contenido principal aquí..." />
+               <Label alignment="CENTER" prefHeight="41.0" prefWidth="749.0" styleClass="publicaciones-label" text="Publicaciones" />
+               <VBox fx:id="contenedorPublicaciones" prefHeight="435.0" prefWidth="784.0" />
                 </VBox>
             </content>
         </ScrollPane>
@@ -144,11 +149,15 @@
 
     <!-- Panel derecho -->
     <right>
-        <VBox alignment="TOP_CENTER" prefWidth="200" spacing="10" styleClass="side-bar" BorderPane.alignment="CENTER">
+        <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="235.0" spacing="10" styleClass="side-bar" BorderPane.alignment="CENTER">
             <padding>
                 <Insets bottom="10" left="10" right="10" top="20" />
             </padding>
-            <Label text="Sugerencias" />
+         <VBox fx:id="VBoxAmigosSugeridos" alignment="TOP_CENTER" prefHeight="445.0" prefWidth="194.0">
+            <children>
+               <Label alignment="CENTER" prefHeight="44.0" prefWidth="161.0" styleClass="friends-suggestion-label" text="Amigos Sugeridos" textAlignment="CENTER" />
+            </children>
+         </VBox>
             <Label text="Anuncios" />
         </VBox>
     </right>

@@ -5,21 +5,32 @@ import proyecto.redsocial.utils.RedSocialUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Queue;
 
 @Data
 public class Sistema {
     private List<Estudiante> estudiantes;
     private List<Moderador> moderadores;
-    private ArbolContenido contenidos;
+    private List<Publicacion> publicacions;
     private RedAfinidad redAfinidad;
     private ColaPrioridadAyuda colaPrioridadAyuda;
     private List<GrupoEstudio> gruposEstudio;
+    private transient ArbolABB arbolPublicaciones;
 
     public Sistema() {
         this.estudiantes = new ArrayList<>();
         this.moderadores = new ArrayList<>();
         this.gruposEstudio = new ArrayList<>();
+        this.publicacions = new ArrayList<>();
+        this.redAfinidad = new RedAfinidad();
+        this.colaPrioridadAyuda = new ColaPrioridadAyuda();
+        cargarArbol();
+    }
+
+    private void cargarArbol() {
+        arbolPublicaciones = new ArbolABB();
+        for (Publicacion publicacion : publicacions) {
+            arbolPublicaciones.insertar(publicacion);
+        }
     }
 
     public Estudiante buscarEstudiante(String correo) {
@@ -41,5 +52,9 @@ public class Sistema {
         estudiante.setContrasenia(contraseniaEncriptada);
         estudiante.setId(estudiantes.size()+1);
         estudiantes.add(estudiante);
+    }
+
+    public List<Publicacion> cargarPublicaciones() {
+        return publicacions;
     }
 }
