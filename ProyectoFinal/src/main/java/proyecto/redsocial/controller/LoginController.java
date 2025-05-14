@@ -99,7 +99,6 @@ public class LoginController {
             Parent root = loader.load();
 
             ModeradorController controller = loader.getController();
-            controller.setModerador(moderador);
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
