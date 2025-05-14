@@ -13,6 +13,7 @@ import javafx.stage.Stage;
 import proyecto.redsocial.RedSocialApplication;
 import proyecto.redsocial.factory.ModelFactory;
 import proyecto.redsocial.model.Estudiante;
+import proyecto.redsocial.model.Moderador;
 
 import java.io.IOException;
 
@@ -49,20 +50,26 @@ public class LoginController {
     }
 
     private void ingresar() {
-        if(validarDatos()){
+        if (validarDatos()) {
             String contrasenia = txtContrasenia.getText();
             String correo = txtUsuario.getText();
-            if(modelFactory.verificarCredenciales(correo,contrasenia)){
-                Estudiante estudiante = modelFactory.obtnerUsuario(correo);
-                cargarVistaPrincipal(estudiante);
+
+            if (modelFactory.verificarCredenciales(correo, contrasenia)) {
+                Object usuario = modelFactory.obtnerUsuario(correo);
+
+                if (usuario instanceof Moderador) {
+                    cargarVistaModerador((Moderador) usuario);
+                } else if (usuario instanceof Estudiante) {
+                    cargarVistaPrincipal((Estudiante) usuario);
+                }
+
                 cerrarVentanaLogin();
-            }else {
-                mostrarMensaje("Error","Error Inicio De Sesion","Usuario o contraseña incorrectos.",Alert.AlertType.ERROR);
+            } else {
+                mostrarMensaje("Error", "Error Inicio De Sesion", "Usuario o contraseña incorrectos.", Alert.AlertType.ERROR);
             }
 
-        }
-        else{
-            mostrarMensaje("Error","Datos Nulos","Hay un campo nulo.",Alert.AlertType.ERROR);
+        } else {
+            mostrarMensaje("Error", "Datos Nulos", "Hay un campo nulo.", Alert.AlertType.ERROR);
         }
     }
 
@@ -86,6 +93,22 @@ public class LoginController {
         }
     }
 
+    private void cargarVistaModerador(Moderador moderador) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/proyecto/redsocial/fxml/ModeradorView.fxml"));
+            Parent root = loader.load();
+
+            ModeradorController controller = loader.getController();
+            controller.setModerador(moderador);
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Panel de Administrador");
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void cargarVistaRegistro() {
         try {

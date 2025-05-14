@@ -1,30 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<java version="21.0.2" class="java.beans.XMLDecoder">
+<java version="21.0.7" class="java.beans.XMLDecoder">
  <object class="proyecto.redsocial.model.Sistema" id="Sistema0">
   <void property="estudiantes">
    <void method="add">
-    <object class="proyecto.redsocial.model.Estudiante" id="Estudiante0">
-     <void property="contenidosPublicados">
-      <void method="add">
-       <object class="proyecto.redsocial.model.Publicacion" id="Publicacion0">
-        <void property="autor">
-         <object idref="Estudiante0"/>
-        </void>
-        <void property="fechaPublicacion">
-         <string>2025-05-09</string>
-        </void>
-        <void property="idContenido">
-         <int>2255068</int>
-        </void>
-        <void property="tema">
-         <string>Política</string>
-        </void>
-        <void property="texto">
-         <string>Hola</string>
-        </void>
-       </object>
-      </void>
-     </void>
+    <object class="proyecto.redsocial.model.Estudiante">
      <void property="contrasenia">
       <string>8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92</string>
      </void>
@@ -36,26 +15,20 @@
      </void>
     </object>
    </void>
+  </void>
+  <void property="moderadores">
    <void method="add">
-    <object class="proyecto.redsocial.model.Estudiante">
+    <object class="proyecto.redsocial.model.Moderador">
      <void property="contrasenia">
-      <string>926b4b8a00cfab44b758450fa6bf188d4bf8541c2fd6b3d9b93d152d43a99f64</string>
+      <string>240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9</string>
      </void>
      <void property="correo">
-      <string>Sara@edu.co</string>
-     </void>
-     <void property="id">
-      <int>2</int>
+      <string>admin@edu.co</string>
      </void>
      <void property="nombre">
-      <string>Sara Sofia</string>
+      <string>Admin</string>
      </void>
     </object>
-   </void>
-  </void>
-  <void property="publicacions">
-   <void method="add">
-    <object idref="Publicacion0"/>
    </void>
   </void>
  </object>

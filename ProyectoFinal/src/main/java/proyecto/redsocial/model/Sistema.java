@@ -54,6 +54,16 @@ public class Sistema {
         estudiantes.add(estudiante);
     }
 
+    public Moderador buscarModerador(String correo) {
+        for (Moderador mod : moderadores) {
+            if (mod.getCorreo().equals(correo)) {
+                return mod;
+            }
+        }
+        return null;
+    }
+
+
     public List<Publicacion> cargarPublicaciones() {
         return publicacions;
     }

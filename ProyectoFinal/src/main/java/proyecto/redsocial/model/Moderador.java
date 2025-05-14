@@ -1,12 +1,32 @@
 package proyecto.redsocial.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Moderador {
-    public void gestionarUsuarios(){}
-    public void gestionarContenido(){}
-    public void generarReporteConexiones(){}
-    public void visualizarGrafoAfinidad(){}
+    private String nombre;
+    private String correo;
+    private String contrasenia; // ← Añadir este campo
 
+    public void gestionarUsuarios() {
+        // Implementar lógica
+    }
+
+    public void gestionarContenido() {
+        // Implementar lógica
+    }
+
+    public void generarReporteConexiones() {
+        // Implementar lógica
+    }
+
+    public void visualizarGrafoAfinidad() {
+        // Implementar lógica
+    }
 }
+
+

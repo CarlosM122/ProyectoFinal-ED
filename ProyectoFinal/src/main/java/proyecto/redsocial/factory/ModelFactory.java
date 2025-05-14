@@ -1,9 +1,6 @@
 package proyecto.redsocial.factory;
 
-import proyecto.redsocial.model.Publicacion;
-import proyecto.redsocial.model.Estudiante;
-import proyecto.redsocial.model.Sistema;
-import proyecto.redsocial.model.SolicitudAyuda;
+import proyecto.redsocial.model.*;
 import proyecto.redsocial.utils.Persistencia;
 import proyecto.redsocial.utils.RedSocialUtils;
 
@@ -21,10 +18,12 @@ public class ModelFactory {
     }
 
     private ModelFactory() {
-        sistema = new Sistema();
-//        inicializarDatosBase();
-//        guardarRecursosXML();
-        cargarRecursosXML();
+        if (Persistencia.existeArchivoXML()) {
+            cargarRecursosXML();
+        } else {
+            inicializarDatosBase();
+            guardarRecursosXML();
+        }
     }
 
     private void cargarRecursosXML() {
@@ -39,22 +38,11 @@ public class ModelFactory {
         sistema = RedSocialUtils.inicializarSistema();
     }
 
-    public boolean verificarCredenciales(String correo, String contrasenia) {
-        boolean respuesta = false;
-        Estudiante estudiante = sistema.buscarEstudiante(correo);
-        if (estudiante == null) return false;
-        String contraseniaEncriptada = RedSocialUtils.encriptarSHA256(contrasenia) ;
-        if (estudiante.getContrasenia().equals(contraseniaEncriptada)) {
-            respuesta = true;
-        }
-        return respuesta;
-    }
-
     public boolean registrarUsuario(String nombre, String correo, String contrasenia) {
         boolean registrado = false;
         Estudiante estudiante = sistema.buscarEstudiante(correo);
         if (estudiante == null) {
-            sistema.guardarEstudiante(nombre,correo,contrasenia);
+            sistema.guardarEstudiante(nombre, correo, contrasenia);
             guardarRecursosXML();
             registrado = true;
         }
@@ -64,11 +52,14 @@ public class ModelFactory {
     public void guardarSolicitud(SolicitudAyuda solicitudAyuda) {
         sistema.getColaPrioridadAyuda().agregarSolicitud(solicitudAyuda);
         guardarRecursosXML();
-
     }
 
-    public Estudiante obtnerUsuario(String correo) {
-        return sistema.buscarEstudiante(correo);
+    public Object obtnerUsuario(String correo) {
+        Estudiante est = sistema.buscarEstudiante(correo);
+        if (est != null) return est;
+
+        Moderador mod = sistema.buscarModerador(correo);
+        return mod;
     }
 
     public void guardarPublicacion(Publicacion publicacion) {
@@ -79,8 +70,23 @@ public class ModelFactory {
         guardarRecursosXML();
     }
 
+    public boolean verificarCredenciales(String correo, String contrasenia) {
+        String contraEncriptada = RedSocialUtils.encriptarSHA256(contrasenia);
+
+        Estudiante est = sistema.buscarEstudiante(correo);
+        if (est != null && est.getContrasenia().equals(contraEncriptada)) {
+            return true;
+        }
+
+        Moderador mod = sistema.buscarModerador(correo);
+        if (mod != null && mod.getContrasenia().equals(contraEncriptada)) {
+            return true;
+        }
+
+        return false;
+    }
+
     public List<Publicacion> obtenerPublicaciones() {
         return sistema.cargarPublicaciones();
     }
-
 }
