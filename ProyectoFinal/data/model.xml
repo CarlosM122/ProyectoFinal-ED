@@ -1,9 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<java version="21.0.7" class="java.beans.XMLDecoder">
+<java version="21.0.2" class="java.beans.XMLDecoder">
  <object class="proyecto.redsocial.model.Sistema" id="Sistema0">
   <void property="estudiantes">
    <void method="add">
-    <object class="proyecto.redsocial.model.Estudiante">
+    <object class="proyecto.redsocial.model.Estudiante" id="Estudiante0">
+     <void property="contenidosPublicados">
+      <void method="add">
+       <object class="proyecto.redsocial.model.Publicacion">
+        <void property="autor">
+         <object idref="Estudiante0"/>
+        </void>
+        <void property="fechaPublicacion">
+         <string>2025-05-14</string>
+        </void>
+        <void property="idContenido">
+         <int>1455440967</int>
+        </void>
+        <void property="rutaArchivoAdjunto">
+         <string>C:\Users\ASUS\Desktop\Repositorio Estructura De Datos\ProyectoFinal-ED\ProyectoFinal\archivos_publicaciones\Captura de pantalla 2025-04-28 130337.png</string>
+        </void>
+        <void property="tema">
+         <string>Matemáticas</string>
+        </void>
+        <void property="texto">
+         <string>Complicada</string>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="proyecto.redsocial.model.Publicacion" id="Publicacion0">
+        <void property="autor">
+         <object idref="Estudiante0"/>
+        </void>
+        <void property="fechaPublicacion">
+         <string>2025-05-14</string>
+        </void>
+        <void property="idContenido">
+         <int>-487807589</int>
+        </void>
+        <void property="tema">
+         <string>Programación</string>
+        </void>
+        <void property="texto">
+         <string>https://www.youtube.com/watch?v=W86KTBSiX2o
+Aqui les dejo una ayuda con java</string>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="proyecto.redsocial.model.Publicacion">
+        <void property="autor">
+         <object idref="Estudiante0"/>
+        </void>
+        <void property="fechaPublicacion">
+         <string>2025-05-14</string>
+        </void>
+        <void property="idContenido">
+         <int>2141870</int>
+        </void>
+        <void property="rutaArchivoAdjunto">
+         <string>C:\Users\ASUS\Desktop\Repositorio Estructura De Datos\ProyectoFinal-ED\ProyectoFinal\archivos_publicaciones\ChatGPT Image Apr 3, 2025, 07_16_01 PM.png</string>
+        </void>
+        <void property="tema">
+         <string>Matemáticas</string>
+        </void>
+        <void property="texto">
+         <string>Duro</string>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="proyecto.redsocial.model.Publicacion">
+        <void property="autor">
+         <object idref="Estudiante0"/>
+        </void>
+        <void property="fechaPublicacion">
+         <string>2025-05-14</string>
+        </void>
+        <void property="idContenido">
+         <int>1982151550</int>
+        </void>
+        <void property="rutaArchivoAdjunto">
+         <string>C:\Users\ASUS\Desktop\Repositorio Estructura De Datos\ProyectoFinal-ED\ProyectoFinal\archivos_publicaciones\Captura de pantalla 2024-09-06 125705.png</string>
+        </void>
+        <void property="tema">
+         <string>Arte</string>
+        </void>
+        <void property="texto">
+         <string>Bacano</string>
+        </void>
+       </object>
+      </void>
+     </void>
      <void property="contrasenia">
       <string>8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92</string>
      </void>
@@ -29,6 +117,11 @@
       <string>Admin</string>
      </void>
     </object>
+   </void>
+  </void>
+  <void property="publicacions">
+   <void method="add">
+    <object idref="Publicacion0"/>
    </void>
   </void>
  </object>

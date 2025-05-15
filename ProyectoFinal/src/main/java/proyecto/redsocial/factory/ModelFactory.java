@@ -4,10 +4,28 @@ import proyecto.redsocial.model.*;
 import proyecto.redsocial.utils.Persistencia;
 import proyecto.redsocial.utils.RedSocialUtils;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 public class ModelFactory {
     private Sistema sistema;
+
+    public void eliminarPublicacion(Publicacion publicacion) {
+        sistema.getPublicacions().remove(publicacion);
+        if (publicacion.getRutaArchivoAdjunto()!=null){
+            Path path = Paths.get(publicacion.getRutaArchivoAdjunto());
+            try {
+                Files.delete(path);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        guardarRecursosXML();
+    }
 
     private static class SingletonHolder {
         private final static ModelFactory eINSTANCE = new ModelFactory();

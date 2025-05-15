@@ -1,6 +1,6 @@
 package proyecto.redsocial.controller;
 
-import java.awt.event.MouseEvent;
+import javafx.scene.input.MouseEvent;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import proyecto.redsocial.factory.ModelFactory;
 import proyecto.redsocial.model.Publicacion;
@@ -19,6 +20,7 @@ public class PublicacionController {
     private Estudiante estudiante;
     private final ModelFactory modelFactory = ModelFactory.getInstance();
     private MainPageController mainPageController;
+    private String rutaArchivoAdjunto;
 
     @FXML
     private ResourceBundle resources;
@@ -39,6 +41,9 @@ public class PublicacionController {
     private Label nombreUsuario;
 
     @FXML
+    private Label labelArchivo;
+
+    @FXML
     private TextArea txtAreaTexto;
 
     @FXML
@@ -48,7 +53,7 @@ public class PublicacionController {
 
     @FXML
     void onSubirArchivo(MouseEvent event) {
-
+        subirArchivo();
     }
 
     @FXML
@@ -78,21 +83,63 @@ public class PublicacionController {
         nombreUsuario.setText(estudiante.getNombre());
     }
 
+    private void subirArchivo() {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Abrir Archivo");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("Texto", "*.txt"),
+                new FileChooser.ExtensionFilter("Imagenes", "*.jpg", "*.png", "*.gif"),
+                new FileChooser.ExtensionFilter("Documentos", "*.doc", "*.docx", "*.pdf"),
+                new FileChooser.ExtensionFilter("Videos", "*.mp4", "*.avi", "*.mov", "*.mkv")
+        );
+        fileChooser.setInitialDirectory(new java.io.File(System.getProperty("user.home")));
+        java.io.File archivo = fileChooser.showOpenDialog(btnPublicar.getScene().getWindow());
+        if (archivo != null) {
+            try {
+                java.io.File carpetaDestino = new java.io.File("archivos_publicaciones");
+                if (!carpetaDestino.exists()) {
+                    carpetaDestino.mkdir();
+                }
+
+                java.io.File archivoDestino = new java.io.File(carpetaDestino, archivo.getName());
+                java.nio.file.Files.copy(
+                        archivo.toPath(),
+                        archivoDestino.toPath(),
+                        java.nio.file.StandardCopyOption.REPLACE_EXISTING
+                );
+
+                rutaArchivoAdjunto = archivoDestino.getAbsolutePath();
+                labelArchivo.setText(archivoDestino.getName());
+                mostrarMensaje("Archivo subido", null, "Archivo adjunto guardado correctamente.", Alert.AlertType.INFORMATION);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                mostrarMensaje("Error", "No se pudo subir el archivo", e.getMessage(), Alert.AlertType.ERROR);
+            }
+        }
+    }
+
     private void publicar() {
-        if(txtAreaTexto!=null&&CBTemas.getValue()!=null&& !Objects.equals(CBTemas.getValue(), "Selecciona un tema")){
+        if(txtAreaTexto!=null && CBTemas.getValue()!=null && !Objects.equals(CBTemas.getValue(), "Selecciona un tema")) {
             String texto = txtAreaTexto.getText();
             String tema = CBTemas.getValue();
+
             Publicacion publicacion = new Publicacion();
             publicacion.setIdContenido(texto.hashCode());
             publicacion.setTema(tema);
             publicacion.setTexto(texto);
             publicacion.setAutor(estudiante);
             publicacion.setFechaPublicacion(LocalDate.now().toString());
+
+            if (rutaArchivoAdjunto != null) {
+                publicacion.setRutaArchivoAdjunto(rutaArchivoAdjunto);
+            }
+
             modelFactory.guardarPublicacion(publicacion);
-            mainPageController.cargarEnVistaPrincipal(publicacion,estudiante);
+            mainPageController.cargarEnVistaPrincipal(publicacion, estudiante);
             cerrarVentana();
-        }else {
-            mostrarMensaje("Error","Datos Nulos","Porfavor rellena los campos necesarios.",Alert.AlertType.ERROR);
+        } else {
+            mostrarMensaje("Error", "Datos Nulos", "Por favor rellena los campos necesarios.", Alert.AlertType.ERROR);
         }
     }
 

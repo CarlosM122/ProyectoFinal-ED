@@ -44,5 +44,6 @@
             <Cursor fx:constant="HAND" />
          </cursor>
       </HBox>
+      <Label fx:id="labelArchivo" layoutX="185.0" layoutY="518.0" prefHeight="18.0" prefWidth="135.0" />
    </children>
 </AnchorPane>

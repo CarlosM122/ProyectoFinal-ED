@@ -12,7 +12,7 @@ public class Publicacion {
     private Estudiante autor;
     private List<Valoracion> valoraciones;
     private String fechaPublicacion;
-    private String archivoAdjunto;
+    private String rutaArchivoAdjunto;
 
     public double calcularPromedioValoracion(){
         return 0;
