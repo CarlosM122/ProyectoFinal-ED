@@ -2,6 +2,8 @@ package proyecto.redsocial.controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
@@ -13,9 +15,9 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -30,6 +32,8 @@ public class MainPageController {
     private Estudiante estudiante;
 
     private final ModelFactory modelFactory = ModelFactory.getInstance();
+    private final List<String> temas = new ArrayList<>();
+    private final List<String> temasNormalizados = new ArrayList<>();
 
     @FXML
     private Label LbPublicacion;
@@ -62,6 +66,9 @@ public class MainPageController {
     private Label txtNombre;
 
     @FXML
+    private TextField txtBusqueda;
+
+    @FXML
     void OnAyuda(MouseEvent event) {
 
     }
@@ -86,6 +93,14 @@ public class MainPageController {
 
     }
 
+
+    @FXML
+    void buscarPorTema(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER){
+            buscarPublicacionesPorTema();
+        }
+    }
+
     @FXML
     void onNotificaciones(MouseEvent event) {
 
@@ -103,7 +118,59 @@ public class MainPageController {
 
     @FXML
     void initialize() {
+        temas.addAll(List.of("Deporte",
+                "Matemáticas",
+                "Política",
+                "Ciencia",
+                "Tecnología",
+                "Arte",
+                "Música",
+                "Historia",
+                "Programación",
+                "Literatura"));
+        for (String tema : temas) {
+            temasNormalizados.add(normalizarTexto(tema));
+        }
+    }
 
+    private void buscarPublicacionesPorTema() {
+        String textoBusqueda = txtBusqueda.getText();
+
+        if (textoBusqueda == null || textoBusqueda.isBlank()) {
+            contenedorPublicaciones.getChildren().clear();
+            cargarPublicaciones(estudiante);
+            return;
+        }
+
+        String temaNormalizado = normalizarTexto(textoBusqueda);
+
+        int indiceTema = temasNormalizados.indexOf(temaNormalizado);
+
+        if (indiceTema == -1) {
+            mostrarMensaje("Error", "Tema no encontrado", "El tema que busca no existe.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        String temaOriginal = temas.get(indiceTema);
+
+        List<Publicacion> listaDePublicaciones = modelFactory.obtenerPublicacionesPorTema(temaOriginal);
+
+        if (listaDePublicaciones.isEmpty()) {
+            mostrarMensaje("Problema", "Publicaciones No Encontradas.", "No se encuentran publicaciones relacionadas con el tema.", Alert.AlertType.INFORMATION);
+        } else {
+            contenedorPublicaciones.getChildren().clear();
+            for (Publicacion publicacion : listaDePublicaciones) {
+                cargarEnVistaPrincipal(publicacion, estudiante);
+            }
+        }
+    }
+
+    private String normalizarTexto(String texto) {
+        if (texto == null) return null;
+        // Elimina tildes y caracteres diacríticos
+        String textoSinTildes = Normalizer.normalize(texto, Normalizer.Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+        return textoSinTildes.toLowerCase();
     }
 
     public void cargarDatosVista(Estudiante estudiante) {
@@ -308,5 +375,13 @@ public class MainPageController {
         }
 
         return contenedor;
+    }
+
+    private void mostrarMensaje(String titulo, String header, String contenido, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(titulo);
+        alert.setHeaderText(header);
+        alert.setContentText(contenido);
+        alert.show();
     }
 }

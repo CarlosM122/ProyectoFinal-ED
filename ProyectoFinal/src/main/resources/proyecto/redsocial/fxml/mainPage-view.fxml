@@ -36,7 +36,7 @@
                 <children>
                <AnchorPane prefHeight="98.0" prefWidth="367.0">
                   <children>
-                     <TextField fx:id="txtBusqueda" layoutX="14.0" layoutY="31.0" prefHeight="36.0" prefWidth="348.0" promptText="Buscar" styleClass="barra-busqueda" />
+                     <TextField fx:id="txtBusqueda" layoutX="14.0" layoutY="31.0" onKeyPressed="#buscarPorTema" prefHeight="36.0" prefWidth="348.0" promptText="Buscar Un Tema De Interes" styleClass="barra-busqueda" />
                   </children>
                </AnchorPane>
                     <VBox fx:id="VboxInicio" alignment="CENTER" onMousePressed="#onInicio" styleClass="nav-button">

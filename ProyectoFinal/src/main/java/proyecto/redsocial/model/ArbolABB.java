@@ -1,10 +1,17 @@
 package proyecto.redsocial.model;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ArbolABB {
     private NodoABB raiz;
+    private String normalizarTexto(String texto) {
+        if (texto == null) return null;
+        return Normalizer.normalize(texto, Normalizer.Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
+                .toLowerCase();
+    }
 
     public void insertar(Publicacion publicacion) {
         raiz = insertarRec(raiz, publicacion);
@@ -15,7 +22,8 @@ public class ArbolABB {
             return new NodoABB(publicacion);
         }
 
-        int comparacion = publicacion.getTema().compareToIgnoreCase(actual.getTema());
+        int comparacion = normalizarTexto(publicacion.getTema())
+                .compareTo(normalizarTexto(actual.getTema()));
 
         if (comparacion < 0) {
             actual.setIzquierdo(insertarRec(actual.getIzquierdo(), publicacion));
@@ -35,7 +43,8 @@ public class ArbolABB {
     private List<Publicacion> buscarRec(NodoABB actual, String tema) {
         if (actual == null) return new ArrayList<>();
 
-        int comparacion = tema.compareToIgnoreCase(actual.getTema());
+        int comparacion = normalizarTexto(tema)
+                .compareTo(normalizarTexto(actual.getTema()));
 
         if (comparacion == 0) {
             return actual.getPublicaciones();
@@ -53,7 +62,8 @@ public class ArbolABB {
     private List<Publicacion> obtenerPublicacionesRec(NodoABB actual, String tema) {
         if (actual == null) return new ArrayList<>();
 
-        int comparacion = tema.compareToIgnoreCase(actual.getTema());
+        int comparacion = normalizarTexto(tema)
+                .compareTo(normalizarTexto(actual.getTema()));
 
         if (comparacion == 0) {
             return actual.getPublicaciones();

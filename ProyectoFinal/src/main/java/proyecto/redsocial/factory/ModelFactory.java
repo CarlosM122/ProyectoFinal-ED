@@ -46,6 +46,7 @@ public class ModelFactory {
 
     private void cargarRecursosXML() {
         sistema = Persistencia.cargarRecursosXML();
+        sistema.cargarArbol();
     }
 
     private void guardarRecursosXML() {
@@ -106,5 +107,9 @@ public class ModelFactory {
 
     public List<Publicacion> obtenerPublicaciones() {
         return sistema.cargarPublicaciones();
+    }
+
+    public List<Publicacion> obtenerPublicacionesPorTema(String tema) {
+        return sistema.getArbolPublicaciones().buscarPublicacionesPorTema(tema);
     }
 }

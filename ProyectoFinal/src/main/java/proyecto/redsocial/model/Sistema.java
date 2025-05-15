@@ -23,10 +23,9 @@ public class Sistema {
         this.publicacions = new ArrayList<>();
         this.redAfinidad = new RedAfinidad();
         this.colaPrioridadAyuda = new ColaPrioridadAyuda();
-        cargarArbol();
     }
 
-    private void cargarArbol() {
+    public void cargarArbol() {
         arbolPublicaciones = new ArbolABB();
         for (Publicacion publicacion : publicacions) {
             arbolPublicaciones.insertar(publicacion);
