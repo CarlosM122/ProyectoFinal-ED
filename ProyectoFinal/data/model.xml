@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<java version="21.0.2" class="java.beans.XMLDecoder">
+ <object class="proyecto.redsocial.model.Sistema" id="Sistema0">
+  <void property="arbolPublicaciones">
+   <object class="proyecto.redsocial.model.ArbolABB"/>
+  </void>
+  <void property="estudiantes">
+   <void method="add">
+    <object class="proyecto.redsocial.model.Estudiante">
+     <void property="contrasenia">
+      <string>8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92</string>
+     </void>
+     <void property="correo">
+      <string>July@edu.co</string>
+     </void>
+     <void property="nombre">
+      <string>July</string>
+     </void>
+    </object>
+   </void>
+   <void method="add">
+    <object class="proyecto.redsocial.model.Estudiante">
+     <void property="contrasenia">
+      <string>ea4ff518d36be99eab2cf8f5192b59ca63c3617d0e586317e643207e27954275</string>
+     </void>
+     <void property="correo">
+      <string>carlosAma.karol@gmail.com</string>
+     </void>
+     <void property="id">
+      <int>2</int>
+     </void>
+     <void property="nombre">
+      <string>CarlosKarol</string>
+     </void>
+    </object>
+   </void>
+  </void>
+  <void property="moderadores">
+   <void method="add">
+    <object class="proyecto.redsocial.model.Moderador">
+     <void property="contrasenia">
+      <string>240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9</string>
+     </void>
+     <void property="correo">
+      <string>admin@edu.co</string>
+     </void>
+     <void property="nombre">
+      <string>Admin</string>
+     </void>
+    </object>
+   </void>
+  </void>
+ </object>
+</java>

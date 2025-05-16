@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/estiloMainPage.css" xmlns="http://javafx.com/javafx/21" fx:controller="proyecto.redsocial.controller.ChatEstudianteController" xmlns:fx="http://javafx.com/fxml/1">
+   <left>
+      <VBox alignment="CENTER" prefHeight="720.0" prefWidth="149.0" styleClass="controlBotones" BorderPane.alignment="CENTER">
+         <children>
+            <VBox alignment="TOP_CENTER" maxWidth="151.0" prefHeight="672.0" prefWidth="100.0">
+               <children>
+                  <VBox fx:id="boxInicio" alignment="CENTER" prefHeight="85.0" prefWidth="80.0">
+                     <children>
+                        <ImageView fitHeight="46.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/casa.png" />
+                           </image>
+                        </ImageView>
+                        <Label text="Inicio" />
+                     </children>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </VBox>
+                  <VBox fx:id="boxAyuda" alignment="CENTER" prefHeight="85.0" prefWidth="80.0">
+                     <children>
+                        <ImageView fitHeight="42.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../images/ayudar.png" />
+                           </image>
+                        </ImageView>
+                        <Label text="Ayuda" />
+                     </children>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </VBox>
+               </children>
+            </VBox>
+            <VBox alignment="CENTER" prefHeight="212.0" prefWidth="149.0" styleClass="profile-name">
+               <children>
+                  <ImageView fitHeight="78.0" fitWidth="78.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/usuario.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="txtnombre" styleClass="profile-name" text="Nombre">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="txtinformacion" styleClass="profile-info" text="Informacion" />
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </left>
+   <center>
+      <VBox prefHeight="720.0" prefWidth="337.0" BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="CENTER" prefHeight="94.0" prefWidth="343.0">
+               <children>
+                  <TextField fx:id="txtBuscar" alignment="BASELINE_LEFT" prefHeight="26.0" prefWidth="317.0" promptText="Buscar" style="-fx-border-radius: 45;" />
+               </children>
+            </HBox>
+            <VBox fx:id="listCompañeros" prefHeight="628.0" prefWidth="343.0" />
+         </children>
+      </VBox>
+   </center>
+   <right>
+      <VBox prefHeight="720.0" prefWidth="755.0" BorderPane.alignment="CENTER">
+         <children>
+            <AnchorPane prefHeight="48.0" prefWidth="759.0" style="-fx-background-radius: 90;">
+               <children>
+                  <Label layoutX="-2.0" layoutY="-2.0" prefHeight="91.0" prefWidth="761.0" styleClass="label-fondo" stylesheets="@../css/estiloMainPage.css" />
+                  <Label fx:id="nombreCompañero" layoutX="300.0" layoutY="17.0" prefHeight="17.0" prefWidth="229.0" text="Sebastian Amaya">
+                     <font>
+                        <Font name="System Bold" size="30.0" />
+                     </font>
+                  </Label>
+                  <ImageView fitHeight="82.0" fitWidth="82.0" layoutX="110.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" styleClass="imagen">
+                     <image>
+                        <Image url="@../images/usuario.png" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="303.0" layoutY="55.0" text="Compañero" textFill="#837f7f">
+                     <font>
+                        <Font name="System Bold" size="19.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <ScrollPane prefHeight="581.0" prefWidth="755.0">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="552.0" prefWidth="748.0">
+                     <children>
+                        <VBox fx:id="chatBox" layoutX="1.0" layoutY="1.0" prefHeight="548.0" prefWidth="744.0" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </ScrollPane>
+            <HBox alignment="CENTER" prefHeight="82.0" prefWidth="759.0">
+               <children>
+                  <TextField fx:id="txtMensaje" prefHeight="31.0" prefWidth="608.0" promptText="Escribe un mensaje..." />
+                  <Button mnemonicParsing="false" prefHeight="33.0" prefWidth="78.0" text="Enviar">
+                     <HBox.margin>
+                        <Insets left="25.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+               <VBox.margin>
+                  <Insets top="15.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+      </VBox>
+   </right>
+</BorderPane>

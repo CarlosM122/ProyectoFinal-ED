@@ -38,6 +38,19 @@
     -fx-font-size: 13px;
 }
 
+.imagen{
+    -fx-border-radius: 90;
+}
+
+
+.label-fondo{
+    -fx-background-color: linear-gradient(to right, #f9d423, #ff4e50);
+    -fx-padding: 6 16;
+    -fx-text-fill: #333333;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+}
+
 .barra-busqueda {
     -fx-prompt-text-fill: #333333;
 }
