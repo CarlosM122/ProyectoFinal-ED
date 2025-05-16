@@ -14,8 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/estiloMainPage.css" xmlns="http://javafx.com/javafx/21" fx:controller="proyecto.redsocial.controller.ChatEstudianteController" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/estiloMainPage.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyecto.redsocial.controller.ChatEstudianteController">
    <left>
       <VBox alignment="CENTER" prefHeight="720.0" prefWidth="149.0" styleClass="controlBotones" BorderPane.alignment="CENTER">
          <children>
@@ -113,8 +112,8 @@
             </ScrollPane>
             <HBox alignment="CENTER" prefHeight="82.0" prefWidth="759.0">
                <children>
-                  <TextField fx:id="txtMensaje" prefHeight="31.0" prefWidth="608.0" promptText="Escribe un mensaje..." />
-                  <Button mnemonicParsing="false" prefHeight="33.0" prefWidth="78.0" text="Enviar">
+                  <TextField fx:id="txtMensaje" onKeyPressed="#enviar" prefHeight="31.0" prefWidth="608.0" promptText="Escribe un mensaje..." />
+                  <Button fx:id="btnEnviar" mnemonicParsing="false" onAction="#OnEnviar" prefHeight="33.0" prefWidth="78.0" text="Enviar">
                      <HBox.margin>
                         <Insets left="25.0" />
                      </HBox.margin>

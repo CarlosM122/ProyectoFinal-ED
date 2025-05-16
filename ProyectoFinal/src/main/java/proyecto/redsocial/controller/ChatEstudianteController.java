@@ -1,13 +1,22 @@
 package proyecto.redsocial.controller;
 
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
+import proyecto.redsocial.model.Estudiante;
 
 public class ChatEstudianteController {
+
+    private Estudiante estudiante1;
+    private Estudiante estudiante2;
 
     @FXML
     private ResourceBundle resources;
@@ -20,6 +29,9 @@ public class ChatEstudianteController {
 
     @FXML
     private VBox boxInicio;
+
+    @FXML
+    private Button btnEnviar;
 
     @FXML
     private VBox chatBox;
@@ -43,9 +55,56 @@ public class ChatEstudianteController {
     private Label txtnombre;
 
     @FXML
+    void OnEnviar(ActionEvent event) {
+        enviarMensaje();
+    }
+
+    @FXML
+    void enviar(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER){
+            enviarMensaje();
+        }
+    }
+
+    @FXML
     void initialize() {
 
     }
+    private void enviarMensaje() {
+        String mensaje = txtMensaje.getText().trim();
+        if (!mensaje.isEmpty()) {
+            VBox tarjeta = crearTarjetaChat();
+            Label nombre = crearLabelNombre("estudiante1.getNombre()");
+            Node contenidoMensaje = crearMensaje(mensaje);
+            tarjeta.getChildren().addAll(nombre, contenidoMensaje);
+            chatBox.getChildren().add(tarjeta);
+            txtMensaje.clear();
+        }
+    }
+    private VBox crearTarjetaChat() {
+        VBox tarjeta = new VBox(8);
+        tarjeta.setStyle("""
+        -fx-background-color: #ffffff;
+        -fx-padding: 12;
+        -fx-background-radius: 12;
+        -fx-border-color: #dddddd;
+        -fx-border-radius: 12;
+        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+    """);
+        return tarjeta;
+    }
 
+    private Node crearMensaje(String texto) {
+        Label contenido = new Label(texto);
+        contenido.setWrapText(true);
+        contenido.setStyle("-fx-font-size: 13px; -fx-text-fill: #444444;");
+        return contenido;
+    }
+
+    private Label crearLabelNombre(String nombre) {
+        Label tema = new Label(nombre);
+        tema.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2a2a2a;");
+        return tema;
+    }
 }
 

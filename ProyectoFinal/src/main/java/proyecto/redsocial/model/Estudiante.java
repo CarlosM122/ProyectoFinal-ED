@@ -15,8 +15,10 @@ public class Estudiante {
     private List<Publicacion> contenidosPublicados;
     private List<Valoracion> valoracions;
     private List<GrupoEstudio> gruposEstudio;
+    private List<Mensaje> ListMensajes;
 
     public Estudiante() {
+        this.ListMensajes = new ArrayList<>();
         this.amigos = new ArrayList<>();
         this.solicitudes = new ColaPrioridadAyuda();
         this.contenidosPublicados = new ArrayList<>();
