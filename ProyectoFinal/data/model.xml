@@ -1,12 +1,90 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<java version="21.0.2" class="java.beans.XMLDecoder">
+<java version="21.0.7" class="java.beans.XMLDecoder">
  <object class="proyecto.redsocial.model.Sistema" id="Sistema0">
   <void property="arbolPublicaciones">
    <object class="proyecto.redsocial.model.ArbolABB"/>
   </void>
   <void property="estudiantes">
    <void method="add">
-    <object class="proyecto.redsocial.model.Estudiante">
+    <object class="proyecto.redsocial.model.Estudiante" id="Estudiante0">
+     <void property="contenidosPublicados">
+      <void method="add">
+       <object class="proyecto.redsocial.model.Publicacion">
+        <void property="autor">
+         <object idref="Estudiante0"/>
+        </void>
+        <void property="fechaPublicacion">
+         <string>2025-05-19</string>
+        </void>
+        <void property="idContenido">
+         <int>-1422494827</int>
+        </void>
+        <void property="tema">
+         <string>Deporte</string>
+        </void>
+        <void property="texto">
+         <string>addsad</string>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="proyecto.redsocial.model.Publicacion">
+        <void property="autor">
+         <object idref="Estudiante0"/>
+        </void>
+        <void property="fechaPublicacion">
+         <string>2025-05-19</string>
+        </void>
+        <void property="idContenido">
+         <int>3344133</int>
+        </void>
+        <void property="tema">
+         <string>Matemáticas</string>
+        </void>
+        <void property="texto">
+         <string>mate</string>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="proyecto.redsocial.model.Publicacion" id="Publicacion0">
+        <void property="autor">
+         <object idref="Estudiante0"/>
+        </void>
+        <void property="fechaPublicacion">
+         <string>2025-05-19</string>
+        </void>
+        <void property="idContenido">
+         <int>2390821</int>
+        </void>
+        <void property="tema">
+         <string>Matemáticas</string>
+        </void>
+        <void property="texto">
+         <string>Mate</string>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="proyecto.redsocial.model.Publicacion" id="Publicacion1">
+        <void property="autor">
+         <object idref="Estudiante0"/>
+        </void>
+        <void property="fechaPublicacion">
+         <string>2025-05-19</string>
+        </void>
+        <void property="idContenido">
+         <int>248689005</int>
+        </void>
+        <void property="tema">
+         <string>Literatura</string>
+        </void>
+        <void property="texto">
+         <string>Literatura</string>
+        </void>
+       </object>
+      </void>
+     </void>
      <void property="contrasenia">
       <string>8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92</string>
      </void>
@@ -48,6 +126,14 @@
       <string>Admin</string>
      </void>
     </object>
+   </void>
+  </void>
+  <void property="publicacions">
+   <void method="add">
+    <object idref="Publicacion0"/>
+   </void>
+   <void method="add">
+    <object idref="Publicacion1"/>
    </void>
   </void>
  </object>

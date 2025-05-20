@@ -13,6 +13,11 @@ import java.util.List;
 public class ModelFactory {
     private Sistema sistema;
 
+    public Sistema getSistema() {
+        return sistema;
+    }
+
+
     public void eliminarPublicacion(Publicacion publicacion) {
         sistema.getPublicacions().remove(publicacion);
         if (publicacion.getRutaArchivoAdjunto()!=null){

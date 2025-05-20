@@ -10,12 +10,11 @@ import java.io.IOException;
 public class RedSocialApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/chatEstudiante-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/login-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
 
         stage.setTitle("Red Social Educativa");
         stage.setScene(scene);
-        stage.setMaximized(true);
         stage.centerOnScreen();
         stage.show();
     }

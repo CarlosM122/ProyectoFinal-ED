@@ -98,7 +98,9 @@ public class LoginController {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/proyecto/redsocial/fxml/ModeradorView.fxml"));
             Parent root = loader.load();
 
-            ModeradorController controller = loader.getController();
+            ModeradorController moderadorController = loader.getController();
+            moderadorController.cargarDatosVista(moderador);
+
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
