@@ -80,7 +80,7 @@ public class MainPageController {
 
     @FXML
     void Onmensajes(MouseEvent event) {
-
+        cargarVistaMensajes();
     }
 
     @FXML
@@ -130,6 +130,17 @@ public class MainPageController {
                 "Literatura"));
         for (String tema : temas) {
             temasNormalizados.add(normalizarTexto(tema));
+        }
+    }
+
+    private void cargarVistaMensajes() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/css/chatEstudiante-view.fxml"));
+            CargaVentana(fxmlLoader,"Chat");
+            ChatEstudianteController chatEstudianteController = fxmlLoader.getController();
+            chatEstudianteController.cargarDatos(estudiante);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -190,19 +201,19 @@ public class MainPageController {
     private void abrirVentanaPublicacion() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/publicacion-view.fxml"));
-            CargaVentana(fxmlLoader);
+            CargaVentana(fxmlLoader,"Publicaciones");
             PublicacionController publicacionController = fxmlLoader.getController();
-            publicacionController.cargarDatos(estudiante, this);
+            publicacionController.cargarDatos(estudiante,this);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void CargaVentana(FXMLLoader fxmlLoader) throws IOException {
+    private void CargaVentana(FXMLLoader fxmlLoader,String titulo) throws IOException {
         Parent root = fxmlLoader.load();
         Stage nuevaVentana = new Stage();
         Scene scene = new Scene(root);
-        nuevaVentana.setTitle("Publicación");
+        nuevaVentana.setTitle(titulo);
         nuevaVentana.setScene(scene);
         nuevaVentana.setResizable(false);
         nuevaVentana.show();

@@ -17,10 +17,19 @@ public class RedSocialUtils {
         Estudiante est = new Estudiante();
         est.setNombre("July");
         est.setCorreo("July@edu.co");
-        String contrasenia = "123456";
-        String contraseniaEncriptada = encriptarSHA256(contrasenia);
+        String contraseniaEncriptada = encriptarSHA256("123456");
         est.setContrasenia(contraseniaEncriptada);
         s.getEstudiantes().add(est);
+
+        Estudiante est1 = new Estudiante();
+        est1.setNombre("AlejoElAmorDeMaria");
+        est1.setCorreo("Alejo@edu.co");
+        String contrasenia = encriptarSHA256("123456");
+        est1.setContrasenia(contrasenia);
+        s.getEstudiantes().add(est1);
+
+        est.getAmigos().add(est1);
+        est1.getAmigos().add(est);
 
         // Crear moderador
         Moderador mod = new Moderador();

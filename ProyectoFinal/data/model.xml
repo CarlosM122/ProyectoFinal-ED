@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<java version="21.0.7" class="java.beans.XMLDecoder">
+<java version="21.0.2" class="java.beans.XMLDecoder">
  <object class="proyecto.redsocial.model.Sistema" id="Sistema0">
   <void property="arbolPublicaciones">
    <object class="proyecto.redsocial.model.ArbolABB"/>
@@ -66,7 +66,7 @@
        </object>
       </void>
       <void method="add">
-       <object class="proyecto.redsocial.model.Publicacion" id="Publicacion1">
+       <object class="proyecto.redsocial.model.Publicacion">
         <void property="autor">
          <object idref="Estudiante0"/>
         </void>
@@ -131,9 +131,6 @@
   <void property="publicacions">
    <void method="add">
     <object idref="Publicacion0"/>
-   </void>
-   <void method="add">
-    <object idref="Publicacion1"/>
    </void>
   </void>
  </object>
