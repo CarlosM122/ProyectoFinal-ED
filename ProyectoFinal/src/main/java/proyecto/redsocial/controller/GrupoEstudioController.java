@@ -6,7 +6,9 @@ import proyecto.redsocial.model.Estudiante;
 import proyecto.redsocial.model.GrupoEstudio;
 
 public class GrupoEstudioController {
-    private ModelFactory modelFactory;
+
+    private final ModelFactory modelFactory = ModelFactory.getInstance();
+    private MainPageController mainPageController;
 
     @FXML
     private TextArea txtAreaChat;
@@ -22,7 +24,8 @@ public class GrupoEstudioController {
 
     private GrupoEstudio grupoEstudio;
 
-    public void inicializar(GrupoEstudio grupo) {
+    public void inicializar(GrupoEstudio grupo, MainPageController mainPageController) {
+        this.mainPageController = mainPageController;
         this.grupoEstudio = grupo;
         cargarMiembros();
     }

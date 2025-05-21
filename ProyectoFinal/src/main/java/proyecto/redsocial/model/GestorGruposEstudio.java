@@ -43,7 +43,6 @@ public class GestorGruposEstudio {
         grupoEstudio.setTema(tema);
         grupoEstudio.setMiembros(new ArrayList<>());
         modelFactory.agregarGrupo(grupoEstudio);
-        gruposPorTema.add(grupoEstudio);
 
         return grupoEstudio;
     }

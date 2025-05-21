@@ -26,6 +26,7 @@ public class RedSocialUtils {
         est.setCorreo("July@edu.co");
         String contraseniaEncriptada = encriptarSHA256("123456");
         est.setContrasenia(contraseniaEncriptada);
+        est.setRutaArchivoImagen("/proyecto/redsocial/imagenesFotoPerfil/July.png");
         s.getEstudiantes().add(est);
         s.getGrafoAfinidad().agregarEstudiante(est);
 

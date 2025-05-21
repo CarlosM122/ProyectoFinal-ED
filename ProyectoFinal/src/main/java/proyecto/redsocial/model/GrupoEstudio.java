@@ -5,7 +5,7 @@ import lombok.Data;
 import java.util.List;
 @Data
 
-public class GrupoEstudio {
+public class GrupoEstudio    {
     private String idGrupoEstudio;
     private String tema;
     private List<Estudiante> miembros;

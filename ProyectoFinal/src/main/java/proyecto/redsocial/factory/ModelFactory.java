@@ -1,5 +1,6 @@
 package proyecto.redsocial.factory;
 
+import lombok.Getter;
 import proyecto.redsocial.model.*;
 import proyecto.redsocial.utils.Persistencia;
 import proyecto.redsocial.utils.RedSocialUtils;
@@ -11,12 +12,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class ModelFactory {
     private Sistema sistema;
-
-    public Sistema getSistema() {
-        return sistema;
-    }
 
 
     private static class SingletonHolder {
@@ -38,6 +36,7 @@ public class ModelFactory {
 
     private void cargarRecursosXML() {
         sistema = Persistencia.cargarRecursosXML();
+        sistema.inicializarSistema();
     }
 
     public void guardarRecursosXML() {
@@ -136,5 +135,6 @@ public class ModelFactory {
 
     public void agregarGrupo(GrupoEstudio grupoEstudio) {
         sistema.getGruposEstudio().add(grupoEstudio);
+        sistema.getGestorGruposEstudio().agregarGrupos(sistema.getGruposEstudio());
     }
 }

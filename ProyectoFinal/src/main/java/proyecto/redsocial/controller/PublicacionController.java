@@ -9,6 +9,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import proyecto.redsocial.factory.ModelFactory;
@@ -30,6 +31,9 @@ public class PublicacionController {
 
     @FXML
     private HBox HBoxArchivo;
+
+    @FXML
+    private StackPane fotoPerfil;
 
     @FXML
     private Button btnPublicar;
@@ -77,10 +81,11 @@ public class PublicacionController {
         CBTemas.setValue("Selecciona un tema");
     }
 
-    public void cargarDatos(Estudiante estudiante, MainPageController mainPageController) {
+    public void cargarDatos(Estudiante estudiante, MainPageController mainPageController, StackPane contenedorImagenPerfilPublicacion) {
         this.mainPageController = mainPageController;
         this.estudiante = estudiante;
         nombreUsuario.setText(estudiante.getNombre());
+        this.fotoPerfil.getChildren().add(contenedorImagenPerfilPublicacion);
     }
 
     private void subirArchivo() {

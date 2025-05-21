@@ -5,12 +5,15 @@ import java.net.URL;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -20,7 +23,11 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import proyecto.redsocial.RedSocialApplication;
 import proyecto.redsocial.factory.ModelFactory;
@@ -71,6 +78,18 @@ public class MainPageController {
 
     @FXML
     private TextField txtBusqueda;
+
+    @FXML
+    private ImageView imagenPerfil;
+
+    @FXML
+    private StackPane contenedorImagenPerfil;
+
+    @FXML
+    private StackPane contenedorImagenPerfilPublicacion;
+
+    @FXML
+    private ImageView imagenPerfilPublicacion;
 
     @FXML
     void OnAyuda(MouseEvent event) {
@@ -181,35 +200,138 @@ public class MainPageController {
         this.estudiante = estudiante;
         txtNombre.setText(estudiante.getNombre());
         txtInformacion.setText(estudiante.getCorreo());
+        cargarFotoPerfil(estudiante.getRutaArchivoImagen());
         cargarPublicaciones(estudiante);
         cargarGrupos(this.estudiante);
     }
 
+    private void cargarFotoPerfil(String rutaArchivoImagen) {
+        try {
+            if (rutaArchivoImagen != null && !rutaArchivoImagen.isBlank()) {
+                Image imagen = new Image(getClass().getResource(rutaArchivoImagen).toExternalForm());
+
+                double radioPerfil = 55;
+                Circle circlePerfil = new Circle(radioPerfil);
+                circlePerfil.setFill(new ImagePattern(imagen));
+                circlePerfil.setStroke(Color.BLACK);
+                circlePerfil.setStrokeWidth(2);
+
+                double radioPublicacion = 45;
+                Circle circlePublicacion = new Circle(radioPublicacion);
+                circlePublicacion.setFill(new ImagePattern(imagen));
+                circlePublicacion.setStroke(Color.BLACK);
+                circlePublicacion.setStrokeWidth(2);
+
+                contenedorImagenPerfil.getChildren().clear();
+                contenedorImagenPerfil.getChildren().add(circlePerfil);
+
+                contenedorImagenPerfilPublicacion.getChildren().clear();
+                contenedorImagenPerfilPublicacion.getChildren().add(circlePublicacion);
+            }
+        } catch (Exception e) {
+            System.out.println("No se pudo cargar la imagen de perfil: " + e.getMessage());
+        }
+    }
+
     public void cargarGrupos(Estudiante estudiante) {
+        VBoxGrupos.getChildren().clear();
         for (GrupoEstudio grupoEstudio:estudiante.getGruposEstudio()){
             cargarEnCampoGrupos(grupoEstudio);
         }
     }
 
     private void cargarEnCampoGrupos(GrupoEstudio grupoEstudio) {
-        VBox tarjeta = crearTarjetaGrupo();
-        Label tema = crearLabelTema(grupoEstudio.getTema());
-
-        tarjeta.getChildren().add(tema);
+        HBox tarjeta = crearTarjetaGrupo(grupoEstudio);
         VBoxGrupos.getChildren().add(tarjeta);
     }
 
-    private VBox crearTarjetaGrupo() {
-        VBox tarjeta = new VBox(8);
+    private HBox crearTarjetaGrupo(GrupoEstudio grupoEstudio) {
+        HBox tarjeta = new HBox(12);
+        tarjeta.setPadding(new Insets(12));
+        tarjeta.setAlignment(Pos.CENTER_LEFT);
         tarjeta.setStyle("""
-                -fx-background-color: #ffffff;
-                -fx-padding: 12;
-                -fx-background-radius: 12;
-                -fx-border-color: #dddddd;
-                -fx-border-radius: 12;
-                -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
-            """);
+        -fx-background-color: #ffffff;
+        -fx-background-radius: 10;
+        -fx-border-color: #dddddd;
+        -fx-border-radius: 10;
+        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 4, 0, 0, 1);
+        -fx-cursor: hand;
+    """);
+
+        tarjeta.setUserData(grupoEstudio);
+
+        ImageView imagen = new ImageView(obtenerImagenPorTema(grupoEstudio.getTema()));
+        imagen.setFitWidth(50);
+        imagen.setFitHeight(50);
+        imagen.setPreserveRatio(true);
+
+        Label titulo = new Label(grupoEstudio.getTema());
+        titulo.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2a2a2a;");
+
+        VBox contenido = new VBox(4, titulo);
+
+        tarjeta.getChildren().addAll(imagen, contenido);
+
+        tarjeta.setOnMouseEntered(e -> tarjeta.setStyle(tarjeta.getStyle() + "-fx-background-color: #f0f4ff;"));
+        tarjeta.setOnMouseExited(e -> tarjeta.setStyle(tarjeta.getStyle().replace("-fx-background-color: #f0f4ff;", "-fx-background-color: #ffffff;")));
+
+        tarjeta.setOnMouseClicked(e -> {
+            GrupoEstudio grupoSeleccionado = (GrupoEstudio) tarjeta.getUserData();
+            ingresarAGrupo(grupoSeleccionado);
+        });
+
         return tarjeta;
+    }
+
+    private void ingresarAGrupo(GrupoEstudio grupoSeleccionado) {
+        FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/grupoEstudio-view.fxml"));
+        try {
+            CargaVentana(fxmlLoader,"Grupos");
+            GrupoEstudioController controller = fxmlLoader.getController();
+            controller.inicializar(grupoSeleccionado,this);
+        }catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private Image obtenerImagenPorTema(String tema) {
+        String ruta = "/proyecto/redsocial/imagenesGrupos/trabajo-en-equipo.png";
+
+        switch (tema.toLowerCase()) {
+            case "deporte":
+                ruta = "/proyecto/redsocial/imagenesGrupos/aptitud-fisica.png";
+                break;
+            case "matemáticas":
+                ruta = "/proyecto/redsocial/imagenesGrupos/matematicas.png";
+                break;
+            case "política":
+                ruta = "/proyecto/redsocial/imagenesGrupos/politica.png";
+                break;
+            case "ciencia":
+                ruta = "/proyecto/redsocial/imagenesGrupos/ciencias.png";
+                break;
+            case "tecnología":
+                ruta = "/proyecto/redsocial/imagenesGrupos/nuevas-tecnologias.png";
+                break;
+            case "arte":
+                ruta = "/proyecto/redsocial/imagenesGrupos/arte.png";
+                break;
+            case "música":
+                ruta = "/proyecto/redsocial/imagenesGrupos/notas-musicales.png";
+                break;
+            case "historia":
+                ruta = "/proyecto/redsocial/imagenesGrupos/historia.png";
+                break;
+            case "programación":
+                ruta = "/proyecto/redsocial/imagenesGrupos/codigo.png";
+                break;
+            case "literatura":
+                ruta = "/proyecto/redsocial/imagenesGrupos/literatura.png";
+                break;
+        }
+
+        return new Image(Objects.requireNonNull(getClass().getResource(ruta)).toExternalForm());
     }
 
     private void cargarPublicaciones(Estudiante estudiante) {
@@ -228,9 +350,9 @@ public class MainPageController {
     private void abrirVentanaPublicacion() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/publicacion-view.fxml"));
-            CargaVentana(fxmlLoader);
+            CargaVentana(fxmlLoader,"Publicar");
             PublicacionController publicacionController = fxmlLoader.getController();
-            publicacionController.cargarDatos(estudiante, this);
+            publicacionController.cargarDatos(estudiante, this,contenedorImagenPerfilPublicacion);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -253,11 +375,11 @@ public class MainPageController {
 
     }
 
-    private void CargaVentana(FXMLLoader fxmlLoader) throws IOException {
+    private void CargaVentana(FXMLLoader fxmlLoader,String titulo) throws IOException {
         Parent root = fxmlLoader.load();
         Stage nuevaVentana = new Stage();
         Scene scene = new Scene(root);
-        nuevaVentana.setTitle("Publicación");
+        nuevaVentana.setTitle(titulo);
         nuevaVentana.setScene(scene);
         nuevaVentana.setResizable(false);
         nuevaVentana.show();
@@ -294,6 +416,14 @@ public class MainPageController {
         }
 
         tarjeta.getChildren().add(info);
+
+        if (usuarioActual.equals(publicacion.getAutor())) {
+            Button botonEliminar = crearBotonEliminar(publicacion);
+            tarjeta.getChildren().add(botonEliminar);
+        }else {
+            Button botonValorar = crearBotonValorar();
+            tarjeta.getChildren().add(botonValorar);
+        }
 
         contenedorPublicaciones.getChildren().addFirst(tarjeta);
     }
@@ -404,7 +534,6 @@ public class MainPageController {
                 }
             }
 
-            // Crea el enlace clickeable
             String url = matcher.group();
             Hyperlink link = new Hyperlink(url);
             link.setStyle("-fx-font-size: 13px;");
@@ -420,7 +549,6 @@ public class MainPageController {
             lastEnd = matcher.end();
         }
 
-        // Agrega texto restante después del último enlace
         if (lastEnd < texto.length()) {
             String textoFinal = texto.substring(lastEnd).trim();
             if (!textoFinal.isEmpty()) {
@@ -431,7 +559,6 @@ public class MainPageController {
             }
         }
 
-        // Si no hay enlaces, retorna solo el texto completo
         if (!hayEnlace) {
             Label contenido = new Label(texto);
             contenido.setWrapText(true);

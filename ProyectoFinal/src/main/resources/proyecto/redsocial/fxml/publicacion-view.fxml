@@ -9,28 +9,23 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="552.0" prefWidth="743.0" stylesheets="@../css/estiloMainPage.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyecto.redsocial.controller.PublicacionController">
+<AnchorPane prefHeight="552.0" prefWidth="743.0" stylesheets="@../css/estiloMainPage.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyecto.redsocial.controller.PublicacionController">
    <children>
-      <ImageView fitHeight="59.0" fitWidth="63.0" layoutX="33.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../images/usuario.png" />
-         </image>
-      </ImageView>
-      <Label fx:id="nombreUsuario" layoutX="117.0" layoutY="24.0" prefHeight="38.0" prefWidth="366.0" stylesheets="@../css/estiloMainPage.css" text="Nombre Usuario" />
       <TextArea fx:id="txtAreaTexto" layoutX="33.0" layoutY="171.0" prefHeight="330.0" prefWidth="674.0" promptText="¿En que estas pensando?">
          <font>
             <Font name="System Bold" size="20.0" />
          </font>
       </TextArea>
-      <Button fx:id="btnPublicar" layoutX="342.0" layoutY="512.0" mnemonicParsing="false" onAction="#onPublicar" text="Publicar" />
-      <Label layoutX="35.0" layoutY="103.0" text="¿Sobre que quieres hablar?">
+      <Button fx:id="btnPublicar" layoutX="329.0" layoutY="510.0" mnemonicParsing="false" onAction="#onPublicar" styleClass="group-suggestion-label" stylesheets="@../css/estiloMainPage.css" text="Publicar" />
+      <Label layoutX="28.0" layoutY="118.0" text="¿Sobre que quieres hablar?">
          <font>
             <Font name="Tahoma Bold" size="12.0" />
          </font>
       </Label>
-      <ComboBox fx:id="CBTemas" layoutX="225.0" layoutY="98.0" prefHeight="26.0" prefWidth="465.0" />
+      <ComboBox fx:id="CBTemas" layoutX="216.0" layoutY="112.0" prefHeight="26.0" prefWidth="465.0" styleClass="barra-busqueda" stylesheets="@../css/estiloMainPage.css" />
       <HBox fx:id="HBoxArchivo" alignment="CENTER" layoutX="33.0" layoutY="510.0" onMousePressed="#onSubirArchivo" prefHeight="32.0" prefWidth="155.0">
          <children>
             <ImageView fitHeight="31.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
@@ -45,5 +40,19 @@
          </cursor>
       </HBox>
       <Label fx:id="labelArchivo" layoutX="185.0" layoutY="518.0" prefHeight="18.0" prefWidth="135.0" />
+      <HBox alignment="CENTER_LEFT" layoutX="27.0" layoutY="14.0" prefHeight="90.0" prefWidth="315.0" spacing="15.0">
+         <children>
+            <StackPane fx:id="fotoPerfil" prefHeight="90.0" prefWidth="66.0">
+               <children>
+                  <ImageView fitHeight="69.0" fitWidth="93.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/usuario.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </StackPane>
+            <Label fx:id="nombreUsuario" prefHeight="38.0" prefWidth="366.0" stylesheets="@../css/estiloMainPage.css" text="Nombre Usuario" />
+         </children>
+      </HBox>
    </children>
 </AnchorPane>

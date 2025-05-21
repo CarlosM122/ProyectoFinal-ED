@@ -28,8 +28,11 @@ public class Sistema implements Serializable {
         this.grafoAfinidad = new GrafoAfinidad();
         this.colaPrioridadAyuda = new ColaPrioridadAyuda();
         this.gestorGruposEstudio = new GestorGruposEstudio();
-        cargarArbol();
-        gestorGruposEstudio.agregarGrupos(gruposEstudio);
+    }
+
+    public void inicializarSistema() {
+        this.cargarArbol();
+        this.gestorGruposEstudio.agregarGrupos(gruposEstudio);
     }
 
     public void cargarArbol() {

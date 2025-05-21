@@ -16,6 +16,7 @@ public class Estudiante {
     private String contrasenia;
     private List<Estudiante> amigos;
     private ColaPrioridadAyuda solicitudes;
+    private String rutaArchivoImagen;
     private List<String> intereses;
     private List<Publicacion> contenidosPublicados;
     private List<Valoracion> valoracions;
