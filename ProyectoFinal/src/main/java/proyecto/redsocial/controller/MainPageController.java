@@ -70,7 +70,7 @@ public class MainPageController {
 
     @FXML
     void OnAyuda(MouseEvent event) {
-
+        cargarVistaAyuda();
     }
 
     @FXML
@@ -196,6 +196,18 @@ public class MainPageController {
         for (Publicacion publicacion : publicaciones) {
             cargarEnVistaPrincipal(publicacion, estudiante);
         }
+    }
+
+    private void cargarVistaAyuda() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/solicitudAyuda-view.fxml"));
+            CargaVentana(fxmlLoader,"Solicitar Ayuda");
+            SolicitudAyudaController controller = fxmlLoader.getController();
+            controller.cargarDatos(estudiante,this);
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+
     }
 
     private void abrirVentanaPublicacion() {

@@ -75,7 +75,6 @@ public class ModelFactory {
 
     public void guardarSolicitud(SolicitudAyuda solicitudAyuda) {
         sistema.getColaPrioridadAyuda().agregarSolicitud(solicitudAyuda);
-        guardarRecursosXML();
     }
 
     public Object obtnerUsuario(String correo) {

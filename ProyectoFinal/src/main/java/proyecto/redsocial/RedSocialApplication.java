@@ -10,7 +10,7 @@ import java.io.IOException;
 public class RedSocialApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/login-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/solicitudAyuda-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
 
         stage.setTitle("Red Social Educativa");
