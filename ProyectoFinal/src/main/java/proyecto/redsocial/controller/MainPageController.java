@@ -24,8 +24,12 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import proyecto.redsocial.RedSocialApplication;
 import proyecto.redsocial.factory.ModelFactory;
+import proyecto.redsocial.model.GrupoEstudio;
 import proyecto.redsocial.model.Publicacion;
 import proyecto.redsocial.model.Estudiante;
+
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 public class MainPageController {
 
@@ -70,7 +74,7 @@ public class MainPageController {
 
     @FXML
     void OnAyuda(MouseEvent event) {
-        cargarVistaAyuda();
+
     }
 
     @FXML
@@ -80,7 +84,7 @@ public class MainPageController {
 
     @FXML
     void Onmensajes(MouseEvent event) {
-        cargarVistaMensajes();
+        abrirVentanaMensaje();
     }
 
     @FXML
@@ -133,17 +137,6 @@ public class MainPageController {
         }
     }
 
-    private void cargarVistaMensajes() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/css/chatEstudiante-view.fxml"));
-            CargaVentana(fxmlLoader,"Chat");
-            ChatEstudianteController chatEstudianteController = fxmlLoader.getController();
-            chatEstudianteController.cargarDatos(estudiante);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void buscarPublicacionesPorTema() {
         String textoBusqueda = txtBusqueda.getText();
 
@@ -189,43 +182,82 @@ public class MainPageController {
         txtNombre.setText(estudiante.getNombre());
         txtInformacion.setText(estudiante.getCorreo());
         cargarPublicaciones(estudiante);
+        cargarGrupos(this.estudiante);
+    }
+
+    public void cargarGrupos(Estudiante estudiante) {
+        for (GrupoEstudio grupoEstudio:estudiante.getGruposEstudio()){
+            cargarEnCampoGrupos(grupoEstudio);
+        }
+    }
+
+    private void cargarEnCampoGrupos(GrupoEstudio grupoEstudio) {
+        VBox tarjeta = crearTarjetaGrupo();
+        Label tema = crearLabelTema(grupoEstudio.getTema());
+
+        tarjeta.getChildren().add(tema);
+        VBoxGrupos.getChildren().add(tarjeta);
+    }
+
+    private VBox crearTarjetaGrupo() {
+        VBox tarjeta = new VBox(8);
+        tarjeta.setStyle("""
+                -fx-background-color: #ffffff;
+                -fx-padding: 12;
+                -fx-background-radius: 12;
+                -fx-border-color: #dddddd;
+                -fx-border-radius: 12;
+                -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+            """);
+        return tarjeta;
     }
 
     private void cargarPublicaciones(Estudiante estudiante) {
         List<Publicacion> publicaciones = modelFactory.obtenerPublicaciones();
         for (Publicacion publicacion : publicaciones) {
-            cargarEnVistaPrincipal(publicacion, estudiante);
+            cargarEnVistaPrincipal(publicacion, this.estudiante);
         }
     }
 
-    private void cargarVistaAyuda() {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/solicitudAyuda-view.fxml"));
-            CargaVentana(fxmlLoader,"Solicitar Ayuda");
-            SolicitudAyudaController controller = fxmlLoader.getController();
-            controller.cargarDatos(estudiante,this);
-        }catch (IOException e){
-            e.printStackTrace();
-        }
-
+    private String obtenerExtensionArchivo(String ruta) {
+        int lastIndex = ruta.lastIndexOf(".");
+        if (lastIndex == -1) return "";
+        return ruta.substring(lastIndex + 1).toLowerCase();
     }
 
     private void abrirVentanaPublicacion() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/publicacion-view.fxml"));
-            CargaVentana(fxmlLoader,"Publicaciones");
+            CargaVentana(fxmlLoader);
             PublicacionController publicacionController = fxmlLoader.getController();
-            publicacionController.cargarDatos(estudiante,this);
+            publicacionController.cargarDatos(estudiante, this);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    private void CargaVentana(FXMLLoader fxmlLoader,String titulo) throws IOException {
+    private void abrirVentanaMensaje() {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/chatEstudiante-view.fxml"));
+            Parent root = fxmlLoader.load();
+            ChatEstudianteController controller = fxmlLoader.getController();
+            controller.initData(estudiante);
+            Scene scene = new Scene(root);
+            Stage nuevaVentana = new Stage();
+            nuevaVentana.setTitle("Chat Estudiante");
+            nuevaVentana.setScene(scene);
+            nuevaVentana.show();
+        }catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private void CargaVentana(FXMLLoader fxmlLoader) throws IOException {
         Parent root = fxmlLoader.load();
         Stage nuevaVentana = new Stage();
         Scene scene = new Scene(root);
-        nuevaVentana.setTitle(titulo);
+        nuevaVentana.setTitle("Publicación");
         nuevaVentana.setScene(scene);
         nuevaVentana.setResizable(false);
         nuevaVentana.show();
@@ -238,20 +270,30 @@ public class MainPageController {
         Node contenido = crearContenido(publicacion.getTexto());
         Label info = crearLabelInfo(publicacion);
 
-        tarjeta.getChildren().addAll(tema, contenido, info);
+        tarjeta.getChildren().addAll(tema, contenido);
 
         if (tieneArchivoAdjunto(publicacion)) {
-            Button botonAbrirArchivo = crearBotonAbrirArchivo(publicacion.getRutaArchivoAdjunto());
+            String ruta = publicacion.getRutaArchivoAdjunto();
+            String extension = obtenerExtensionArchivo(ruta);
+
+            if (extension.equals("png") || extension.equals("jpg") || extension.equals("jpeg")) {
+                try {
+                    Image imagen = new Image("file:" + ruta);
+                    ImageView imageView = new ImageView(imagen);
+                    imageView.setFitWidth(200);
+                    imageView.setPreserveRatio(true);
+                    tarjeta.getChildren().add(imageView);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Button botonAbrirArchivo = crearBotonAbrirArchivo(ruta);
+                    tarjeta.getChildren().add(botonAbrirArchivo);
+                }
+            }
+            Button botonAbrirArchivo = crearBotonAbrirArchivo(ruta);
             tarjeta.getChildren().add(botonAbrirArchivo);
         }
 
-        if (!publicacion.getAutor().equals(usuarioActual)) {
-            Button botonValorar = crearBotonValorar();
-            tarjeta.getChildren().add(botonValorar);
-        } else {
-            Button botonEliminar = crearBotonEliminar(publicacion);
-            tarjeta.getChildren().add(botonEliminar);
-        }
+        tarjeta.getChildren().add(info);
 
         contenedorPublicaciones.getChildren().addFirst(tarjeta);
     }

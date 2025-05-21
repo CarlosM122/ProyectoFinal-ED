@@ -1,86 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <java version="21.0.2" class="java.beans.XMLDecoder">
  <object class="proyecto.redsocial.model.Sistema" id="Sistema0">
-  <void property="arbolPublicaciones">
-   <object class="proyecto.redsocial.model.ArbolABB"/>
-  </void>
   <void property="estudiantes">
    <void method="add">
     <object class="proyecto.redsocial.model.Estudiante" id="Estudiante0">
+     <void property="amigos">
+      <void method="add">
+       <object class="proyecto.redsocial.model.Estudiante" id="Estudiante1">
+        <void property="amigos">
+         <void method="add">
+          <object idref="Estudiante0"/>
+         </void>
+        </void>
+        <void property="contrasenia">
+         <string>8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92</string>
+        </void>
+        <void property="correo">
+         <string>Alejo@edu.co</string>
+        </void>
+        <void property="nombre">
+         <string>AlejoElAmorDeMaria</string>
+        </void>
+       </object>
+      </void>
+     </void>
      <void property="contenidosPublicados">
-      <void method="add">
-       <object class="proyecto.redsocial.model.Publicacion">
-        <void property="autor">
-         <object idref="Estudiante0"/>
-        </void>
-        <void property="fechaPublicacion">
-         <string>2025-05-19</string>
-        </void>
-        <void property="idContenido">
-         <int>-1422494827</int>
-        </void>
-        <void property="tema">
-         <string>Deporte</string>
-        </void>
-        <void property="texto">
-         <string>addsad</string>
-        </void>
-       </object>
-      </void>
-      <void method="add">
-       <object class="proyecto.redsocial.model.Publicacion">
-        <void property="autor">
-         <object idref="Estudiante0"/>
-        </void>
-        <void property="fechaPublicacion">
-         <string>2025-05-19</string>
-        </void>
-        <void property="idContenido">
-         <int>3344133</int>
-        </void>
-        <void property="tema">
-         <string>Matemáticas</string>
-        </void>
-        <void property="texto">
-         <string>mate</string>
-        </void>
-       </object>
-      </void>
       <void method="add">
        <object class="proyecto.redsocial.model.Publicacion" id="Publicacion0">
         <void property="autor">
          <object idref="Estudiante0"/>
         </void>
         <void property="fechaPublicacion">
-         <string>2025-05-19</string>
+         <string>2025-05-20</string>
         </void>
         <void property="idContenido">
-         <int>2390821</int>
+         <int>2255068</int>
         </void>
         <void property="tema">
-         <string>Matemáticas</string>
+         <string>Tecnología</string>
         </void>
         <void property="texto">
-         <string>Mate</string>
-        </void>
-       </object>
-      </void>
-      <void method="add">
-       <object class="proyecto.redsocial.model.Publicacion">
-        <void property="autor">
-         <object idref="Estudiante0"/>
-        </void>
-        <void property="fechaPublicacion">
-         <string>2025-05-19</string>
-        </void>
-        <void property="idContenido">
-         <int>248689005</int>
-        </void>
-        <void property="tema">
-         <string>Literatura</string>
-        </void>
-        <void property="texto">
-         <string>Literatura</string>
+         <string>Hola</string>
         </void>
        </object>
       </void>
@@ -91,26 +51,42 @@
      <void property="correo">
       <string>July@edu.co</string>
      </void>
+     <void property="gruposEstudio">
+      <void method="add">
+       <object class="proyecto.redsocial.model.GrupoEstudio" id="GrupoEstudio0">
+        <void property="idGrupoEstudio">
+         <string>grupo_tecnología</string>
+        </void>
+        <void property="miembros">
+         <object class="java.util.ArrayList">
+          <void method="add">
+           <object idref="Estudiante0"/>
+          </void>
+         </object>
+        </void>
+        <void property="tema">
+         <string>Tecnología</string>
+        </void>
+       </object>
+      </void>
+     </void>
+     <void property="intereses">
+      <void method="add">
+       <string>Tecnología</string>
+      </void>
+     </void>
      <void property="nombre">
       <string>July</string>
      </void>
     </object>
    </void>
    <void method="add">
-    <object class="proyecto.redsocial.model.Estudiante">
-     <void property="contrasenia">
-      <string>ea4ff518d36be99eab2cf8f5192b59ca63c3617d0e586317e643207e27954275</string>
-     </void>
-     <void property="correo">
-      <string>carlosAma.karol@gmail.com</string>
-     </void>
-     <void property="id">
-      <int>2</int>
-     </void>
-     <void property="nombre">
-      <string>CarlosKarol</string>
-     </void>
-    </object>
+    <object idref="Estudiante1"/>
+   </void>
+  </void>
+  <void property="gruposEstudio">
+   <void method="add">
+    <object idref="GrupoEstudio0"/>
    </void>
   </void>
   <void property="moderadores">

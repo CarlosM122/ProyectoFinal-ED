@@ -14,6 +14,7 @@ import proyecto.redsocial.RedSocialApplication;
 import proyecto.redsocial.factory.ModelFactory;
 import proyecto.redsocial.model.Estudiante;
 import proyecto.redsocial.model.Moderador;
+import proyecto.redsocial.utils.RedSocialUtils;
 
 import java.io.IOException;
 
@@ -60,7 +61,7 @@ public class LoginController {
                 if (usuario instanceof Moderador) {
                     cargarVistaModerador((Moderador) usuario);
                 } else if (usuario instanceof Estudiante) {
-                    cargarVistaPrincipal((Estudiante) usuario);
+                    RedSocialUtils.cargarVistaPrincipal((Estudiante) usuario);
                 }
 
                 cerrarVentanaLogin();
@@ -70,26 +71,6 @@ public class LoginController {
 
         } else {
             mostrarMensaje("Error", "Datos Nulos", "Hay un campo nulo.", Alert.AlertType.ERROR);
-        }
-    }
-
-    private void cargarVistaPrincipal(Estudiante estudiante) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/mainPage-view.fxml"));
-            Parent root = fxmlLoader.load();
-
-            MainPageController mainPageController = fxmlLoader.getController();
-            mainPageController.cargarDatosVista(estudiante);
-
-            Stage nuevaVentana = new Stage();
-            Scene scene = new Scene(root);
-            nuevaVentana.setTitle("Nombre Web");
-            nuevaVentana.setScene(scene);
-            nuevaVentana.setMaximized(true);
-            nuevaVentana.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
         }
     }
 

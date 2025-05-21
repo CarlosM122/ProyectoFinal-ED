@@ -8,6 +8,9 @@ module proyecto.redsocial {
     opens proyecto.redsocial to javafx.fxml;
     exports proyecto.redsocial;
     exports proyecto.redsocial.model;
+    opens proyecto.redsocial.factory;
+    exports proyecto.redsocial.factory;
 
     opens proyecto.redsocial.controller to javafx.fxml;
+    exports proyecto.redsocial.model.EstructurasPropias;
 }

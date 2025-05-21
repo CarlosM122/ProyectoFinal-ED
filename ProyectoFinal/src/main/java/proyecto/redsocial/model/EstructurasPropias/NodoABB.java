@@ -1,6 +1,7 @@
-package proyecto.redsocial.model;
+package proyecto.redsocial.model.EstructurasPropias;
 
 import lombok.Data;
+import proyecto.redsocial.model.Publicacion;
 
 import java.util.ArrayList;
 import java.util.List;

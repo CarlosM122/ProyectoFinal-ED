@@ -1,10 +1,14 @@
 package proyecto.redsocial.model;
 
 import lombok.Data;
+import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
 @Data
+@ToString(exclude = {"gruposEstudio", "contenidosPublicados", "amigos"})
+
+
 public class Estudiante {
     private int id;
     private String nombre;
@@ -12,6 +16,7 @@ public class Estudiante {
     private String contrasenia;
     private List<Estudiante> amigos;
     private ColaPrioridadAyuda solicitudes;
+    private List<String> intereses;
     private List<Publicacion> contenidosPublicados;
     private List<Valoracion> valoracions;
     private List<GrupoEstudio> gruposEstudio;
@@ -24,6 +29,7 @@ public class Estudiante {
         this.contenidosPublicados = new ArrayList<>();
         this.valoracions = new ArrayList<>();
         this.gruposEstudio = new ArrayList<>();
+        this.intereses = new ArrayList<>();
     }
 
     public void publicarContenido(Publicacion publicacion){
@@ -38,10 +44,29 @@ public class Estudiante {
         valoracions.add(v);
     }
 
+    public boolean tieneInteres(String tema) {
+        return intereses != null && intereses.contains(tema);
+    }
+
     public void solicitarAyuda(SolicitudAyuda solicitudAyuda){
     }
 
     public void enviarMensaje(String mensaje,Estudiante estudiante){
 
+    }
+
+    public void agregarInteres(String interes){
+        if(!intereses.contains(interes)){
+            intereses.add(interes);
+        }
+    }
+
+    public boolean tieneInteresComun(Estudiante otro) {
+        for (String interes : intereses) {
+            if (otro.getIntereses().contains(interes)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -135,9 +135,14 @@ public class PublicacionController {
                 publicacion.setRutaArchivoAdjunto(rutaArchivoAdjunto);
             }
 
+            estudiante.agregarInteres(tema);
+            modelFactory.asignarAGrupoDeEstudio(estudiante, tema);
             modelFactory.guardarPublicacion(publicacion);
             mainPageController.cargarEnVistaPrincipal(publicacion, estudiante);
+            mainPageController.cargarGrupos(estudiante);
             cerrarVentana();
+            modelFactory.actualizarRedAfinidad(estudiante, tema);
+            modelFactory.guardarRecursosXML();
         } else {
             mostrarMensaje("Error", "Datos Nulos", "Por favor rellena los campos necesarios.", Alert.AlertType.ERROR);
         }

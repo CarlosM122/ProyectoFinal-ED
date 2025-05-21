@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" stylesheets="@estiloMainPage.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyecto.redsocial.controller.ChatEstudianteController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/estiloMainPage.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyecto.redsocial.controller.ChatEstudianteController">
    <left>
       <VBox alignment="CENTER" prefHeight="720.0" prefWidth="149.0" styleClass="controlBotones" BorderPane.alignment="CENTER">
          <children>
@@ -83,10 +83,10 @@
          <children>
             <AnchorPane prefHeight="48.0" prefWidth="759.0" style="-fx-background-radius: 90;">
                <children>
-                  <Label layoutX="-2.0" layoutY="-2.0" prefHeight="91.0" prefWidth="761.0" styleClass="label-fondo" stylesheets="@estiloMainPage.css" />
-                  <Label fx:id="nombreCompañero" layoutX="300.0" layoutY="17.0" prefHeight="17.0" prefWidth="229.0" text="Sebastian Amaya">
+                  <Label fx:id="infoCompañero" layoutX="-2.0" layoutY="-2.0" prefHeight="91.0" prefWidth="761.0" styleClass="label-fondo" stylesheets="@../css/estiloMainPage.css" />
+                  <Label fx:id="nombreCompañero" layoutX="228.0" layoutY="17.0" prefHeight="26.0" prefWidth="450.0">
                      <font>
-                        <Font name="System Bold" size="30.0" />
+                        <Font name="System Bold" size="16.0" />
                      </font>
                   </Label>
                   <ImageView fitHeight="82.0" fitWidth="82.0" layoutX="110.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" styleClass="imagen">
@@ -94,11 +94,6 @@
                         <Image url="@../images/usuario.png" />
                      </image>
                   </ImageView>
-                  <Label layoutX="303.0" layoutY="55.0" text="Compañero" textFill="#837f7f">
-                     <font>
-                        <Font name="System Bold" size="19.0" />
-                     </font>
-                  </Label>
                </children>
             </AnchorPane>
             <ScrollPane prefHeight="581.0" prefWidth="755.0">

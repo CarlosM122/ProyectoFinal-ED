@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ModelFactory {
@@ -17,20 +18,6 @@ public class ModelFactory {
         return sistema;
     }
 
-
-    public void eliminarPublicacion(Publicacion publicacion) {
-        sistema.getPublicacions().remove(publicacion);
-        if (publicacion.getRutaArchivoAdjunto()!=null){
-            Path path = Paths.get(publicacion.getRutaArchivoAdjunto());
-            try {
-                Files.delete(path);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        guardarRecursosXML();
-    }
 
     private static class SingletonHolder {
         private final static ModelFactory eINSTANCE = new ModelFactory();
@@ -51,10 +38,9 @@ public class ModelFactory {
 
     private void cargarRecursosXML() {
         sistema = Persistencia.cargarRecursosXML();
-        sistema.cargarArbol();
     }
 
-    private void guardarRecursosXML() {
+    public void guardarRecursosXML() {
         Persistencia.guardarRecursosXML(sistema);
     }
 
@@ -66,7 +52,12 @@ public class ModelFactory {
         boolean registrado = false;
         Estudiante estudiante = sistema.buscarEstudiante(correo);
         if (estudiante == null) {
-            sistema.guardarEstudiante(nombre, correo, contrasenia);
+            Estudiante nuevoEstudiante = new Estudiante();
+            nuevoEstudiante.setNombre(nombre);
+            nuevoEstudiante.setCorreo(correo);
+            nuevoEstudiante.setContrasenia(RedSocialUtils.encriptarSHA256(contrasenia));
+            sistema.guardarEstudiante(nuevoEstudiante);
+            sistema.getGrafoAfinidad().agregarEstudiante(nuevoEstudiante);
             guardarRecursosXML();
             registrado = true;
         }
@@ -90,7 +81,6 @@ public class ModelFactory {
         sistema.getArbolPublicaciones().insertar(publicacion);
         Estudiante estudiante = publicacion.getAutor();
         estudiante.publicarContenido(publicacion);
-        guardarRecursosXML();
     }
 
     public boolean verificarCredenciales(String correo, String contrasenia) {
@@ -115,5 +105,36 @@ public class ModelFactory {
 
     public List<Publicacion> obtenerPublicacionesPorTema(String tema) {
         return sistema.getArbolPublicaciones().buscarPublicacionesPorTema(tema);
+    }
+
+    public void eliminarPublicacion(Publicacion publicacion) {
+        sistema.getPublicacions().remove(publicacion);
+        if (publicacion.getRutaArchivoAdjunto()!=null){
+            Path path = Paths.get(publicacion.getRutaArchivoAdjunto());
+            try {
+                Files.delete(path);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        guardarRecursosXML();
+    }
+
+    public void actualizarRedAfinidad(Estudiante estudianteActual, String tema) {
+        for (Estudiante otro : sistema.getEstudiantes()) {
+            if (!otro.equals(estudianteActual) && otro.getIntereses().contains(tema)) {
+                sistema.getGrafoAfinidad().agregarRelacion(estudianteActual, otro);
+                return;
+            }
+        }
+    }
+
+    public void asignarAGrupoDeEstudio(Estudiante estudiante, String tema) {
+        sistema.getGestorGruposEstudio().agregarEstudianteAGrupo(estudiante, tema,this);
+    }
+
+    public void agregarGrupo(GrupoEstudio grupoEstudio) {
+        sistema.getGruposEstudio().add(grupoEstudio);
     }
 }
