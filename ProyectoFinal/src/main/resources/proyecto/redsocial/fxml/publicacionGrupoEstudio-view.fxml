@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="552.0" prefWidth="743.0" stylesheets="@../css/estiloMainPage.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyecto.redsocial.controller.PublicacionGrupoController">
+    <children>
+        <ImageView fitHeight="59.0" fitWidth="63.0" layoutX="33.0" layoutY="28.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../images/usuario.png" />
+            </image>
+        </ImageView>
+        <Label fx:id="nombreUsuario" layoutX="117.0" layoutY="38.0" prefHeight="38.0" prefWidth="101.0" stylesheets="@../css/estiloMainPage.css" text="Nombre Usuario" />
+        <TextArea fx:id="txtAreaTexto" layoutX="33.0" layoutY="171.0" prefHeight="330.0" prefWidth="674.0" promptText="¿En que estas pensando?">
+            <font>
+                <Font name="System Bold" size="20.0" />
+            </font>
+        </TextArea>
+        <Button fx:id="btnPublicar" layoutX="342.0" layoutY="512.0" mnemonicParsing="false" onAction="#onPublicar" text="Publicar" />
+        <Label layoutX="35.0" layoutY="103.0" text="¿Sobre que quieres hablar?">
+            <font>
+                <Font name="Tahoma Bold" size="12.0" />
+            </font>
+        </Label>
+        <ComboBox fx:id="CBTemas" layoutX="225.0" layoutY="98.0" prefHeight="26.0" prefWidth="465.0" />
+        <HBox fx:id="HBoxArchivo" alignment="CENTER" layoutX="33.0" layoutY="510.0" onMousePressed="#onSubirArchivo" prefHeight="32.0" prefWidth="155.0">
+            <children>
+                <ImageView fitHeight="31.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+                    <image>
+                        <Image url="@../images/cargando.png" />
+                    </image>
+                </ImageView>
+                <Label text="  Subir Archivo" />
+            </children>
+            <cursor>
+                <Cursor fx:constant="HAND" />
+            </cursor>
+        </HBox>
+        <Label fx:id="labelArchivo" layoutX="185.0" layoutY="518.0" prefHeight="18.0" prefWidth="135.0" />
+      <Label fx:id="txtNombreGrupo" layoutX="236.0" layoutY="16.0" textFill="#ee6d31">
+         <font>
+            <Font name="System Bold Italic" size="17.0" />
+         </font>
+      </Label>
+    </children>
+</AnchorPane>

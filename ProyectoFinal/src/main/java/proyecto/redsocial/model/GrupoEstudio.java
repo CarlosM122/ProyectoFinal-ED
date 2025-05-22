@@ -9,6 +9,7 @@ public class GrupoEstudio    {
     private String idGrupoEstudio;
     private String tema;
     private List<Estudiante> miembros;
+    private List<Publicacion> publicaciones;
 
     public GrupoEstudio() {
     }

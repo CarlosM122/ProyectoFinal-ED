@@ -16,7 +16,6 @@ import java.util.List;
 public class ModelFactory {
     private Sistema sistema;
 
-
     private static class SingletonHolder {
         private final static ModelFactory eINSTANCE = new ModelFactory();
     }

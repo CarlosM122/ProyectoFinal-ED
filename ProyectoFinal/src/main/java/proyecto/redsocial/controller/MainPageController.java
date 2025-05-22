@@ -37,6 +37,7 @@ import proyecto.redsocial.model.Estudiante;
 
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import proyecto.redsocial.utils.RedSocialUtils;
 
 public class MainPageController {
 
@@ -283,18 +284,6 @@ public class MainPageController {
         return tarjeta;
     }
 
-    private void ingresarAGrupo(GrupoEstudio grupoSeleccionado) {
-        FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/grupoEstudio-view.fxml"));
-        try {
-            CargaVentana(fxmlLoader,"Grupos");
-            GrupoEstudioController controller = fxmlLoader.getController();
-            controller.inicializar(grupoSeleccionado,this);
-        }catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
-
     private Image obtenerImagenPorTema(String tema) {
         String ruta = "/proyecto/redsocial/imagenesGrupos/trabajo-en-equipo.png";
 
@@ -334,6 +323,18 @@ public class MainPageController {
         return new Image(Objects.requireNonNull(getClass().getResource(ruta)).toExternalForm());
     }
 
+    private void ingresarAGrupo(GrupoEstudio grupoSeleccionado) {
+        FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/grupoEstudio-view.fxml"));
+        try {
+            RedSocialUtils.CargaVentana(fxmlLoader,"Grupos");
+            GrupoEstudioController controller = fxmlLoader.getController();
+            controller.inicializar(grupoSeleccionado,this,estudiante);
+        }catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     private void cargarPublicaciones(Estudiante estudiante) {
         List<Publicacion> publicaciones = modelFactory.obtenerPublicaciones();
         for (Publicacion publicacion : publicaciones) {
@@ -350,7 +351,7 @@ public class MainPageController {
     private void abrirVentanaPublicacion() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/publicacion-view.fxml"));
-            CargaVentana(fxmlLoader,"Publicar");
+            RedSocialUtils.CargaVentana(fxmlLoader,"Publicar");
             PublicacionController publicacionController = fxmlLoader.getController();
             publicacionController.cargarDatos(estudiante, this,contenedorImagenPerfilPublicacion);
         } catch (IOException e) {
@@ -373,16 +374,6 @@ public class MainPageController {
             throw new RuntimeException(e);
         }
 
-    }
-
-    private void CargaVentana(FXMLLoader fxmlLoader,String titulo) throws IOException {
-        Parent root = fxmlLoader.load();
-        Stage nuevaVentana = new Stage();
-        Scene scene = new Scene(root);
-        nuevaVentana.setTitle(titulo);
-        nuevaVentana.setScene(scene);
-        nuevaVentana.setResizable(false);
-        nuevaVentana.show();
     }
 
     public void cargarEnVistaPrincipal(Publicacion publicacion, Estudiante usuarioActual) {

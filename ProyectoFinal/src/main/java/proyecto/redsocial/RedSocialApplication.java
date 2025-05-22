@@ -15,7 +15,7 @@ public class RedSocialApplication extends Application {
 
         stage.setTitle("Red Social Educativa");
         stage.setScene(scene);
-        stage.setMaximized(true);
+        stage.setMaximized(false);
         stage.centerOnScreen();
         stage.show();
     }

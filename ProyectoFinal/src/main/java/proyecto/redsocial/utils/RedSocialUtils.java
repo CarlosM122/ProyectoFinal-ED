@@ -3,6 +3,7 @@ package proyecto.redsocial.utils;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import proyecto.redsocial.RedSocialApplication;
 import proyecto.redsocial.controller.MainPageController;
@@ -14,6 +15,7 @@ import proyecto.redsocial.model.Sistema;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Objects;
 
 public class RedSocialUtils {
 
@@ -88,5 +90,15 @@ public class RedSocialUtils {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void CargaVentana(FXMLLoader fxmlLoader,String titulo) throws IOException {
+        Parent root = fxmlLoader.load();
+        Stage nuevaVentana = new Stage();
+        Scene scene = new Scene(root);
+        nuevaVentana.setTitle(titulo);
+        nuevaVentana.setScene(scene);
+        nuevaVentana.setResizable(false);
+        nuevaVentana.show();
     }
 }

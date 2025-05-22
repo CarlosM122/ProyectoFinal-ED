@@ -1,24 +1,164 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/estiloMainPage.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyecto.redsocial.controller.GrupoEstudioController">
+<BorderPane prefHeight="720.0" prefWidth="1280.0" stylesheets="@../css/estiloMainPage.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyecto.redsocial.controller.GrupoEstudioController">
 
-    <children>
+    <!-- Barra superior -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="50" styleClass="top-bar" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="10" left="20" right="20" top="10" />
+            </padding>
+            <AnchorPane prefHeight="98.0" prefWidth="145.0">
+                <children>
+                    <!-- Logo -->
+                    <ImageView fitHeight="52.0" fitWidth="55.0" layoutX="58.0" layoutY="23.0" preserveRatio="true">
+                        <image>
+                            <Image url="@../images/Logo2.png" />
+                        </image>
+                    </ImageView>
+                </children>
+            </AnchorPane>
 
-        <TextArea fx:id="txtAreaChat" editable="false" layoutX="20.0" layoutY="20.0" prefHeight="300.0" prefWidth="400.0" wrapText="true" />
+            <!-- Botones de navegación -->
+            <HBox alignment="CENTER" prefHeight="98.0" prefWidth="1141.0" spacing="30" styleClass="nav-buttons">
+                <children>
+                    <AnchorPane prefHeight="98.0" prefWidth="367.0">
+                        <children>
+                     <Label fx:id="nombreGrupo" layoutX="88.0" layoutY="40.0" text=" GRUPO ESTUDIANTES" textFill="#ee8738">
+                        <font>
+                           <Font name="System Bold Italic" size="27.0" />
+                        </font>
+                     </Label>
+                        </children>
+                    </AnchorPane>
+                    <VBox fx:id="VboxInicio" alignment="CENTER" maxWidth="138.0" onMousePressed="#onInicio" prefHeight="98.0" prefWidth="138.0" styleClass="nav-button">
+                        <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/casa.png" />
+                            </image>
+                        </ImageView>
+                        <Label styleClass="nav-label" text="Inicio" />
+                    </VBox>
+                    <VBox alignment="CENTER" onMousePressed="#onAmigos" styleClass="nav-button">
+                        <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/personas.png" />
+                            </image>
+                        </ImageView>
+                        <Label styleClass="nav-label" text="Amigos" />
+                    </VBox>
+                    <VBox alignment="CENTER" onMousePressed="#Onmensajes" styleClass="nav-button">
+                        <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/conversacion.png" />
+                            </image>
+                        </ImageView>
+                        <Label styleClass="nav-label" text="Mensajes" />
+                    </VBox>
+                    <VBox alignment="CENTER" onMousePressed="#OnAyuda" styleClass="nav-button">
+                        <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/ayudar.png" />
+                            </image>
+                        </ImageView>
+                        <Label styleClass="nav-label" text="Ayuda" />
+                    </VBox>
+                </children>
+            </HBox>
+        </HBox>
+    </top>
 
-        <TextField fx:id="txtMensaje" layoutX="20.0" layoutY="330.0" prefWidth="320.0" promptText="Escribe un mensaje..." />
+    <!-- Panel izquierdo -->
+    <left>
+        <VBox alignment="TOP_CENTER" prefHeight="455.0" prefWidth="199.0" spacing="10" styleClass="side-bar" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="20" />
+            </padding>
+            <AnchorPane prefHeight="208.0" prefWidth="158.0">
+                <children>
+                    <VBox alignment="CENTER" prefHeight="178.0" prefWidth="158.0">
+                        <ImageView fitHeight="95.0" fitWidth="107.0" preserveRatio="true">
+                            <image>
+                                <Image url="@../images/usuario.png" />
+                            </image>
+                        </ImageView>
+                        <Label fx:id="txtNombre" styleClass="profile-name" text="Nombre" />
+                        <Label fx:id="txtInformacion" styleClass="profile-info" text="informacion" />
+                    </VBox>
+                </children>
+            </AnchorPane>
+            <VBox fx:id="VBoxGrupos" alignment="TOP_CENTER" prefHeight="415.0" prefWidth="199.0">
+                <children>
+                    <Label alignment="CENTER" prefHeight="44.0" prefWidth="161.0" styleClass="group-suggestion-label" text="Tus Grupos" textAlignment="CENTER" />
+                </children>
+            </VBox>
+        </VBox>
+    </left>
 
-        <Button fx:id="btnEnviar" layoutX="350.0" layoutY="330.0" onAction="#enviarMensaje" text="Enviar" />
+    <!-- Contenido principal -->
+    <center>
+        <ScrollPane fitToWidth="true" styleClass="content-area" BorderPane.alignment="CENTER">
+            <content>
+                <VBox alignment="TOP_CENTER" spacing="15">
+                    <padding>
+                        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                    </padding>
+                    <HBox prefHeight="100.0" prefWidth="200.0">
+                        <children>
+                            <AnchorPane prefHeight="100.0" prefWidth="122.0">
+                                <children>
+                                    <ImageView fitHeight="64.0" fitWidth="57.0" layoutX="35.0" layoutY="22.0" preserveRatio="true">
+                                        <image>
+                                            <Image url="@../images/usuario.png" />
+                                        </image>
+                                    </ImageView>
+                                </children>
+                            </AnchorPane>
+                            <AnchorPane prefHeight="100.0" prefWidth="535.0">
+                                <children>
+                                    <Label fx:id="LbPublicacion" layoutX="14.0" layoutY="28.0" onMousePressed="#onPublicar" prefHeight="42.0" prefWidth="506.0" style="-fx-border-color: black; -fx-border-radius: 90; -fx-background-color: transparent;" text="    Crear Publicación">
+                                        <cursor>
+                                            <Cursor fx:constant="HAND" />
+                                        </cursor></Label>
+                                </children>
+                            </AnchorPane>
+                        </children>
+                    </HBox>
+                    <Label alignment="CENTER" prefHeight="41.0" prefWidth="749.0" styleClass="publicaciones-label" text="Publicaciones" />
+                    <VBox fx:id="contenedorPublicaciones" prefHeight="435.0" prefWidth="784.0" />
+                </VBox>
+            </content>
+        </ScrollPane>
+    </center>
 
-        <Label layoutX="440.0" layoutY="20.0" text="Miembros" />
-        <ListView fx:id="listaMiembros" layoutX="440.0" layoutY="40.0" prefHeight="320.0" prefWidth="140.0" />
+    <!-- Panel derecho -->
+    <right>
+        <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="235.0" spacing="10" styleClass="side-bar" BorderPane.alignment="CENTER">
+            <padding>
+                <Insets bottom="10" left="10" right="10" top="20" />
+            </padding>
+            <VBox fx:id="VBoxAmigosSugeridos" alignment="TOP_CENTER" prefHeight="445.0" prefWidth="194.0">
+                <children>
+                    <Label alignment="CENTER" prefHeight="44.0" prefWidth="161.0" styleClass="friends-suggestion-label" text="Amigos " textAlignment="CENTER">
+                  <font>
+                     <Font size="1.0" />
+                  </font></Label>
+                </children>
+            </VBox>
+            <Label text="Anuncios" />
+        </VBox>
+    </right>
 
-    </children>
-</AnchorPane>
+</BorderPane>
