@@ -15,6 +15,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -38,7 +39,7 @@ public class GrupoEstudioController {
     private GrupoEstudio grupoEstudio;
     private MainPageController mainPageController;
     private List<Estudiante> miembros = new ArrayList<>();
-    private List<Publicacion> publicacions = new ArrayList<>();
+    private List<Publicacion> publicaciones = new ArrayList<>();
 
     @FXML
     private Label LbPublicacion;
@@ -53,30 +54,37 @@ public class GrupoEstudioController {
     private VBox VboxInicio;
 
     @FXML
+    private VBox contenedorImagenPerfil;
+
+    @FXML
+    private VBox contenedorImagenPublicacion;
+
+
+    @FXML
     private VBox contenedorPublicaciones;
 
     @FXML
     private Label txtInformacion;
 
     @FXML
+    private VBox VboxInfoGrupo;
+
+    @FXML
     private Label txtNombre;
 
     @FXML
-    private Label nombreGrupo;
-
-    @FXML
     void OnAyuda(MouseEvent event) {
-
+        mainPageController.OnAyuda(event);
     }
 
     @FXML
     void Onmensajes(MouseEvent event) {
-
+        mainPageController.Onmensajes(event);
     }
 
     @FXML
     void onAmigos(MouseEvent event) {
-
+        mainPageController.onAmigos(event);
     }
 
     @FXML
@@ -92,9 +100,9 @@ public class GrupoEstudioController {
     private void cargarVentanaPublicacion() {
         FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/publicacionGrupoEstudio-view.fxml"));
         try {
-            RedSocialUtils.CargaVentana(fxmlLoader,"Publicar");
+            RedSocialUtils.CargaVentana(fxmlLoader, "Publicar");
             PublicacionGrupoController controller = fxmlLoader.getController();
-            controller.inicializarDatos(estudiante,this,grupoEstudio);
+            controller.inicializarDatos(estudiante, this, grupoEstudio);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -105,12 +113,50 @@ public class GrupoEstudioController {
         this.grupoEstudio = grupoSeleccionado;
         this.mainPageController = mainPageController;
         this.miembros = grupoSeleccionado.getMiembros();
-        this.publicacions = grupoSeleccionado.getPublicaciones();
+        this.publicaciones = grupoSeleccionado.getPublicaciones();
         txtNombre.setText(estudiante.getNombre());
         txtInformacion.setText(estudiante.getCorreo());
-        nombreGrupo.setText(grupoSeleccionado.getTema());
+        VboxInfoGrupo.getChildren().clear();
+        HBox tarjeta = crearTarjetaGrupoInfo(grupoEstudio);
+        VboxInfoGrupo.getChildren().add(tarjeta);
+        cargarFotoPerfilprincipal(estudiante.getRutaArchivoImagen());
         cargarGrupos(estudiante);
+        cargarPublicaionesGrupo();
         cargarMiembros();
+    }
+
+    private void cargarPublicaionesGrupo() {
+        contenedorPublicaciones.getChildren().clear();
+        for (Publicacion publicacion : grupoEstudio.getPublicaciones()) {
+            cargarEnVistaPrincipal(publicacion, estudiante);
+        }
+    }
+
+    private void cargarFotoPerfilprincipal(String rutaArchivoImagen) {
+        try {
+            if (rutaArchivoImagen != null && !rutaArchivoImagen.isBlank()) {
+                Image imagen = new Image(Objects.requireNonNull(getClass().getResource(rutaArchivoImagen)).toExternalForm());
+
+                double radioPerfil = 55;
+                Circle circlePerfil = new Circle(radioPerfil);
+                circlePerfil.setFill(new ImagePattern(imagen));
+                circlePerfil.setStroke(Color.BLACK);
+                circlePerfil.setStrokeWidth(2);
+
+                double radioPerfilpublicacion = 45;
+                Circle circlePublicacion = new Circle(radioPerfilpublicacion);
+                circlePublicacion.setFill(new ImagePattern(imagen));
+                circlePublicacion.setStroke(Color.BLACK);
+                circlePublicacion.setStrokeWidth(2);
+
+                contenedorImagenPerfil.getChildren().clear();
+                contenedorImagenPerfil.getChildren().add(circlePerfil);
+                contenedorImagenPublicacion.getChildren().clear();
+                contenedorImagenPublicacion.getChildren().add(circlePublicacion);
+            }
+        } catch (Exception e) {
+            System.out.println("No se pudo cargar la imagen de perfil: " + e.getMessage());
+        }
     }
 
     public void cargarGrupos(Estudiante estudiante) {
@@ -125,18 +171,43 @@ public class GrupoEstudioController {
         VBoxGrupos.getChildren().add(tarjeta);
     }
 
+    private HBox crearTarjetaGrupoInfo(GrupoEstudio grupoEstudio) {
+        HBox tarjeta = new HBox(20);
+        tarjeta.setPadding(new Insets(12));
+        tarjeta.setAlignment(Pos.CENTER);
+        tarjeta.setStyle("""
+                -fx-background-color: #efefef;
+                -fx-background-radius: 10;
+                -fx-border-radius: 10;
+                -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 4, 0, 0, 1);
+                """);
+
+        ImageView imagen = new ImageView(obtenerImagenPorTema(grupoEstudio.getTema()));
+        imagen.setFitWidth(50);
+        imagen.setFitHeight(50);
+        imagen.setPreserveRatio(true);
+
+        Label titulo = new Label(grupoEstudio.getTema());
+        titulo.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #2a2a2a;");
+
+        VBox contenido = new VBox(4, titulo);
+
+        tarjeta.getChildren().addAll(imagen, contenido);
+        return tarjeta;
+    }
+
     private HBox crearTarjetaGrupo(GrupoEstudio grupoEstudio) {
         HBox tarjeta = new HBox(12);
         tarjeta.setPadding(new Insets(12));
         tarjeta.setAlignment(Pos.CENTER_LEFT);
         tarjeta.setStyle("""
-        -fx-background-color: #ffffff;
-        -fx-background-radius: 10;
-        -fx-border-color: #dddddd;
-        -fx-border-radius: 10;
-        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 4, 0, 0, 1);
-        -fx-cursor: hand;
-                    """);
+                -fx-background-color: #ffffff;
+                -fx-background-radius: 10;
+                -fx-border-color: #dddddd;
+                -fx-border-radius: 10;
+                -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 4, 0, 0, 1);
+                -fx-cursor: hand;
+                """);
 
         tarjeta.setUserData(grupoEstudio);
 
@@ -206,11 +277,11 @@ public class GrupoEstudioController {
         if (grupoSeleccionado.getTema().equals(grupoEstudio.getTema())) return;
         FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/grupoEstudio-view.fxml"));
         try {
-            RedSocialUtils.CargaVentana(fxmlLoader,"Grupos");
+            RedSocialUtils.CargaVentana(fxmlLoader, "Grupos");
             GrupoEstudioController controller = fxmlLoader.getController();
-            controller.inicializar(grupoSeleccionado,mainPageController,estudiante);
+            controller.inicializar(grupoSeleccionado, mainPageController, estudiante);
             cerrarVentana();
-        }catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -220,8 +291,8 @@ public class GrupoEstudioController {
         stage.close();
     }
 
-    private void cargarMiembros(){
-        for(Estudiante estudiante: miembros){
+    private void cargarMiembros() {
+        for (Estudiante estudiante : miembros) {
             cargarMiembro(estudiante);
         }
     }
@@ -236,10 +307,10 @@ public class GrupoEstudioController {
         tarjeta.setAlignment(Pos.CENTER_LEFT);
         tarjeta.setPadding(new Insets(8));
         tarjeta.setStyle("""
-        -fx-background-color: #f4f4f8;
-        -fx-background-radius: 10;
-        -fx-cursor: hand;
-    """);
+                    -fx-background-color: #f4f4f8;
+                    -fx-background-radius: 10;
+                    -fx-cursor: hand;
+                """);
 
         // Crear avatar circular (placeholder)
         Circle avatar = new Circle(20, Color.web("#6a8caf"));
@@ -265,15 +336,15 @@ public class GrupoEstudioController {
 
         // Estilo hover para mejor experiencia
         tarjeta.setOnMouseEntered(e -> tarjeta.setStyle("""
-        -fx-background-color: #e0e5f2;
-        -fx-background-radius: 10;
-        -fx-cursor: hand;
-    """));
+                    -fx-background-color: #e0e5f2;
+                    -fx-background-radius: 10;
+                    -fx-cursor: hand;
+                """));
         tarjeta.setOnMouseExited(e -> tarjeta.setStyle("""
-        -fx-background-color: #f4f4f8;
-        -fx-background-radius: 10;
-        -fx-cursor: hand;
-    """));
+                    -fx-background-color: #f4f4f8;
+                    -fx-background-radius: 10;
+                    -fx-cursor: hand;
+                """));
 
         return tarjeta;
     }
@@ -313,7 +384,7 @@ public class GrupoEstudioController {
         if (usuarioActual.equals(publicacion.getAutor())) {
             Button botonEliminar = crearBotonEliminar(publicacion);
             tarjeta.getChildren().add(botonEliminar);
-        }else {
+        } else {
             Button botonValorar = crearBotonValorar();
             tarjeta.getChildren().add(botonValorar);
         }
@@ -330,13 +401,13 @@ public class GrupoEstudioController {
     private VBox crearTarjetaPublicacion() {
         VBox tarjeta = new VBox(8);
         tarjeta.setStyle("""
-        -fx-background-color: #ffffff;
-        -fx-padding: 12;
-        -fx-background-radius: 12;
-        -fx-border-color: #dddddd;
-        -fx-border-radius: 12;
-        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
-    """);
+                    -fx-background-color: #ffffff;
+                    -fx-padding: 12;
+                    -fx-background-radius: 12;
+                    -fx-border-color: #dddddd;
+                    -fx-border-radius: 12;
+                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+                """);
         return tarjeta;
     }
 
@@ -468,4 +539,3 @@ public class GrupoEstudioController {
         return contenedor;
     }
 }
-

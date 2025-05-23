@@ -1,27 +1,22 @@
 package proyecto.redsocial.controller;
 
-import java.io.IOException;
-import java.net.URL;
-import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import proyecto.redsocial.RedSocialApplication;
 import proyecto.redsocial.factory.ModelFactory;
 import proyecto.redsocial.model.Estudiante;
 import proyecto.redsocial.utils.RedSocialUtils;
 
+import java.net.URL;
+import java.util.ResourceBundle;
+
 public class RegistroController {
 
     private ModelFactory modelFactory;
-
 
 
     @FXML
@@ -53,20 +48,20 @@ public class RegistroController {
     }
 
     private void crearRegistro() {
-        if(validarDatos()){
+        if (validarDatos()) {
             String correo = txtCorreo.getText();
             String nombre = txtNombre.getText();
             String contrasenia = txtContrasenia.getText().trim();
-            if (modelFactory.registrarUsuario(nombre,correo,contrasenia)){
+            if (modelFactory.registrarUsuario(nombre, correo, contrasenia)) {
                 Object usuario = modelFactory.obtnerUsuario(correo);
                 RedSocialUtils.cargarVistaPrincipal((Estudiante) usuario);
-                mostrarMensaje("Registro","Registro Exitoso","Su registro fue exitoso.",Alert.AlertType.INFORMATION);
+                mostrarMensaje("Registro", "Registro Exitoso", "Su registro fue exitoso.", Alert.AlertType.INFORMATION);
                 cerrarVentana();
-            }else {
-                mostrarMensaje("Error","Error al registrar","Error al reguistrarse, el correo ya existe.",Alert.AlertType.ERROR);
+            } else {
+                mostrarMensaje("Error", "Error al registrar", "Error al reguistrarse, el correo ya existe.", Alert.AlertType.ERROR);
             }
-        }else {
-            mostrarMensaje("Error","Datos Nulos","Hay un campo nulo.", Alert.AlertType.ERROR);
+        } else {
+            mostrarMensaje("Error", "Datos Nulos", "Hay un campo nulo.", Alert.AlertType.ERROR);
         }
     }
 

@@ -120,7 +120,7 @@ public class MainPageController {
 
     @FXML
     void buscarPorTema(KeyEvent event) {
-        if (event.getCode() == KeyCode.ENTER){
+        if (event.getCode() == KeyCode.ENTER) {
             buscarPublicacionesPorTema();
         }
     }
@@ -159,7 +159,6 @@ public class MainPageController {
 
     private void buscarPublicacionesPorTema() {
         String textoBusqueda = txtBusqueda.getText();
-
         if (textoBusqueda == null || textoBusqueda.isBlank()) {
             contenedorPublicaciones.getChildren().clear();
             cargarPublicaciones(estudiante);
@@ -201,15 +200,22 @@ public class MainPageController {
         this.estudiante = estudiante;
         txtNombre.setText(estudiante.getNombre());
         txtInformacion.setText(estudiante.getCorreo());
-        cargarFotoPerfil(estudiante.getRutaArchivoImagen());
+        cargarFotoPerfilprincipal(estudiante.getRutaArchivoImagen());
         cargarPublicaciones(estudiante);
         cargarGrupos(this.estudiante);
     }
 
-    private void cargarFotoPerfil(String rutaArchivoImagen) {
+    public void cargarGrupos(Estudiante estudiante) {
+        VBoxGrupos.getChildren().clear();
+        for (GrupoEstudio grupoEstudio : estudiante.getGruposEstudio()) {
+            cargarEnCampoGrupos(grupoEstudio);
+        }
+    }
+
+    private void cargarFotoPerfilprincipal(String rutaArchivoImagen) {
         try {
             if (rutaArchivoImagen != null && !rutaArchivoImagen.isBlank()) {
-                Image imagen = new Image(getClass().getResource(rutaArchivoImagen).toExternalForm());
+                Image imagen = new Image(Objects.requireNonNull(getClass().getResource(rutaArchivoImagen)).toExternalForm());
 
                 double radioPerfil = 55;
                 Circle circlePerfil = new Circle(radioPerfil);
@@ -217,27 +223,19 @@ public class MainPageController {
                 circlePerfil.setStroke(Color.BLACK);
                 circlePerfil.setStrokeWidth(2);
 
-                double radioPublicacion = 45;
-                Circle circlePublicacion = new Circle(radioPublicacion);
+                double radioPerfilpublicacion = 45;
+                Circle circlePublicacion = new Circle(radioPerfilpublicacion);
                 circlePublicacion.setFill(new ImagePattern(imagen));
                 circlePublicacion.setStroke(Color.BLACK);
                 circlePublicacion.setStrokeWidth(2);
 
                 contenedorImagenPerfil.getChildren().clear();
                 contenedorImagenPerfil.getChildren().add(circlePerfil);
-
                 contenedorImagenPerfilPublicacion.getChildren().clear();
                 contenedorImagenPerfilPublicacion.getChildren().add(circlePublicacion);
             }
         } catch (Exception e) {
             System.out.println("No se pudo cargar la imagen de perfil: " + e.getMessage());
-        }
-    }
-
-    public void cargarGrupos(Estudiante estudiante) {
-        VBoxGrupos.getChildren().clear();
-        for (GrupoEstudio grupoEstudio:estudiante.getGruposEstudio()){
-            cargarEnCampoGrupos(grupoEstudio);
         }
     }
 
@@ -251,13 +249,13 @@ public class MainPageController {
         tarjeta.setPadding(new Insets(12));
         tarjeta.setAlignment(Pos.CENTER_LEFT);
         tarjeta.setStyle("""
-        -fx-background-color: #ffffff;
-        -fx-background-radius: 10;
-        -fx-border-color: #dddddd;
-        -fx-border-radius: 10;
-        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 4, 0, 0, 1);
-        -fx-cursor: hand;
-    """);
+                    -fx-background-color: #ffffff;
+                    -fx-background-radius: 10;
+                    -fx-border-color: #dddddd;
+                    -fx-border-radius: 10;
+                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 4, 0, 0, 1);
+                    -fx-cursor: hand;
+                """);
 
         tarjeta.setUserData(grupoEstudio);
 
@@ -326,10 +324,10 @@ public class MainPageController {
     private void ingresarAGrupo(GrupoEstudio grupoSeleccionado) {
         FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/grupoEstudio-view.fxml"));
         try {
-            RedSocialUtils.CargaVentana(fxmlLoader,"Grupos");
+            RedSocialUtils.CargaVentana(fxmlLoader, "Grupos");
             GrupoEstudioController controller = fxmlLoader.getController();
-            controller.inicializar(grupoSeleccionado,this,estudiante);
-        }catch (IOException e) {
+            controller.inicializar(grupoSeleccionado, this, estudiante);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
@@ -351,9 +349,9 @@ public class MainPageController {
     private void abrirVentanaPublicacion() {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/publicacion-view.fxml"));
-            RedSocialUtils.CargaVentana(fxmlLoader,"Publicar");
+            RedSocialUtils.CargaVentana(fxmlLoader, "Publicar");
             PublicacionController publicacionController = fxmlLoader.getController();
-            publicacionController.cargarDatos(estudiante, this,contenedorImagenPerfilPublicacion);
+            publicacionController.cargarDatos(estudiante, this, contenedorImagenPerfilPublicacion);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -370,7 +368,7 @@ public class MainPageController {
             nuevaVentana.setTitle("Chat Estudiante");
             nuevaVentana.setScene(scene);
             nuevaVentana.show();
-        }catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
@@ -411,7 +409,7 @@ public class MainPageController {
         if (usuarioActual.equals(publicacion.getAutor())) {
             Button botonEliminar = crearBotonEliminar(publicacion);
             tarjeta.getChildren().add(botonEliminar);
-        }else {
+        } else {
             Button botonValorar = crearBotonValorar();
             tarjeta.getChildren().add(botonValorar);
         }
@@ -422,13 +420,13 @@ public class MainPageController {
     private VBox crearTarjetaPublicacion() {
         VBox tarjeta = new VBox(8);
         tarjeta.setStyle("""
-        -fx-background-color: #ffffff;
-        -fx-padding: 12;
-        -fx-background-radius: 12;
-        -fx-border-color: #dddddd;
-        -fx-border-radius: 12;
-        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
-    """);
+                    -fx-background-color: #ffffff;
+                    -fx-padding: 12;
+                    -fx-background-radius: 12;
+                    -fx-border-color: #dddddd;
+                    -fx-border-radius: 12;
+                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+                """);
         return tarjeta;
     }
 

@@ -1,10 +1,12 @@
 package proyecto.redsocial.controller;
 
 import javafx.scene.input.MouseEvent;
+
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.ResourceBundle;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -125,7 +127,7 @@ public class PublicacionController {
     }
 
     private void publicar() {
-        if(txtAreaTexto!=null && CBTemas.getValue()!=null && !Objects.equals(CBTemas.getValue(), "Selecciona un tema")) {
+        if (txtAreaTexto != null && CBTemas.getValue() != null && !Objects.equals(CBTemas.getValue(), "Selecciona un tema")) {
             String texto = txtAreaTexto.getText();
             String tema = CBTemas.getValue();
 

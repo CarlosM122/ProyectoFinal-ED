@@ -15,7 +15,6 @@ public class Estudiante {
     private String correo;
     private String contrasenia;
     private List<Estudiante> amigos;
-    private ColaPrioridadAyuda solicitudes;
     private String rutaArchivoImagen;
     private List<String> intereses;
     private List<Publicacion> contenidosPublicados;
@@ -26,7 +25,6 @@ public class Estudiante {
     public Estudiante() {
         this.ListMensajes = new ArrayList<>();
         this.amigos = new ArrayList<>();
-        this.solicitudes = new ColaPrioridadAyuda();
         this.contenidosPublicados = new ArrayList<>();
         this.valoracions = new ArrayList<>();
         this.gruposEstudio = new ArrayList<>();

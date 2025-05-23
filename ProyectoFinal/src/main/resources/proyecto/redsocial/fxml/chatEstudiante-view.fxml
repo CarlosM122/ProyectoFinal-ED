@@ -71,7 +71,7 @@
          <children>
             <HBox alignment="CENTER" prefHeight="94.0" prefWidth="343.0">
                <children>
-                  <TextField fx:id="txtBuscar" alignment="BASELINE_LEFT" prefHeight="26.0" prefWidth="317.0" promptText="Buscar" style="-fx-border-radius: 45;" />
+                  <TextField fx:id="txtBuscar" alignment="BASELINE_LEFT" prefHeight="26.0" prefWidth="317.0" promptText="Buscar" style="-fx-border-radius: 45;" styleClass="barra-busqueda" />
                </children>
             </HBox>
             <VBox fx:id="listCompañeros" prefHeight="628.0" prefWidth="343.0" />
@@ -81,19 +81,15 @@
    <right>
       <VBox prefHeight="720.0" prefWidth="755.0" BorderPane.alignment="CENTER">
          <children>
-            <AnchorPane prefHeight="48.0" prefWidth="759.0" style="-fx-background-radius: 90;">
+            <AnchorPane prefHeight="48.0" prefWidth="759.0" style="-fx-background-color: #d3d2cf;">
                <children>
-                  <Label fx:id="infoCompañero" layoutX="-2.0" layoutY="-2.0" prefHeight="91.0" prefWidth="761.0" styleClass="label-fondo" stylesheets="@../css/estiloMainPage.css" />
-                  <Label fx:id="nombreCompañero" layoutX="228.0" layoutY="17.0" prefHeight="26.0" prefWidth="450.0">
+                  <Label fx:id="infoCompañero" alignment="CENTER" layoutX="352.0" layoutY="52.0" prefHeight="12.0" prefWidth="194.0" />
+                  <Label fx:id="nombreCompañero" alignment="CENTER" contentDisplay="CENTER" layoutX="294.0" layoutY="14.0" prefHeight="26.0" prefWidth="310.0">
                      <font>
                         <Font name="System Bold" size="16.0" />
                      </font>
                   </Label>
-                  <ImageView fitHeight="82.0" fitWidth="82.0" layoutX="110.0" layoutY="4.0" pickOnBounds="true" preserveRatio="true" styleClass="imagen">
-                     <image>
-                        <Image url="@../images/usuario.png" />
-                     </image>
-                  </ImageView>
+                  <HBox fx:id="contenerdorImagenPerfil" alignment="CENTER" prefHeight="103.0" prefWidth="325.0" />
                </children>
             </AnchorPane>
             <ScrollPane prefHeight="581.0" prefWidth="755.0">
@@ -108,7 +104,7 @@
             <HBox alignment="CENTER" prefHeight="82.0" prefWidth="759.0">
                <children>
                   <TextField fx:id="txtMensaje" onKeyPressed="#enviar" prefHeight="31.0" prefWidth="608.0" promptText="Escribe un mensaje..." />
-                  <Button fx:id="btnEnviar" mnemonicParsing="false" onAction="#OnEnviar" prefHeight="33.0" prefWidth="78.0" text="Enviar">
+                  <Button fx:id="btnEnviar" mnemonicParsing="false" onAction="#OnEnviar" prefHeight="33.0" prefWidth="78.0" styleClass="boton-post" text="Enviar">
                      <HBox.margin>
                         <Insets left="25.0" />
                      </HBox.margin>

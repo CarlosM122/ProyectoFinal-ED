@@ -1,33 +1,28 @@
 package proyecto.redsocial.controller;
 
-import java.awt.*;
-import java.awt.TextArea;
-import java.io.IOException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
-
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import proyecto.redsocial.factory.ModelFactory;
 import proyecto.redsocial.model.Estudiante;
 import proyecto.redsocial.model.SolicitudAyuda;
 
+import java.awt.*;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ResourceBundle;
+
 public class SolicitudAyudaController {
-    private Estudiante estudiante;
-    private MainPageController mainPageController;
     private final List<String> CBUrgencia = new ArrayList<>();
     private final ModelFactory modelFactory = ModelFactory.getInstance();
-
+    private Estudiante estudiante;
+    private MainPageController mainPageController;
     @FXML
     private ResourceBundle resources;
 
@@ -114,19 +109,19 @@ public class SolicitudAyudaController {
 
     private void enviarSolicitud() {
         String tema = CBTemas.getValue();
-        if(tema!=null&& txtDescripcion.getText()!=null) {
-            String urgencia= obtenerUrgencia(CBTemas.getValue());
+        if (tema != null && txtDescripcion.getText() != null) {
+            int urgencia = obtenerUrgencia(CBTemas.getValue());
             SolicitudAyuda solicitudAyuda = new SolicitudAyuda();
             solicitudAyuda.setTema(tema);
-            solicitudAyuda.setDescripcion(txtDescripcion.getText());
             solicitudAyuda.setUrgencia(urgencia);
             solicitudAyuda.setEstudiante(estudiante);
             modelFactory.guardarSolicitud(solicitudAyuda);
-            Node descripcion = crearTarjetaContenido(txtDescripcion.getText()+"\n"+urgencia);
+            Node descripcion = crearTarjetaContenido(txtDescripcion.getText() + "\n" + urgencia);
             Label titulo = crearTarjetaTema(tema);
             VBox tarjeta = crearTarjetaSolicitud();
             tarjeta.getChildren().addAll(titulo, descripcion);
             contenedorSolicitudes.getChildren().add(tarjeta);
+            modelFactory.guardarRecursosXML();
         }
     }
 
@@ -143,42 +138,42 @@ public class SolicitudAyudaController {
         return contenido;
     }
 
-    private String obtenerUrgencia(String value) {
+    private int obtenerUrgencia(String value) {
         switch (value) {
             case "No puedo subir archivos":
             case "Error en publicaciones":
-                return "Media";
+                return 2;
 
             case "Cambio de contraseña":
             case "Problemas técnicos":
             case "No puedo iniciar sesión":
             case "Solicitud de eliminación de cuenta":
-                return "Alta";
+                return 3;
 
             default:
-                return "Baja";
+                return 1;
         }
     }
 
-private void mostrarMensaje(String titulo, String header, String contenido, Alert.AlertType alertType) {
-    Alert alert = new Alert(alertType);
-    alert.setTitle(titulo);
-    alert.setHeaderText(header);
-    alert.setContentText(contenido);
-    alert.show();
-}
+    private void mostrarMensaje(String titulo, String header, String contenido, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(titulo);
+        alert.setHeaderText(header);
+        alert.setContentText(contenido);
+        alert.show();
+    }
 
-private VBox crearTarjetaSolicitud() {
-    VBox tarjeta = new VBox(8);
-    tarjeta.setStyle("""
-        
-                -fx-background-color: #ffffff;
-        -fx-padding: 12;
-        -fx-background-radius: 12;
-        -fx-border-color: #dddddd;
-        -fx-border-radius: 12;
-        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
-                    """);
-    return tarjeta;
-}
+    private VBox crearTarjetaSolicitud() {
+        VBox tarjeta = new VBox(8);
+        tarjeta.setStyle("""
+                
+                        -fx-background-color: #ffffff;
+                -fx-padding: 12;
+                -fx-background-radius: 12;
+                -fx-border-color: #dddddd;
+                -fx-border-radius: 12;
+                -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+                """);
+        return tarjeta;
+    }
 }

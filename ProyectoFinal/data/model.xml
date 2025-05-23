@@ -15,80 +15,48 @@
           <object idref="Estudiante0"/>
          </void>
         </void>
-        <void property="contenidosPublicados">
-         <void method="add">
-          <object class="proyecto.redsocial.model.Publicacion" id="Publicacion0">
-           <void property="autor">
-            <object idref="Estudiante1"/>
-           </void>
-           <void property="fechaPublicacion">
-            <string>2025-05-21</string>
-           </void>
-           <void property="idContenido">
-            <int>2255068</int>
-           </void>
-           <void property="tema">
-            <string>Música</string>
-           </void>
-           <void property="texto">
-            <string>Hola</string>
-           </void>
-          </object>
-         </void>
-        </void>
         <void property="contrasenia">
          <string>8d969eef6ecad3c29a3a629280e686cf0c3f5d5a86aff3ca12020c923adc6c92</string>
         </void>
         <void property="correo">
          <string>Alejo@edu.co</string>
         </void>
-        <void property="gruposEstudio">
-         <void method="add">
-          <object class="proyecto.redsocial.model.GrupoEstudio" id="GrupoEstudio0">
-           <void property="idGrupoEstudio">
-            <string>grupo_música</string>
-           </void>
-           <void property="miembros">
-            <object class="java.util.ArrayList">
-             <void method="add">
-              <object idref="Estudiante0"/>
-             </void>
-             <void method="add">
-              <object idref="Estudiante1"/>
-             </void>
-            </object>
-           </void>
-           <void property="tema">
-            <string>Música</string>
-           </void>
-          </object>
-         </void>
-        </void>
-        <void property="intereses">
-         <void method="add">
-          <string>Música</string>
-         </void>
-        </void>
         <void property="nombre">
          <string>AlejoElAmorDeMaria</string>
+        </void>
+       </object>
+      </void>
+      <void method="add">
+       <object class="proyecto.redsocial.model.Estudiante" id="Estudiante2">
+        <void property="contrasenia">
+         <string>3d34630dd6bbb687560bb54b1392911f25e2a2a3547dda9386f863386bd6396f</string>
+        </void>
+        <void property="correo">
+         <string>Samuel@edu.co</string>
+        </void>
+        <void property="nombre">
+         <string>Samuel</string>
+        </void>
+        <void property="rutaArchivoImagen">
+         <string>/proyecto/redsocial/imagenesFotoPerfil/Samu.jpg</string>
         </void>
        </object>
       </void>
      </void>
      <void property="contenidosPublicados">
       <void method="add">
-       <object class="proyecto.redsocial.model.Publicacion" id="Publicacion1">
+       <object class="proyecto.redsocial.model.Publicacion" id="Publicacion0">
         <void property="autor">
          <object idref="Estudiante0"/>
         </void>
         <void property="fechaPublicacion">
-         <string>2025-05-21</string>
+         <string>2025-05-23</string>
         </void>
         <void property="idContenido">
          <int>2255068</int>
         </void>
         <void property="tema">
-         <string>Ciencia</string>
+         <string>Arte</string>
         </void>
         <void property="texto">
          <string>Hola</string>
@@ -96,18 +64,18 @@
        </object>
       </void>
       <void method="add">
-       <object class="proyecto.redsocial.model.Publicacion" id="Publicacion2">
+       <object class="proyecto.redsocial.model.Publicacion" id="Publicacion1">
         <void property="autor">
          <object idref="Estudiante0"/>
         </void>
         <void property="fechaPublicacion">
-         <string>2025-05-21</string>
+         <string>2025-05-23</string>
         </void>
         <void property="idContenido">
          <int>2255068</int>
         </void>
         <void property="tema">
-         <string>Música</string>
+         <string>Historia</string>
         </void>
         <void property="texto">
          <string>Hola</string>
@@ -123,9 +91,9 @@
      </void>
      <void property="gruposEstudio">
       <void method="add">
-       <object class="proyecto.redsocial.model.GrupoEstudio" id="GrupoEstudio1">
+       <object class="proyecto.redsocial.model.GrupoEstudio" id="GrupoEstudio0">
         <void property="idGrupoEstudio">
-         <string>grupo_ciencia</string>
+         <string>grupo_arte</string>
         </void>
         <void property="miembros">
          <object class="java.util.ArrayList">
@@ -135,20 +103,34 @@
          </object>
         </void>
         <void property="tema">
-         <string>Ciencia</string>
+         <string>Arte</string>
         </void>
        </object>
       </void>
       <void method="add">
-       <object idref="GrupoEstudio0"/>
+       <object class="proyecto.redsocial.model.GrupoEstudio" id="GrupoEstudio1">
+        <void property="idGrupoEstudio">
+         <string>grupo_historia</string>
+        </void>
+        <void property="miembros">
+         <object class="java.util.ArrayList">
+          <void method="add">
+           <object idref="Estudiante0"/>
+          </void>
+         </object>
+        </void>
+        <void property="tema">
+         <string>Historia</string>
+        </void>
+       </object>
       </void>
      </void>
      <void property="intereses">
       <void method="add">
-       <string>Ciencia</string>
+       <string>Arte</string>
       </void>
       <void method="add">
-       <string>Música</string>
+       <string>Historia</string>
       </void>
      </void>
      <void property="nombre">
@@ -162,13 +144,16 @@
    <void method="add">
     <object idref="Estudiante1"/>
    </void>
+   <void method="add">
+    <object idref="Estudiante2"/>
+   </void>
   </void>
   <void property="gruposEstudio">
    <void method="add">
-    <object idref="GrupoEstudio1"/>
+    <object idref="GrupoEstudio0"/>
    </void>
    <void method="add">
-    <object idref="GrupoEstudio0"/>
+    <object idref="GrupoEstudio1"/>
    </void>
   </void>
   <void property="moderadores">
@@ -188,13 +173,10 @@
   </void>
   <void property="publicacions">
    <void method="add">
-    <object idref="Publicacion1"/>
-   </void>
-   <void method="add">
-    <object idref="Publicacion2"/>
-   </void>
-   <void method="add">
     <object idref="Publicacion0"/>
+   </void>
+   <void method="add">
+    <object idref="Publicacion1"/>
    </void>
   </void>
  </object>

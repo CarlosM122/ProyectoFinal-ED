@@ -3,6 +3,7 @@ module proyecto.redsocial {
     requires javafx.fxml;
     requires static lombok;
     requires java.desktop;
+    requires javafx.graphics;
 
 
     opens proyecto.redsocial to javafx.fxml;

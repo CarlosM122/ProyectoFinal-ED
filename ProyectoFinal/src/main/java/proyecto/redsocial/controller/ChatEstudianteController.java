@@ -2,11 +2,16 @@ package proyecto.redsocial.controller;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 import java.util.ResourceBundle;
+
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -16,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
@@ -54,6 +60,9 @@ public class ChatEstudianteController {
     private TextField txtBuscar;
 
     @FXML
+    private HBox contenerdorImagenPerfil;
+
+    @FXML
     private TextField txtMensaje;
 
     @FXML
@@ -69,7 +78,7 @@ public class ChatEstudianteController {
 
     @FXML
     void enviar(KeyEvent event) {
-        if (event.getCode() == KeyCode.ENTER){
+        if (event.getCode() == KeyCode.ENTER) {
             enviarMensaje();
         }
     }
@@ -79,12 +88,14 @@ public class ChatEstudianteController {
         modelFactory = ModelFactory.getInstance();
     }
 
-    public void initData(Estudiante estudiante){
-        estudiante1=estudiante;
+    public void initData(Estudiante estudiante) {
+        estudiante1 = estudiante;
         txtnombre.setText(estudiante1.getNombre());
         txtinformacion.setText(estudiante1.getCorreo());
         cargarListaAmigos();
-    };
+    }
+
+    ;
 
     private void cargarListaAmigos() {
         List<Estudiante> amigos = estudiante1.getAmigos();
@@ -96,13 +107,36 @@ public class ChatEstudianteController {
     private void cargarAmigo(Estudiante estudiante) {
         HBox tarjeta = crearTarjetaChatLista(estudiante);
 
+        tarjeta.setUserData(estudiante);
         tarjeta.setOnMouseClicked(event -> {
-            estudiante2 = estudiante;
+            Estudiante estudianteCompañero = (Estudiante) tarjeta.getUserData();
+            estudiante2 = estudianteCompañero;
             nombreCompañero.setText(estudiante2.getNombre());
+            cargarFotoPerfil(estudianteCompañero.getRutaArchivoImagen());
+            infoCompañero.setText(estudiante2.getCorreo());
             // Aquí cargarías el chat de este compañero
         });
 
         listCompañeros.getChildren().add(tarjeta);
+    }
+
+    private void cargarFotoPerfil(String rutaArchivoImagen) {
+        try {
+            if (rutaArchivoImagen != null && !rutaArchivoImagen.isBlank()) {
+                Image imagen = new Image(Objects.requireNonNull(getClass().getResource(rutaArchivoImagen)).toExternalForm());
+
+                double radioPerfil = 45;
+                Circle circlePerfil = new Circle(radioPerfil);
+                circlePerfil.setFill(new ImagePattern(imagen));
+                circlePerfil.setStroke(Color.BLACK);
+                circlePerfil.setStrokeWidth(2);
+
+                contenerdorImagenPerfil.getChildren().clear();
+                contenerdorImagenPerfil.getChildren().add(circlePerfil);
+            }
+        } catch (Exception e) {
+            System.out.println("No se pudo cargar la imagen de perfil: " + e.getMessage());
+        }
     }
 
     private HBox crearTarjetaChatLista(Estudiante estudiante) {
@@ -110,10 +144,10 @@ public class ChatEstudianteController {
         tarjeta.setAlignment(Pos.CENTER_LEFT);
         tarjeta.setPadding(new Insets(8));
         tarjeta.setStyle("""
-        -fx-background-color: #f4f4f8;
-        -fx-background-radius: 10;
-        -fx-cursor: hand;
-    """);
+                    -fx-background-color: #f4f4f8;
+                    -fx-background-radius: 10;
+                    -fx-cursor: hand;
+                """);
 
         // Crear avatar circular (placeholder)
         Circle avatar = new Circle(20, Color.web("#6a8caf"));
@@ -139,15 +173,15 @@ public class ChatEstudianteController {
 
         // Estilo hover para mejor experiencia
         tarjeta.setOnMouseEntered(e -> tarjeta.setStyle("""
-        -fx-background-color: #e0e5f2;
-        -fx-background-radius: 10;
-        -fx-cursor: hand;
-    """));
+                    -fx-background-color: #e0e5f2;
+                    -fx-background-radius: 10;
+                    -fx-cursor: hand;
+                """));
         tarjeta.setOnMouseExited(e -> tarjeta.setStyle("""
-        -fx-background-color: #f4f4f8;
-        -fx-background-radius: 10;
-        -fx-cursor: hand;
-    """));
+                    -fx-background-color: #f4f4f8;
+                    -fx-background-radius: 10;
+                    -fx-cursor: hand;
+                """));
 
         return tarjeta;
     }
@@ -163,16 +197,17 @@ public class ChatEstudianteController {
             txtMensaje.clear();
         }
     }
+
     private VBox crearTarjetaChat() {
         VBox tarjeta = new VBox(8);
         tarjeta.setStyle("""
-        -fx-background-color: #ffffff;
-        -fx-padding: 12;
-        -fx-background-radius: 12;
-        -fx-border-color: #dddddd;
-        -fx-border-radius: 12;
-        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
-    """);
+                    -fx-background-color: #ffffff;
+                    -fx-padding: 12;
+                    -fx-background-radius: 12;
+                    -fx-border-color: #dddddd;
+                    -fx-border-radius: 12;
+                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+                """);
         return tarjeta;
     }
 

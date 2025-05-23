@@ -3,11 +3,9 @@ package proyecto.redsocial.utils;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import proyecto.redsocial.RedSocialApplication;
 import proyecto.redsocial.controller.MainPageController;
-import proyecto.redsocial.model.ColaPrioridadAyuda;
 import proyecto.redsocial.model.Estudiante;
 import proyecto.redsocial.model.Moderador;
 import proyecto.redsocial.model.Sistema;
@@ -15,7 +13,6 @@ import proyecto.redsocial.model.Sistema;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Objects;
 
 public class RedSocialUtils {
 
@@ -39,9 +36,18 @@ public class RedSocialUtils {
         est1.setContrasenia(contrasenia);
         s.getEstudiantes().add(est1);
 
+        Estudiante est2 = new Estudiante();
+        est2.setNombre("Samuel");
+        est2.setCorreo("Samuel@edu.co");
+        est2.setContrasenia(encriptarSHA256("samuel123"));
+        est2.setRutaArchivoImagen("/proyecto/redsocial/imagenesFotoPerfil/Samu.jpg");
+        s.getEstudiantes().add(est2);
+
+
+
         est.getAmigos().add(est1);
         est1.getAmigos().add(est);
-
+        est1.getAmigos().add(est2);
         // Crear moderador
         Moderador mod = new Moderador();
         mod.setNombre("Admin");

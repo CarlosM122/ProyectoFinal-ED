@@ -1,10 +1,5 @@
 package proyecto.redsocial.controller;
 
-import java.net.URL;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -17,12 +12,18 @@ import proyecto.redsocial.model.Estudiante;
 import proyecto.redsocial.model.GrupoEstudio;
 import proyecto.redsocial.model.Publicacion;
 
+import java.net.URL;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
 public class PublicacionGrupoController {
 
+    private final ModelFactory modelFactory = ModelFactory.getInstance();
     private GrupoEstudioController grupoEstudioController;
     private Estudiante estudiante;
     private GrupoEstudio grupoEstudio;
-    private ModelFactory modelFactory = ModelFactory.getInstance();
     private String rutaArchivoAdjunto;
 
     @FXML
@@ -64,14 +65,7 @@ public class PublicacionGrupoController {
 
     @FXML
     void initialize() {
-        CBTemas.getItems().addAll(List.of( "Revisión de temas vistos en clase",
-                "Solucion de ejercicios y problemas",
-                "Preparación para exámenes y parciales",
-                "Explicación de conceptos difíciles",
-                "Discusión de lecturas asignadas",
-                "Comparación de apuntes entre los integrantes",
-                "Elaboración de mapas conceptuales o resúmenes",
-                "Resolución de guías o talleres"));
+        CBTemas.getItems().addAll(List.of("Revisión de temas vistos en clase", "Solucion de ejercicios y problemas", "Preparación para exámenes y parciales", "Explicación de conceptos difíciles", "Discusión de lecturas asignadas", "Comparación de apuntes entre los integrantes", "Elaboración de mapas conceptuales o resúmenes", "Resolución de guías o talleres"));
     }
 
     public void inicializarDatos(Estudiante estudiante, GrupoEstudioController grupoEstudioController, GrupoEstudio grupoEstudio) {
@@ -83,7 +77,7 @@ public class PublicacionGrupoController {
     }
 
     private void publicar() {
-        if(txtAreaTexto!=null && CBTemas.getValue()!=null && !Objects.equals(CBTemas.getValue(), "Selecciona un tema")) {
+        if (txtAreaTexto != null && CBTemas.getValue() != null && !Objects.equals(CBTemas.getValue(), "Selecciona un tema")) {
             String texto = txtAreaTexto.getText();
             String tema = CBTemas.getValue();
 
@@ -115,12 +109,7 @@ public class PublicacionGrupoController {
     private void subirArchivo() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Abrir Archivo");
-        fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Texto", "*.txt"),
-                new FileChooser.ExtensionFilter("Imagenes", "*.jpg", "*.png", "*.gif"),
-                new FileChooser.ExtensionFilter("Documentos", "*.doc", "*.docx", "*.pdf"),
-                new FileChooser.ExtensionFilter("Videos", "*.mp4", "*.avi", "*.mov", "*.mkv")
-        );
+        fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Texto", "*.txt"), new FileChooser.ExtensionFilter("Imagenes", "*.jpg", "*.png", "*.gif"), new FileChooser.ExtensionFilter("Documentos", "*.doc", "*.docx", "*.pdf"), new FileChooser.ExtensionFilter("Videos", "*.mp4", "*.avi", "*.mov", "*.mkv"));
         fileChooser.setInitialDirectory(new java.io.File(System.getProperty("user.home")));
         java.io.File archivo = fileChooser.showOpenDialog(btnPublicar.getScene().getWindow());
         if (archivo != null) {
@@ -131,11 +120,7 @@ public class PublicacionGrupoController {
                 }
 
                 java.io.File archivoDestino = new java.io.File(carpetaDestino, archivo.getName());
-                java.nio.file.Files.copy(
-                        archivo.toPath(),
-                        archivoDestino.toPath(),
-                        java.nio.file.StandardCopyOption.REPLACE_EXISTING
-                );
+                java.nio.file.Files.copy(archivo.toPath(), archivoDestino.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
                 rutaArchivoAdjunto = archivoDestino.getAbsolutePath();
                 labelArchivo.setText(archivoDestino.getName());

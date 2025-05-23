@@ -9,20 +9,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 public class ModelFactory {
     private Sistema sistema;
-
-    private static class SingletonHolder {
-        private final static ModelFactory eINSTANCE = new ModelFactory();
-    }
-
-    public static ModelFactory getInstance() {
-        return SingletonHolder.eINSTANCE;
-    }
 
     private ModelFactory() {
         if (Persistencia.existeArchivoXML()) {
@@ -31,6 +22,10 @@ public class ModelFactory {
             inicializarDatosBase();
             guardarRecursosXML();
         }
+    }
+
+    public static ModelFactory getInstance() {
+        return SingletonHolder.eINSTANCE;
     }
 
     private void cargarRecursosXML() {
@@ -63,7 +58,8 @@ public class ModelFactory {
     }
 
     public void guardarSolicitud(SolicitudAyuda solicitudAyuda) {
-        sistema.getColaPrioridadAyuda().agregarSolicitud(solicitudAyuda);
+        sistema.getColaPrioridadSolicitudes().insertar(solicitudAyuda);
+        sistema.getListaSolicitudesAyuda().add(solicitudAyuda);
     }
 
     public Object obtnerUsuario(String correo) {
@@ -90,11 +86,7 @@ public class ModelFactory {
         }
 
         Moderador mod = sistema.buscarModerador(correo);
-        if (mod != null && mod.getContrasenia().equals(contraEncriptada)) {
-            return true;
-        }
-
-        return false;
+        return mod != null && mod.getContrasenia().equals(contraEncriptada);
     }
 
     public List<Publicacion> obtenerPublicaciones() {
@@ -107,7 +99,7 @@ public class ModelFactory {
 
     public void eliminarPublicacion(Publicacion publicacion) {
         sistema.getPublicacions().remove(publicacion);
-        if (publicacion.getRutaArchivoAdjunto()!=null){
+        if (publicacion.getRutaArchivoAdjunto() != null) {
             Path path = Paths.get(publicacion.getRutaArchivoAdjunto());
             try {
                 Files.delete(path);
@@ -129,11 +121,15 @@ public class ModelFactory {
     }
 
     public void asignarAGrupoDeEstudio(Estudiante estudiante, String tema) {
-        sistema.getGestorGruposEstudio().agregarEstudianteAGrupo(estudiante, tema,this);
+        sistema.getGestorGruposEstudio().agregarEstudianteAGrupo(estudiante, tema, this);
     }
 
     public void agregarGrupo(GrupoEstudio grupoEstudio) {
         sistema.getGruposEstudio().add(grupoEstudio);
         sistema.getGestorGruposEstudio().agregarGrupos(sistema.getGruposEstudio());
+    }
+
+    private static class SingletonHolder {
+        private final static ModelFactory eINSTANCE = new ModelFactory();
     }
 }
