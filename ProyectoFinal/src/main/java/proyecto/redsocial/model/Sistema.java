@@ -10,33 +10,15 @@ import java.util.*;
 public class Sistema implements Serializable {
 
     private static final long serialVersionUID = 1L;
-
     private Map<String, List<String>> conexionesAfinidad;
-
     private ListaEnlazada<GrupoEstudio> listaGruposEstudio;
-
-    /** Lista enlazada auxiliar de estudiantes. Se reconstruye desde la lista simple al cargar. */
     private  ListaEnlazada<Estudiante> listaEstudiantes;
-
-    /** Lista enlazada auxiliar de moderadores. */
     private  ListaEnlazada<Moderador> listaModeradores;
-
-    /** Lista enlazada auxiliar de publicaciones. */
     private  ListaEnlazada<Publicacion> listaPublicaciones;
-
-    /** Árbol binario de publicaciones ordenadas. Se reconstruye al cargar. */
     private  ArbolABB arbolPublicaciones;
-
-    /** Cola de prioridad para solicitudes de ayuda. */
     private  ColaPrioridadSolicitudes colaPrioridadSolicitudes;
-
-    /** Grafo de afinidad entre estudiantes. Se reconstruye usando conexionesAfinidad. */
     private  GrafoAfinidad redAfinidad;
-
-    /** Manejador de grupos de estudio. */
     private  GestorGruposEstudio gestorGruposEstudio;
-
-    // --- CONSTRUCTOR ---
 
     public Sistema() {
         this.listaGruposEstudio = new ListaEnlazada<>();
@@ -75,8 +57,8 @@ public class Sistema implements Serializable {
                 Estudiante amigo = buscarEstudiante(correoAmigo);
                 NodoGrafo nodoAmigo = redAfinidad.buscarEstudiante(amigo);
 
-                if (nodo != null && nodoAmigo != null && !nodo.getAdyacentes().contains(nodoAmigo)) {
-                    nodo.getAdyacentes().add(nodoAmigo);
+                if (nodo != null && nodoAmigo != null && !nodo.getAdyacentes().contiene(nodoAmigo)) {
+                    nodo.getAdyacentes().agregar(nodoAmigo);
                 }
             }
         }

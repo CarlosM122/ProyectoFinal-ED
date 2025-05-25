@@ -23,9 +23,9 @@ public class GrafoAfinidad implements Serializable {
         NodoGrafo nodo1 = buscarEstudiante(estudiante1);
         NodoGrafo nodo2 = buscarEstudiante(estudiante2);
 
-        if (nodo1 != null && nodo2 != null && !nodo1.getAdyacentes().contains(nodo2)) {
-            nodo1.getAdyacentes().add(nodo2);
-            nodo2.getAdyacentes().add(nodo1);
+        if (nodo1 != null && nodo2 != null && !nodo1.getAdyacentes().contiene(nodo2)) {
+            nodo1.getAdyacentes().agregar(nodo2);
+            nodo2.getAdyacentes().agregar(nodo1);
 
             // Guardar en el mapa las conexiones
             guardarConexion(conexionesAfinidad, estudiante1.getCorreo(), estudiante2.getCorreo());
@@ -59,7 +59,7 @@ public class GrafoAfinidad implements Serializable {
             for (NodoGrafo amigoDeAmigo : amigo.getAdyacentes()) {
                 if (!recomendaciones.contiene(amigoDeAmigo.getEstudiante()) &&
                         !amigoDeAmigo.getEstudiante().equals(estudiante) &&
-                        !amigoDeAmigo.getAdyacentes().contains(nodo)) {
+                        !amigoDeAmigo.getAdyacentes().contiene(nodo)) {
                     recomendaciones.agregar(amigoDeAmigo.getEstudiante());
                 }
             }

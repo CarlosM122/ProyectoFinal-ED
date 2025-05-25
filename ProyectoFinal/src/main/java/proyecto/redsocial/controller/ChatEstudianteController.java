@@ -20,6 +20,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import proyecto.redsocial.factory.ModelFactory;
 import proyecto.redsocial.model.Estudiante;
+import proyecto.redsocial.model.Mensaje;
 import proyecto.redsocial.utils.RedSocialUtils;
 
 public class ChatEstudianteController {
@@ -92,7 +93,7 @@ public class ChatEstudianteController {
     ;
 
     private void cargarListaAmigos() {
-        List<Estudiante> amigos = estudiante1.getAmigos();
+        List<Estudiante> amigos = estudiante1.getAmigos().aLista();
         for (Estudiante estudiante : amigos) {
             cargarAmigo(estudiante);
         }
@@ -108,10 +109,24 @@ public class ChatEstudianteController {
             nombreCompañero.setText(estudiante2.getNombre());
             cargarFotoPerfil(estudianteCompañero.getRutaArchivoImagen());
             infoCompañero.setText(estudiante2.getCorreo());
-            // Aquí cargarías el chat de este compañero
+            List<Mensaje> mensajes = modelFactory.obtenerMensajes(estudiante,estudianteCompañero);
+            cargarMensajes(mensajes);
+            txtMensaje.requestFocus();
+            event.consume();
         });
 
         listCompañeros.getChildren().add(tarjeta);
+    }
+
+    private void cargarMensajes(List<Mensaje> mensajes) {
+        chatBox.getChildren().clear();
+        for (Mensaje mensaje : mensajes) {
+            VBox tarjeta = crearTarjetaChat();
+            Label nombre = crearLabelNombre(mensaje.getEmisor().getNombre());
+            Node contenidoMensaje = crearMensaje(mensaje.getMensaje());
+            tarjeta.getChildren().addAll(nombre, contenidoMensaje);
+            chatBox.getChildren().add(tarjeta);
+        }
     }
 
     private void cargarFotoPerfil(String rutaArchivoImagen) {
@@ -136,12 +151,19 @@ public class ChatEstudianteController {
     private void enviarMensaje() {
         String mensaje = txtMensaje.getText().trim();
         if (!mensaje.isEmpty()) {
+            Mensaje mensaje1 = new Mensaje();
+            mensaje1.setEmisor(estudiante1);
+            mensaje1.setReceptor(estudiante2);
+            mensaje1.setMensaje(mensaje);
+            estudiante1.getListMensajes().agregar(mensaje1);
+            estudiante2.getListMensajes().agregar(mensaje1);
             VBox tarjeta = crearTarjetaChat();
             Label nombre = crearLabelNombre(estudiante1.getNombre());
             Node contenidoMensaje = crearMensaje(mensaje);
             tarjeta.getChildren().addAll(nombre, contenidoMensaje);
             chatBox.getChildren().add(tarjeta);
             txtMensaje.clear();
+            modelFactory.guardarRecursosXML();
         }
     }
 

@@ -13,13 +13,13 @@ import java.util.List;
 public class NodoGrafo implements Serializable {
     private static final long serialVersionUID = 1L;
     private Estudiante estudiante;
-    private List<NodoGrafo> adyacentes;
+    private ListaEnlazada<NodoGrafo> adyacentes;
 
     public NodoGrafo() {
     }
 
     public NodoGrafo(Estudiante estudiante) {
         this.estudiante = estudiante;
-        this.adyacentes = new ArrayList<>();
+        this.adyacentes = new ListaEnlazada<>();
     }
 }

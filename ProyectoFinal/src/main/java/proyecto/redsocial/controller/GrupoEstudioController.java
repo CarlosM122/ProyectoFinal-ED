@@ -110,8 +110,8 @@ public class GrupoEstudioController {
         this.estudiante = estudiante;
         this.grupoEstudio = grupoSeleccionado;
         this.mainPageController = mainPageController;
-        this.miembros = grupoSeleccionado.getMiembros();
-        this.publicaciones = grupoSeleccionado.getPublicaciones();
+        this.miembros = grupoSeleccionado.getMiembros().aLista();
+        this.publicaciones = grupoSeleccionado.getPublicaciones().aLista();
         txtNombre.setText(estudiante.getNombre());
         txtInformacion.setText(estudiante.getCorreo());
         VboxInfoGrupo.getChildren().clear();
@@ -425,7 +425,7 @@ public class GrupoEstudioController {
                 "    -fx-font-size: 13px;");
         boton.setCursor(Cursor.HAND);
         boton.setOnAction(event -> {
-            grupoEstudio.getPublicaciones().remove(publicacion);
+            grupoEstudio.getPublicaciones().eliminar(publicacion);
             contenedorPublicaciones.getChildren().removeIf(child -> child instanceof VBox && ((VBox) child).getChildren().contains(boton));
         });
         return boton;

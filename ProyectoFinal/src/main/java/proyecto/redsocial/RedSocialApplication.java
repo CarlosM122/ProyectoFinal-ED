@@ -13,7 +13,7 @@ public class RedSocialApplication extends Application {
         FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/login-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
 
-        stage.setTitle("Red Social Educativa");
+        stage.setTitle("MindWave");
         stage.setScene(scene);
         stage.setMaximized(false);
         stage.centerOnScreen();

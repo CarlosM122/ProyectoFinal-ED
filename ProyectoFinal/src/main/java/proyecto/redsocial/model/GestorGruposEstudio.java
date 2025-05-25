@@ -9,7 +9,7 @@ import java.util.List;
 
 public class GestorGruposEstudio implements Serializable {
     private static final long serialVersionUID = 1L;
-    private final List<GrupoEstudio> gruposPorTema = new ArrayList<>();
+    private final ListaEnlazada<GrupoEstudio> gruposPorTema = new ListaEnlazada<>();
     private ModelFactory modelFactory;
 
     public GestorGruposEstudio() {
@@ -23,7 +23,7 @@ public class GestorGruposEstudio implements Serializable {
         this.modelFactory = modelFactory;
         GrupoEstudio grupoEstudio = buscarGrupoPorTema(tema);
         grupoEstudio.agregarMiembro(estudiante);
-        estudiante.getGruposEstudio().add(grupoEstudio);
+        estudiante.getGruposEstudio().agregar(grupoEstudio);
     }
 
     public void asignarEstudiantesAGrupos(List<Estudiante> estudiantes) {
@@ -44,7 +44,7 @@ public class GestorGruposEstudio implements Serializable {
         GrupoEstudio grupoEstudio = new GrupoEstudio();
         grupoEstudio.setIdGrupoEstudio("grupo_" + tema.toLowerCase());
         grupoEstudio.setTema(tema);
-        grupoEstudio.setMiembros(new ArrayList<>());
+        grupoEstudio.setMiembros(new ListaEnlazada<>());
         modelFactory.agregarGrupo(grupoEstudio);
 
         return grupoEstudio;
@@ -61,6 +61,6 @@ public class GestorGruposEstudio implements Serializable {
     }
 
     public List<GrupoEstudio> obtenerGruposFormados() {
-        return gruposPorTema;
+        return gruposPorTema.aLista();
     }
 }

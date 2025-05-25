@@ -41,6 +41,46 @@ public class ListaEnlazada <T> implements Iterable<T>, Serializable {
         }
     }
 
+    public T get(int index) {
+        if (index < 0) {
+            throw new IndexOutOfBoundsException("Índice negativo: " + index);
+        }
+        Nodo<T> actual = cabeza;
+        int contador = 0;
+        while (actual != null) {
+            if (contador == index) {
+                return actual.getDato();
+            }
+            actual = actual.getSiguiente();
+            contador++;
+        }
+        throw new IndexOutOfBoundsException("Índice fuera de rango: " + index);
+    }
+
+    public void eliminar(int index) {
+        if (index < 0) {
+            throw new IndexOutOfBoundsException("Índice negativo: " + index);
+        }
+        if (cabeza == null) {
+            throw new IndexOutOfBoundsException("Lista vacía");
+        }
+        if (index == 0) {
+            cabeza = cabeza.getSiguiente();
+            return;
+        }
+        Nodo<T> actual = cabeza;
+        int contador = 0;
+        while (actual.getSiguiente() != null) {
+            if (contador == index - 1) {
+                actual.setSiguiente(actual.getSiguiente().getSiguiente());
+                return;
+            }
+            actual = actual.getSiguiente();
+            contador++;
+        }
+        throw new IndexOutOfBoundsException("Índice fuera de rango: " + index);
+    }
+
     public void imprimir() {
         Nodo<T> actual = cabeza;
         while (actual != null) {
@@ -88,6 +128,10 @@ public class ListaEnlazada <T> implements Iterable<T>, Serializable {
         return false;
     }
 
+    public boolean estaVacia(){
+        return cabeza==null;
+    }
+
     public int size() {
         int contador = 0;
         if (cabeza == null) return 0;
@@ -97,5 +141,11 @@ public class ListaEnlazada <T> implements Iterable<T>, Serializable {
             actual = actual.getSiguiente();
         }
         return contador;
+    }
+
+    public void addAll(List<T> list) {
+        for (T elemento : list) {
+            this.agregar(elemento);
+        }
     }
 }

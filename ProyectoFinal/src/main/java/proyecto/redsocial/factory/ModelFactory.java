@@ -11,6 +11,7 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -128,6 +129,17 @@ public class ModelFactory implements Serializable {
     public void agregarAmigo(Estudiante estudiante, Estudiante estudianteAgregar) {
         sistema.getRedAfinidad().conectarEstudiantes(estudiante, estudianteAgregar, sistema.getConexionesAfinidad());
         guardarRecursosXML();
+    }
+
+    public List<Mensaje> obtenerMensajes(Estudiante estudiante, Estudiante estudianteCompañero) {
+        ListaEnlazada<Mensaje> mensajeList = new ListaEnlazada<>();
+        ListaEnlazada<Mensaje> mensajesTotales = estudiante.getListMensajes();
+        for (Mensaje mensaje: mensajesTotales){
+            if (mensaje.getEmisor().equals(estudianteCompañero)||mensaje.getReceptor().equals(estudianteCompañero)){
+                mensajeList.agregar(mensaje);
+            }
+        }
+        return mensajeList.aLista();
     }
 
     private static class SingletonHolder {

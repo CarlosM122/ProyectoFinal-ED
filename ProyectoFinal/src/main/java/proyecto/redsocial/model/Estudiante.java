@@ -2,6 +2,7 @@ package proyecto.redsocial.model;
 
 import lombok.Data;
 import lombok.ToString;
+import proyecto.redsocial.model.EstructurasPropias.ListaEnlazada;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,25 +17,25 @@ public class Estudiante implements Serializable {
     private String nombre;
     private String correo;
     private String contrasenia;
-    private List<Estudiante> amigos;
+    private ListaEnlazada<Estudiante> amigos;
     private String rutaArchivoImagen;
-    private List<String> intereses;
-    private List<Publicacion> contenidosPublicados;
-    private List<Valoracion> valoracions;
-    private List<GrupoEstudio> gruposEstudio;
-    private List<Mensaje> ListMensajes;
+    private ListaEnlazada<String> intereses;
+    private ListaEnlazada<Publicacion> contenidosPublicados;
+    private ListaEnlazada<Valoracion> valoracions;
+    private ListaEnlazada<GrupoEstudio> gruposEstudio;
+    private ListaEnlazada<Mensaje> ListMensajes;
 
     public Estudiante() {
-        this.ListMensajes = new ArrayList<>();
-        this.amigos = new ArrayList<>();
-        this.contenidosPublicados = new ArrayList<>();
-        this.valoracions = new ArrayList<>();
-        this.gruposEstudio = new ArrayList<>();
-        this.intereses = new ArrayList<>();
+        this.ListMensajes = new ListaEnlazada<>();
+        this.amigos = new ListaEnlazada<>();
+        this.contenidosPublicados = new ListaEnlazada<>();
+        this.valoracions = new ListaEnlazada<>();
+        this.gruposEstudio = new ListaEnlazada<>();
+        this.intereses = new ListaEnlazada<>();
     }
 
     public void publicarContenido(Publicacion publicacion){
-        contenidosPublicados.add(publicacion);
+        contenidosPublicados.agregar(publicacion);
     }
 
     public void valorarContenido(int valoracion, Publicacion publicacion, String comentario ){
@@ -42,11 +43,11 @@ public class Estudiante implements Serializable {
         v.setPublicacion(publicacion);
         v.setValoracion(valoracion);
         v.setComentario(comentario);
-        valoracions.add(v);
+        valoracions.agregar(v);
     }
 
     public boolean tieneInteres(String tema) {
-        return intereses != null && intereses.contains(tema);
+        return intereses != null && intereses.contiene(tema);
     }
 
     public void solicitarAyuda(SolicitudAyuda solicitudAyuda){
@@ -57,14 +58,14 @@ public class Estudiante implements Serializable {
     }
 
     public void agregarInteres(String interes){
-        if(!intereses.contains(interes)){
-            intereses.add(interes);
+        if(!intereses.contiene(interes)){
+            intereses.agregar(interes);
         }
     }
 
     public boolean tieneInteresComun(Estudiante otro) {
         for (String interes : intereses) {
-            if (otro.getIntereses().contains(interes)) {
+            if (otro.getIntereses().contiene(interes)) {
                 return true;
             }
         }

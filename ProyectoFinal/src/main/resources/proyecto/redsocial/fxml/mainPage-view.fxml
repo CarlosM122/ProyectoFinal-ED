@@ -84,7 +84,7 @@
             <padding>
                 <Insets bottom="10" left="10" right="10" top="20" />
             </padding>
-            <VBox alignment="CENTER" prefHeight="141.0" prefWidth="158.0">
+            <VBox alignment="CENTER" prefHeight="308.0" prefWidth="255.0">
             <StackPane fx:id="contenedorImagenPerfil" prefHeight="60.0" prefWidth="255.0">
                <children>
                       <ImageView fx:id="imagenPerfil" fitHeight="93.0" fitWidth="139.0" nodeOrientation="INHERIT" preserveRatio="true">
@@ -97,11 +97,9 @@
             </StackPane>
                 <Label fx:id="txtNombre" styleClass="profile-name" text="Nombre" />
                 <Label fx:id="txtInformacion" styleClass="profile-info" text="informacion" />
+            <Label alignment="CENTER" prefHeight="45.0" prefWidth="162.0" styleClass="group-suggestion-label" text="Tus Grupos" textAlignment="CENTER" />
             </VBox>
-         <VBox fx:id="VBoxGrupos" alignment="TOP_CENTER" prefHeight="452.0" prefWidth="255.0">
-            <children>
-               <Label alignment="CENTER" prefHeight="44.0" prefWidth="161.0" styleClass="group-suggestion-label" text="Tus Grupos" textAlignment="CENTER" />
-            </children>
+         <VBox fx:id="VBoxGrupos" alignment="TOP_CENTER" prefHeight="445.0" prefWidth="255.0">
             <VBox.margin>
                <Insets top="10.0" />
             </VBox.margin>

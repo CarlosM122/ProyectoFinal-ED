@@ -10,7 +10,8 @@ import java.io.Serializable;
 
 public class Mensaje implements Serializable {
     private static final long serialVersionUID = 1L;
-    private Estudiante estudiante;
+    private Estudiante emisor;
+    private Estudiante receptor;
     private String mensaje;
     private GrupoEstudio grupoEstudio;
 

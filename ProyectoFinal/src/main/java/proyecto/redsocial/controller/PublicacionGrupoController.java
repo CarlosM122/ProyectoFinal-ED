@@ -92,7 +92,7 @@ public class PublicacionGrupoController {
                 publicacion.setRutaArchivoAdjunto(rutaArchivoAdjunto);
             }
 
-            grupoEstudio.getPublicaciones().add(publicacion);
+            grupoEstudio.getPublicaciones().agregar(publicacion);
             grupoEstudioController.cargarEnVistaPrincipal(publicacion, estudiante);
             cerrarVentana();
             modelFactory.guardarRecursosXML();

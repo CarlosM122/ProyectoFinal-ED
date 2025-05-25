@@ -55,7 +55,7 @@ public class GestionarUsuariosController {
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colCorreo.setCellValueFactory(new PropertyValueFactory<>("correo"));
         colValoracion.setCellValueFactory(cellData -> {
-            double promedio = cellData.getValue().getValoracions().stream()
+            double promedio = cellData.getValue().getValoracions().aLista().stream()
                     .mapToInt(v -> v.getValoracion())
                     .average()
                     .orElse(0.0);

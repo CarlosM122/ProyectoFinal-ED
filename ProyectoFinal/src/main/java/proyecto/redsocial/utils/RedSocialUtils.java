@@ -44,8 +44,8 @@ public class RedSocialUtils {
         est1.setContrasenia(contrasenia);
         s.getListaEstudiantes().agregar(est1);
 
-        est.getAmigos().add(est1);
-        est1.getAmigos().add(est);
+        est.getAmigos().agregar(est1);
+        est1.getAmigos().agregar(est);
 
 
         Estudiante est2 = new Estudiante();
@@ -55,8 +55,8 @@ public class RedSocialUtils {
         est2.setRutaArchivoImagen("/proyecto/redsocial/imagenesFotoPerfil/Samu.jpg");
         s.getListaEstudiantes().agregar(est2);
 
-        est1.getAmigos().add(est2);
-        est2.getAmigos().add(est1);
+        est1.getAmigos().agregar(est2);
+        est2.getAmigos().agregar(est1);
 
 
         // Crear moderador
@@ -148,7 +148,7 @@ public class RedSocialUtils {
 
             Stage nuevaVentana = new Stage();
             Scene scene = new Scene(root);
-            nuevaVentana.setTitle("Nombre Web");
+            nuevaVentana.setTitle("MindWave");
             nuevaVentana.setScene(scene);
             nuevaVentana.setMaximized(true);
             nuevaVentana.show();
