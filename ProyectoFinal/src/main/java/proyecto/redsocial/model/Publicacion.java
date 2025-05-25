@@ -4,8 +4,8 @@ import lombok.Data;
 import lombok.ToString;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.List;
+
 @Data
 @ToString(exclude = "autor")
 public class Publicacion implements Serializable {
@@ -13,7 +13,7 @@ public class Publicacion implements Serializable {
     private int idContenido;
     private String tema;
     private String texto;
-    private Estudiante autor;
+    private Usuario autor;
     private List<Valoracion> valoraciones;
     private String fechaPublicacion;
     private String rutaArchivoAdjunto;
@@ -21,7 +21,7 @@ public class Publicacion implements Serializable {
     public Publicacion() {
     }
 
-    public double calcularPromedioValoracion(){
-        return 0;
+    public double calcularPromedioValoracion() {
+        return 0; // Puedes implementarlo si tienes valoraciones
     }
 }

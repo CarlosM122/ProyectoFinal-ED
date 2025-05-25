@@ -115,4 +115,15 @@ public class Sistema implements Serializable {
     public List<Publicacion> cargarPublicaciones() {
         return listaPublicaciones.aLista();
     }
+
+    /**
+     * Devuelve una lista de todos los estudiantes registrados en el sistema.
+     */
+    public List<Estudiante> getEstudiantes() {
+        List<Estudiante> estudiantes = new ArrayList<>();
+        for (Estudiante est : listaEstudiantes) {
+            estudiantes.add(est);
+        }
+        return estudiantes;
+    }
 }

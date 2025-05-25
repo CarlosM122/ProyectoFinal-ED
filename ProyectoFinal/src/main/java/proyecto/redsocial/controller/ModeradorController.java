@@ -6,10 +6,12 @@ import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -17,6 +19,8 @@ import proyecto.redsocial.factory.ModelFactory;
 import proyecto.redsocial.model.Estudiante;
 import proyecto.redsocial.model.Moderador;
 import proyecto.redsocial.model.Publicacion;
+import proyecto.redsocial.model.Sistema;
+import proyecto.redsocial.model.Valoracion;
 
 import java.io.IOException;
 import java.util.List;
@@ -26,8 +30,13 @@ import java.util.regex.Pattern;
 public class ModeradorController {
 
     private Estudiante estudiante;
+    private ModelFactory modelFactory = ModelFactory.getInstance();
     private Moderador moderador;
-    private final ModelFactory modelFactory = ModelFactory.getInstance();
+    private Sistema sistema;
+
+    public void setSistema(Sistema sistema) {
+        this.sistema = sistema;
+    }
 
     @FXML
     private VBox CerrarSecion;
@@ -56,6 +65,8 @@ public class ModeradorController {
     @FXML
     private Label txtNombre;
 
+    @FXML
+    private TextField txtPublicacion;
 
     @FXML
     void OnCerrarSesion(MouseEvent event) {
@@ -80,57 +91,66 @@ public class ModeradorController {
     @FXML
     void OnGestionarusuarios(MouseEvent event) {
         try {
-            // Cargar la nueva vista
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/proyecto/redsocial/fxml/gestionarUsuarios-view.fxml"));
             Parent root = loader.load();
 
-            // Obtener el controlador
             GestionarUsuariosController controller = loader.getController();
-
-            // Cargar datos necesarios
             controller.cargarEstudiantes(modelFactory.getSistema());
 
-            // Crear y mostrar la nueva ventana
             Stage nuevoStage = new Stage();
             nuevoStage.setScene(new Scene(root));
             nuevoStage.setTitle("Gestión de Usuarios");
             nuevoStage.show();
 
-            // Cerrar la ventana actual
             Stage ventanaActual = (Stage) ((Node) event.getSource()).getScene().getWindow();
             ventanaActual.close();
 
         } catch (IOException e) {
-            e.printStackTrace();  // Opcional: muestra alerta con Alert si quieres
+            e.printStackTrace();
         }
     }
 
-
-
-
     @FXML
     void onPublicar(MouseEvent event) {
+        String texto = txtPublicacion.getText();
+        if (texto != null && !texto.trim().isEmpty()) {
+            Publicacion publicacion = new Publicacion();
+            publicacion.setTexto(texto);
+            // Solo si el moderador puede publicar, debes cambiar el tipo de autor a Usuario o similar
+            // Por ahora, esto se comentaría o necesita rediseño:
+            // publicacion.setAutor(moderador);
 
+            modelFactory.getSistema().getListaPublicaciones().agregar(publicacion);
+            txtPublicacion.clear();
+            cargarPublicaciones();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Advertencia");
+            alert.setHeaderText("Campo vacío");
+            alert.setContentText("Por favor, ingrese texto para publicar.");
+            alert.showAndWait();
+        }
     }
+
+    public void cargarPublicaciones() {
+        contenedorPublicaciones.getChildren().clear();
+        List<Publicacion> publicaciones = modelFactory.getSistema().cargarPublicaciones(); // método correcto
+        for (Publicacion publicacion : publicaciones) {
+            cargarEnVistaPrincipal(publicacion, null);
+        }
+    }
+
 
     public void cargarDatosVista(Moderador moderador) {
         this.moderador = moderador;
         txtNombre.setText(moderador.getNombre());
         txtInformacion.setText(moderador.getCorreo());
-        cargarPublicaciones(estudiante);
-    }
-
-    private void cargarPublicaciones(Estudiante estudiante) {
-        List<Publicacion> publicaciones = modelFactory.obtenerPublicaciones();
-        for (Publicacion publicacion : publicaciones) {
-            cargarEnVistaPrincipal(publicacion, estudiante);
-        }
+        cargarPublicaciones();
     }
 
     private Node crearContenido(String texto) {
         VBox contenedor = new VBox(6);
 
-        // Regex para encontrar enlaces
         Pattern pattern = Pattern.compile("(https?://\\S+)");
         Matcher matcher = pattern.matcher(texto);
 
@@ -140,7 +160,6 @@ public class ModeradorController {
         while (matcher.find()) {
             hayEnlace = true;
 
-            // Agrega texto antes del enlace
             if (matcher.start() > lastEnd) {
                 String textoAntes = texto.substring(lastEnd, matcher.start()).trim();
                 if (!textoAntes.isEmpty()) {
@@ -151,7 +170,6 @@ public class ModeradorController {
                 }
             }
 
-            // Crea el enlace clickeable
             String url = matcher.group();
             Hyperlink link = new Hyperlink(url);
             link.setStyle("-fx-font-size: 13px;");
@@ -159,7 +177,11 @@ public class ModeradorController {
                 try {
                     java.awt.Desktop.getDesktop().browse(new java.net.URI(url));
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Error");
+                    alert.setHeaderText("No se pudo abrir el enlace");
+                    alert.setContentText(ex.getMessage());
+                    alert.showAndWait();
                 }
             });
             contenedor.getChildren().add(link);
@@ -167,7 +189,6 @@ public class ModeradorController {
             lastEnd = matcher.end();
         }
 
-        // Agrega texto restante después del último enlace
         if (lastEnd < texto.length()) {
             String textoFinal = texto.substring(lastEnd).trim();
             if (!textoFinal.isEmpty()) {
@@ -178,7 +199,6 @@ public class ModeradorController {
             }
         }
 
-        // Si no hay enlaces, retorna solo el texto completo
         if (!hayEnlace) {
             Label contenido = new Label(texto);
             contenido.setWrapText(true);
@@ -203,10 +223,10 @@ public class ModeradorController {
             tarjeta.getChildren().add(botonAbrirArchivo);
         }
 
-        Button botonValorar = crearBotonValorar();
-        tarjeta.getChildren().add(botonValorar);
-        Button botonEliminar = crearBotonEliminar(publicacion);
-        tarjeta.getChildren().add(botonEliminar);
+        Button botonValorar = crearBotonValorar(publicacion);
+        Button botonEliminar = crearBotonEliminar(publicacion, tarjeta);
+
+        tarjeta.getChildren().addAll(botonValorar, botonEliminar);
 
         contenedorPublicaciones.getChildren().addFirst(tarjeta);
     }
@@ -214,13 +234,13 @@ public class ModeradorController {
     private VBox crearTarjetaPublicacion() {
         VBox tarjeta = new VBox(8);
         tarjeta.setStyle("""
-        -fx-background-color: #ffffff;
-        -fx-padding: 12;
-        -fx-background-radius: 12;
-        -fx-border-color: #dddddd;
-        -fx-border-radius: 12;
-        -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
-    """);
+            -fx-background-color: #ffffff;
+            -fx-padding: 12;
+            -fx-background-radius: 12;
+            -fx-border-color: #dddddd;
+            -fx-border-radius: 12;
+            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+        """);
         return tarjeta;
     }
 
@@ -256,13 +276,17 @@ public class ModeradorController {
             try {
                 java.awt.Desktop.getDesktop().open(new java.io.File(rutaArchivo));
             } catch (IOException e) {
-                e.printStackTrace();
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText("No se pudo abrir el archivo");
+                alert.setContentText(e.getMessage());
+                alert.showAndWait();
             }
         });
         return boton;
     }
 
-    private Button crearBotonValorar() {
+    private Button crearBotonValorar(Publicacion publicacion) {
         Button boton = new Button("Valorar");
         boton.setStyle("-fx-background-color: linear-gradient(to right, #f9d423, #ff4e50);\n" +
                 "    -fx-background-radius: 90;\n" +
@@ -272,12 +296,42 @@ public class ModeradorController {
                 "    -fx-font-size: 13px;");
         boton.setCursor(Cursor.HAND);
         boton.setOnAction(event -> {
-            System.out.println("Boton Valoracion");
+            TextInputDialog dialog = new TextInputDialog();
+            dialog.setTitle("Valorar publicación");
+            dialog.setHeaderText("Ingrese una valoración (1-5):");
+            dialog.setContentText("Valoración:");
+            dialog.showAndWait().ifPresent(valor -> {
+                try {
+                    int valoracion = Integer.parseInt(valor);
+                    if (valoracion < 1 || valoracion > 5) {
+                        mostrarAlerta("Valoración fuera de rango", "Ingrese un valor entre 1 y 5.");
+                        return;
+                    }
+                    Valoracion nuevaValoracion = new Valoracion();
+                    nuevaValoracion.setValoracion(valoracion);
+                    nuevaValoracion.setPublicacion(publicacion);
+                    // Puedes agregar más lógica aquí si quieres guardar quién valoró
+                    if (publicacion.getValoraciones() != null) {
+                        publicacion.getValoraciones().add(nuevaValoracion);
+                    }
+                    mostrarAlerta("Valoración registrada", "¡Gracias por valorar!");
+                } catch (NumberFormatException e) {
+                    mostrarAlerta("Valor no válido", "Ingrese un número entero entre 1 y 5.");
+                }
+            });
         });
         return boton;
     }
 
-    private Button crearBotonEliminar(Publicacion publicacion) {
+    private void mostrarAlerta(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
+
+    private Button crearBotonEliminar(Publicacion publicacion, VBox tarjeta) {
         Button boton = new Button("Eliminar");
         boton.setStyle("-fx-background-color: linear-gradient(to right, #f9d423, #ff4e50);\n" +
                 "    -fx-background-radius: 90;\n" +
@@ -288,9 +342,8 @@ public class ModeradorController {
         boton.setCursor(Cursor.HAND);
         boton.setOnAction(event -> {
             modelFactory.eliminarPublicacion(publicacion);
-            contenedorPublicaciones.getChildren().removeIf(child -> child instanceof VBox && ((VBox) child).getChildren().contains(boton));
+            contenedorPublicaciones.getChildren().remove(tarjeta);
         });
         return boton;
     }
 }
-

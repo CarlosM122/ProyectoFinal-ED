@@ -21,16 +21,21 @@ import proyecto.redsocial.model.Sistema;
 import javafx.scene.control.Button;
 import javafx.event.ActionEvent;
 
+import java.io.IOException;
 
 public class GestionarUsuariosController {
 
     private Sistema sistema;
+    private proyecto.redsocial.model.Moderador moderador;
 
     public void setSistema(Sistema sistema) {
         this.sistema = sistema;
         cargarEstudiantes(sistema);
     }
 
+    public void setModerador(proyecto.redsocial.model.Moderador moderador) {
+        this.moderador = moderador;
+    }
 
     @FXML
     private VBox CerrarSecion;
@@ -71,31 +76,8 @@ public class GestionarUsuariosController {
     @FXML
     private Label txtNombre;
 
-<<<<<<< Updated upstream
-<<<<<<< Updated upstream
-    public void cargarEstudiantes(Sistema sistema) {
-        // Asociar columnas si no se hizo en el FXML
-        colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        colCorreo.setCellValueFactory(new PropertyValueFactory<>("correo"));
-        colValoracion.setCellValueFactory(cellData -> {
-            double promedio = cellData.getValue().getValoracions().aLista().stream()
-                    .mapToInt(v -> v.getValoracion())
-                    .average()
-                    .orElse(0.0);
-            return new javafx.beans.property.SimpleStringProperty(String.format("%.1f", promedio));
-        });
-
-        ObservableList<Estudiante> lista = FXCollections.observableArrayList(sistema.getListaEstudiantes().aLista());
-        tablaUsuarios.setItems(lista);
-    }
-=======
     @FXML
     private TextField txtNombreUsuario;
->>>>>>> Stashed changes
-=======
-    @FXML
-    private TextField txtNombreUsuario;
->>>>>>> Stashed changes
 
     @FXML
     private TextField txtValoracionUsuario;
@@ -103,96 +85,95 @@ public class GestionarUsuariosController {
     @FXML
     void OnCerrarSesion(MouseEvent event) {
         try {
-            // Cambia la ruta al FXML de moderador
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/proyecto/redsocial/fxml/Moderadorview.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/proyecto/redsocial/fxml/ModeradorView.fxml"));
             Parent root = loader.load();
 
-            // Mostrar la vista del moderador
+            ModeradorController moderadorController = loader.getController();
+            moderadorController.setSistema(sistema);
+            if (moderador != null) {
+                moderadorController.cargarDatosVista(moderador);
+            }
+
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
-            stage.setTitle("Panel del Moderador");
+            stage.setTitle("Panel de Administrador");
             stage.show();
 
-            // Cierra la ventana actual
             Stage ventanaActual = (Stage) ((Node) event.getSource()).getScene().getWindow();
             ventanaActual.close();
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+
+
+    @FXML
+    void OnEliminarUsuario(ActionEvent event) {
+        Estudiante seleccionado = tablaUsuarios.getSelectionModel().getSelectedItem();
+        if (seleccionado != null) {
+            sistema.getListaEstudiantes().eliminar(seleccionado);
+            cargarEstudiantes(sistema);
+            txtInformacion.setText("Usuario eliminado correctamente.");
+        } else {
+            txtInformacion.setText("Seleccione un usuario para eliminar.");
         }
     }
 
     @FXML
     void OnEditarUsuario(ActionEvent event) {
         Estudiante seleccionado = tablaUsuarios.getSelectionModel().getSelectedItem();
-
         if (seleccionado != null) {
-            seleccionado.setNombre(txtNombreUsuario.getText());
-            seleccionado.setCorreo(txtCorreoUsuario.getText());
-
-            // Actualizar visualización de la tabla
-            tablaUsuarios.refresh();
-
-            txtInformacion.setText("Usuario actualizado correctamente.");
+            String nuevoNombre = txtNombreUsuario.getText();
+            if (!nuevoNombre.isEmpty()) {
+                seleccionado.setNombre(nuevoNombre);
+            }
+            cargarEstudiantes(sistema);
+            txtInformacion.setText("Usuario editado correctamente.");
         } else {
-            txtInformacion.setText("Por favor selecciona un usuario para editar.");
+            txtInformacion.setText("Seleccione un usuario para editar.");
         }
     }
-
 
     @FXML
-    void OnEliminarUsuario(ActionEvent event) {
-        Estudiante seleccionado = tablaUsuarios.getSelectionModel().getSelectedItem();
+    public void initialize() {
+        tablaUsuarios.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                txtNombreUsuario.setText(newSelection.getNombre());
+                txtCorreoUsuario.setText(newSelection.getCorreo());
 
-        if (seleccionado != null) {
-            sistema.getEstudiantes().remove(seleccionado);
-            tablaUsuarios.getItems().remove(seleccionado);
-            txtInformacion.setText("Usuario eliminado correctamente.");
-            limpiarCampos();
-        } else {
-            txtInformacion.setText("Por favor selecciona un usuario para eliminar.");
-        }
+                // Calcular promedio de valoraciones
+                double suma = 0;
+                int cantidad = 0;
+                for (var v : newSelection.getValoracions()) {
+                    suma += v.getValoracion();
+                    cantidad++;
+                }
+                double promedio = cantidad > 0 ? (suma / cantidad) : 0.0;
+                txtValoracionUsuario.setText(String.format("%.1f", promedio));
+            }
+        });
     }
-
 
     public void cargarEstudiantes(Sistema sistema) {
         // Asociar columnas si no se hizo en el FXML
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colCorreo.setCellValueFactory(new PropertyValueFactory<>("correo"));
         colValoracion.setCellValueFactory(cellData -> {
-            double promedio = cellData.getValue().getValoracions().stream()
-                    .mapToInt(v -> v.getValoracion())
-                    .average()
-                    .orElse(0.0);
+            // Calcular promedio manualmente porque ListaEnlazada no tiene stream()
+            double suma = 0;
+            int cantidad = 0;
+            for (var v : cellData.getValue().getValoracions()) {
+                suma += v.getValoracion();
+                cantidad++;
+            }
+            double promedio = cantidad > 0 ? (suma / cantidad) : 0.0;
             return new javafx.beans.property.SimpleStringProperty(String.format("%.1f", promedio));
         });
 
         ObservableList<Estudiante> lista = FXCollections.observableArrayList(sistema.getEstudiantes());
         tablaUsuarios.setItems(lista);
-    }
-
-    private void limpiarCampos() {
-        txtNombreUsuario.clear();
-        txtCorreoUsuario.clear();
-        txtValoracionUsuario.clear();
-    }
-
-
-    @FXML
-    public void initialize() {
-        // Agregar listener para cargar datos al seleccionar un estudiante en la tabla
-        tablaUsuarios.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                txtNombreUsuario.setText(newSelection.getNombre());
-                txtCorreoUsuario.setText(newSelection.getCorreo());
-
-                double promedio = newSelection.getValoracions().stream()
-                        .mapToInt(v -> v.getValoracion())
-                        .average()
-                        .orElse(0.0);
-                txtValoracionUsuario.setText(String.format("%.1f", promedio));
-            }
-        });
     }
 
 

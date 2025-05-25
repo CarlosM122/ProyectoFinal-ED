@@ -11,12 +11,9 @@ import java.util.List;
 @ToString(exclude = {"gruposEstudio", "contenidosPublicados", "amigos"})
 
 
-public class Estudiante implements Serializable {
+public class Estudiante extends Usuario implements Serializable {
     private static final long serialVersionUID = 1L;
     private int id;
-    private String nombre;
-    private String correo;
-    private String contrasenia;
     private ListaEnlazada<Estudiante> amigos;
     private String rutaArchivoImagen;
     private ListaEnlazada<String> intereses;
@@ -72,3 +69,4 @@ public class Estudiante implements Serializable {
         return false;
     }
 }
+
