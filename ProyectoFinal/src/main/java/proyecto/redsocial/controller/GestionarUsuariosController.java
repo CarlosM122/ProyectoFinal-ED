@@ -72,6 +72,7 @@ public class GestionarUsuariosController {
     private Label txtNombre;
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
     public void cargarEstudiantes(Sistema sistema) {
         // Asociar columnas si no se hizo en el FXML
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
@@ -87,6 +88,10 @@ public class GestionarUsuariosController {
         ObservableList<Estudiante> lista = FXCollections.observableArrayList(sistema.getListaEstudiantes().aLista());
         tablaUsuarios.setItems(lista);
     }
+=======
+    @FXML
+    private TextField txtNombreUsuario;
+>>>>>>> Stashed changes
 =======
     @FXML
     private TextField txtNombreUsuario;
