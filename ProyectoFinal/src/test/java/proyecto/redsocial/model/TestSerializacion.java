@@ -3,8 +3,6 @@ package proyecto.redsocial.model;
 import proyecto.redsocial.model.EstructurasPropias.ListaEnlazada;
 import proyecto.redsocial.utils.Persistencia;
 
-import java.io.*;
-
 public class TestSerializacion {
     public static void main(String[] args) throws Exception {
         Sistema sistema = new Sistema();

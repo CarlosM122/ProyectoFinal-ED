@@ -289,6 +289,10 @@ public class MainPageController {
                 circlePublicacion.setStroke(Color.BLACK);
                 circlePublicacion.setStrokeWidth(2);
 
+                circlePerfil.setOnMouseClicked(event -> {
+                    cargarVistaPerfil();
+                });
+
                 contenedorImagenPerfil.getChildren().clear();
                 contenedorImagenPerfil.getChildren().add(circlePerfil);
                 contenedorImagenPerfilPublicacion.getChildren().clear();
@@ -296,6 +300,17 @@ public class MainPageController {
             }
         } catch (Exception e) {
             System.out.println("No se pudo cargar la imagen de perfil: " + e.getMessage());
+        }
+    }
+
+    private void cargarVistaPerfil() {
+        FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("/proyecto/redsocial/fxml/pagePerfil-viw.fxml"));
+        try {
+            RedSocialUtils.CargaVentana(fxmlLoader, "Editar perfil");
+            PagePerfilController pagePerfilController = fxmlLoader.getController();
+            pagePerfilController.inicializarDatos(estudiante, this);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

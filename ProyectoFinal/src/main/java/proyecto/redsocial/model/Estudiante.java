@@ -17,6 +17,7 @@ public class Estudiante implements Serializable {
     private String nombre;
     private String correo;
     private String contrasenia;
+    private String informacion;
     private ListaEnlazada<Estudiante> amigos;
     private String rutaArchivoImagen;
     private ListaEnlazada<String> intereses;
