@@ -17,8 +17,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import proyecto.redsocial.RedSocialApplication;
 import proyecto.redsocial.model.Estudiante;
@@ -298,55 +296,8 @@ public class GrupoEstudioController {
     }
 
     private void cargarMiembro(Estudiante estudiante) {
-        HBox tarjeta = crearTarjetaMiembrosLista(estudiante);
+        HBox tarjeta = RedSocialUtils.crearTarjetaEstudiante(estudiante);
         VBoxAmigosSugeridos.getChildren().add(tarjeta);
-    }
-
-    private HBox crearTarjetaMiembrosLista(Estudiante estudiante) {
-        HBox tarjeta = new HBox(10);
-        tarjeta.setAlignment(Pos.CENTER_LEFT);
-        tarjeta.setPadding(new Insets(8));
-        tarjeta.setStyle("""
-                    -fx-background-color: #f4f4f8;
-                    -fx-background-radius: 10;
-                    -fx-cursor: hand;
-                """);
-
-        // Crear avatar circular (placeholder)
-        Circle avatar = new Circle(20, Color.web("#6a8caf"));
-        // Si tienes imagen, usar ImageView así:
-        // ImageView avatar = new ImageView(new Image("ruta/al/avatar.png"));
-        // avatar.setFitWidth(40);
-        // avatar.setFitHeight(40);
-        // avatar.setClip(new Circle(20, 20, 20));
-
-        // Nombre
-        Label nombre = new Label(estudiante.getNombre());
-        nombre.setFont(Font.font("System", FontWeight.BOLD, 14));
-        nombre.setTextFill(Color.web("#333333"));
-
-        // Estado o info adicional (puedes cambiar texto)
-        Label estado = new Label("Activo ahora");
-        estado.setFont(Font.font("System", 12));
-        estado.setTextFill(Color.web("#777777"));
-
-        VBox textos = new VBox(4, nombre, estado);
-
-        tarjeta.getChildren().addAll(avatar, textos);
-
-        // Estilo hover para mejor experiencia
-        tarjeta.setOnMouseEntered(e -> tarjeta.setStyle("""
-                    -fx-background-color: #e0e5f2;
-                    -fx-background-radius: 10;
-                    -fx-cursor: hand;
-                """));
-        tarjeta.setOnMouseExited(e -> tarjeta.setStyle("""
-                    -fx-background-color: #f4f4f8;
-                    -fx-background-radius: 10;
-                    -fx-cursor: hand;
-                """));
-
-        return tarjeta;
     }
 
     public void cargarEnVistaPrincipal(Publicacion publicacion, Estudiante usuarioActual) {

@@ -8,7 +8,11 @@ public class ListaEnlazada <T> implements Iterable<T>{
 
     private Nodo<T> cabeza;
 
-    public void agregar(T dato) {
+    public ListaEnlazada() {
+        this.cabeza = null;
+    }
+
+    public void add(T dato) {
         Nodo<T> nuevo = new Nodo<>(dato);
         if (cabeza == null) {
             cabeza = nuevo;
@@ -18,6 +22,48 @@ public class ListaEnlazada <T> implements Iterable<T>{
                 actual = actual.getSiguiente();
             }
             actual.setSiguiente(nuevo);
+        }
+    }
+
+    public T get(int index) {
+        Nodo<T> actual = cabeza;
+        int contador = 0;
+        while (actual != null) {
+            if (contador == index) {
+                return actual.getDato();
+            }
+            actual = actual.getSiguiente();
+            contador++;
+        }
+        throw new IndexOutOfBoundsException("Índice fuera de rango: " + index);
+    }
+
+    public int size() {
+        int contador = 0;
+        Nodo<T> actual = cabeza;
+        while (actual != null) {
+            contador++;
+            actual = actual.getSiguiente();
+        }
+        return contador;
+    }
+
+    public void clear() {
+        cabeza = null;
+    }
+
+    public void eliminar(T nodo){
+        if (cabeza.getDato().equals(nodo)) {
+            cabeza = cabeza.getSiguiente();
+        } else {
+            Nodo<T> actual = cabeza;
+            while (actual.getSiguiente() != null) {
+                if (actual.getSiguiente().getDato().equals(nodo)) {
+                    actual.setSiguiente(actual.getSiguiente().getSiguiente());
+                    break;
+                }
+                actual = actual.getSiguiente();
+            }
         }
     }
 
@@ -55,5 +101,16 @@ public class ListaEnlazada <T> implements Iterable<T>{
                 return dato;
             }
         };
+    }
+
+    public boolean contiene(T nodo2) {
+        Nodo<T> actual = cabeza;
+        while (actual != null) {
+            if (actual.getDato().equals(nodo2)) {
+                return true;
+            }
+            actual = actual.getSiguiente();
+        }
+        return false;
     }
 }

@@ -148,7 +148,6 @@ public class PublicacionController {
             mainPageController.cargarEnVistaPrincipal(publicacion, estudiante);
             mainPageController.cargarGrupos(estudiante);
             cerrarVentana();
-            modelFactory.actualizarRedAfinidad(estudiante, tema);
             modelFactory.guardarRecursosXML();
         } else {
             mostrarMensaje("Error", "Datos Nulos", "Por favor rellena los campos necesarios.", Alert.AlertType.ERROR);

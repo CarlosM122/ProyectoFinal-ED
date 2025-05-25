@@ -12,11 +12,11 @@ public class GestorGruposEstudio {
     public GestorGruposEstudio() {
     }
 
-    public void agregarGrupos(List<GrupoEstudio> grupos){
+    public void agregarGrupos(List<GrupoEstudio> grupos) {
         gruposPorTema.addAll(grupos);
     }
 
-    public void agregarEstudianteAGrupo(Estudiante estudiante, String tema, ModelFactory modelFactory){
+    public void agregarEstudianteAGrupo(Estudiante estudiante, String tema, ModelFactory modelFactory) {
         this.modelFactory = modelFactory;
         GrupoEstudio grupoEstudio = buscarGrupoPorTema(tema);
         grupoEstudio.agregarMiembro(estudiante);
@@ -47,10 +47,10 @@ public class GestorGruposEstudio {
         return grupoEstudio;
     }
 
-    public List<GrupoEstudio> obtenerGruposDeEstudiante(Estudiante estudiante){
+    public List<GrupoEstudio> obtenerGruposDeEstudiante(Estudiante estudiante) {
         List<GrupoEstudio> grupos = new ArrayList<>();
-        for(GrupoEstudio grupo : gruposPorTema){
-            if(grupo.esMiembro(estudiante)){
+        for (GrupoEstudio grupo : gruposPorTema) {
+            if (grupo.esMiembro(estudiante)) {
                 grupos.add(grupo);
             }
         }

@@ -1,8 +1,17 @@
 package proyecto.redsocial.utils;
 
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import proyecto.redsocial.RedSocialApplication;
 import proyecto.redsocial.controller.MainPageController;
@@ -27,7 +36,6 @@ public class RedSocialUtils {
         est.setContrasenia(contraseniaEncriptada);
         est.setRutaArchivoImagen("/proyecto/redsocial/imagenesFotoPerfil/July.png");
         s.getEstudiantes().add(est);
-        s.getGrafoAfinidad().agregarEstudiante(est);
 
         Estudiante est1 = new Estudiante();
         est1.setNombre("AlejoElAmorDeMaria");
@@ -36,6 +44,10 @@ public class RedSocialUtils {
         est1.setContrasenia(contrasenia);
         s.getEstudiantes().add(est1);
 
+        est.getAmigos().add(est1);
+        est1.getAmigos().add(est);
+
+
         Estudiante est2 = new Estudiante();
         est2.setNombre("Samuel");
         est2.setCorreo("Samuel@edu.co");
@@ -43,11 +55,10 @@ public class RedSocialUtils {
         est2.setRutaArchivoImagen("/proyecto/redsocial/imagenesFotoPerfil/Samu.jpg");
         s.getEstudiantes().add(est2);
 
-
-
-        est.getAmigos().add(est1);
-        est1.getAmigos().add(est);
         est1.getAmigos().add(est2);
+        est2.getAmigos().add(est1);
+
+
         // Crear moderador
         Moderador mod = new Moderador();
         mod.setNombre("Admin");
@@ -58,6 +69,10 @@ public class RedSocialUtils {
         s.getModeradores().add(mod);
 
         s.getGestorGruposEstudio().asignarEstudiantesAGrupos(s.getEstudiantes());
+
+        s.inicializarSistema();
+        s.getRedAfinidad().conectarEstudiantes(est, est1);
+        s.getRedAfinidad().conectarEstudiantes(est1, est2);
 
         return s;
     }
@@ -75,6 +90,53 @@ public class RedSocialUtils {
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException("Error al encriptar la contraseña", e);
         }
+    }
+
+    public static HBox crearTarjetaEstudiante(Estudiante estudiante) {
+        HBox tarjeta = new HBox(10);
+        tarjeta.setAlignment(Pos.CENTER_LEFT);
+        tarjeta.setPadding(new Insets(8));
+        tarjeta.setStyle("""
+                    -fx-background-color: #f4f4f8;
+                    -fx-background-radius: 10;
+                    -fx-cursor: hand;
+                """);
+
+        // Crear avatar circular (placeholder)
+        Circle avatar = new Circle(20, Color.web("#6a8caf"));
+        // Si tienes imagen, usar ImageView así:
+        // ImageView avatar = new ImageView(new Image("ruta/al/avatar.png"));
+        // avatar.setFitWidth(40);
+        // avatar.setFitHeight(40);
+        // avatar.setClip(new Circle(20, 20, 20));
+
+        // Nombre
+        Label nombre = new Label(estudiante.getNombre());
+        nombre.setFont(Font.font("System", FontWeight.BOLD, 14));
+        nombre.setTextFill(Color.web("#333333"));
+
+        // Estado o info adicional (puedes cambiar texto)
+        Label estado = new Label("Activo ahora");
+        estado.setFont(Font.font("System", 12));
+        estado.setTextFill(Color.web("#777777"));
+
+        VBox textos = new VBox(4, nombre, estado);
+
+        tarjeta.getChildren().addAll(avatar, textos);
+
+        // Estilo hover para mejor experiencia
+        tarjeta.setOnMouseEntered(e -> tarjeta.setStyle("""
+                    -fx-background-color: #e0e5f2;
+                    -fx-background-radius: 10;
+                    -fx-cursor: hand;
+                """));
+        tarjeta.setOnMouseExited(e -> tarjeta.setStyle("""
+                    -fx-background-color: #f4f4f8;
+                    -fx-background-radius: 10;
+                    -fx-cursor: hand;
+                """));
+
+        return tarjeta;
     }
 
 

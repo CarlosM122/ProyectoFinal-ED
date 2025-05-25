@@ -1,5 +1,35 @@
 package proyecto.redsocial.controller;
 
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Cursor;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.FontWeight;
+import javafx.stage.Stage;
+import proyecto.redsocial.RedSocialApplication;
+import proyecto.redsocial.factory.ModelFactory;
+import proyecto.redsocial.model.EstructurasPropias.ListaEnlazada;
+import proyecto.redsocial.model.Estudiante;
+import proyecto.redsocial.model.GrupoEstudio;
+import proyecto.redsocial.model.Publicacion;
+import proyecto.redsocial.utils.RedSocialUtils;
+
 import java.io.IOException;
 import java.net.URL;
 import java.text.Normalizer;
@@ -10,43 +40,12 @@ import java.util.ResourceBundle;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Cursor;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-import javafx.scene.shape.Circle;
-import javafx.stage.Stage;
-import proyecto.redsocial.RedSocialApplication;
-import proyecto.redsocial.factory.ModelFactory;
-import proyecto.redsocial.model.GrupoEstudio;
-import proyecto.redsocial.model.Publicacion;
-import proyecto.redsocial.model.Estudiante;
-
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import proyecto.redsocial.utils.RedSocialUtils;
-
 public class MainPageController {
-
-    private Estudiante estudiante;
 
     private final ModelFactory modelFactory = ModelFactory.getInstance();
     private final List<String> temas = new ArrayList<>();
     private final List<String> temasNormalizados = new ArrayList<>();
-
+    private Estudiante estudiante;
     @FXML
     private Label LbPublicacion;
 
@@ -203,6 +202,51 @@ public class MainPageController {
         cargarFotoPerfilprincipal(estudiante.getRutaArchivoImagen());
         cargarPublicaciones(estudiante);
         cargarGrupos(this.estudiante);
+        cargarAmigosSugeridos();
+    }
+
+    private void cargarAmigosSugeridos() {
+        ListaEnlazada<Estudiante> amigosSugeridos = modelFactory.obtenerAmigosRecomendados(estudiante);
+        for (Estudiante amigoSugerido : amigosSugeridos) {
+            cargarEnAmigosSugueridos(amigoSugerido);
+        }
+    }
+
+    private void cargarEnAmigosSugueridos(Estudiante amigoSugerido) {
+        HBox tarjeta = crearTarjetaSugerido(amigoSugerido);
+        VBoxAmigosSugeridos.getChildren().add(tarjeta);
+    }
+
+    private HBox crearTarjetaSugerido(Estudiante estudiante) {
+        HBox tarjeta = new HBox(10);
+        tarjeta.setAlignment(Pos.CENTER_LEFT);
+        tarjeta.setPadding(new Insets(10));
+        tarjeta.setStyle("""
+                -fx-background-color: #eaf1fb;
+                -fx-background-radius: 10;
+                -fx-border-color: #cddbf0;
+                -fx-border-radius: 10;
+                -fx-cursor: hand;
+            """);
+
+        Circle avatar = new Circle(20, Color.web("#6a8caf"));
+
+        Label nombre = new Label(estudiante.getNombre());
+        nombre.setFont(Font.font("System", FontWeight.BOLD, 14));
+        nombre.setTextFill(Color.web("#2a2a2a"));
+
+        Label sugerido = new Label("Sugerido");
+        sugerido.setFont(Font.font("System", FontPosture.ITALIC, 12));
+        sugerido.setTextFill(Color.web("#5075a8"));
+
+        VBox textos = new VBox(4, nombre, sugerido);
+
+        Region espacio = new Region();
+        HBox.setHgrow(espacio, Priority.ALWAYS);
+
+        tarjeta.getChildren().addAll(avatar, textos, espacio);
+
+        return tarjeta;
     }
 
     public void cargarGrupos(Estudiante estudiante) {

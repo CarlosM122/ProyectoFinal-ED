@@ -5,14 +5,16 @@ import proyecto.redsocial.model.EstructurasPropias.ArbolABB;
 import proyecto.redsocial.model.EstructurasPropias.ColaPrioridadSolicitudes;
 import proyecto.redsocial.model.EstructurasPropias.GrafoAfinidad;
 import proyecto.redsocial.model.EstructurasPropias.ListaEnlazada;
-import proyecto.redsocial.utils.RedSocialUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Data
 public class Sistema implements Serializable {
+    private Map<Estudiante,Estudiante> conexionAfinidad;
     private List<Estudiante> estudiantes;
     private ListaEnlazada<Estudiante> listaEstudiantes;
     private List<Moderador> moderadores;
@@ -20,24 +22,25 @@ public class Sistema implements Serializable {
     private List<Publicacion> publicacions;
     private ListaEnlazada<Publicacion> listaPublicaciones;
     private List<SolicitudAyuda> listaSolicitudesAyuda;
-    private GrafoAfinidad grafoAfinidad;
     private ColaPrioridadSolicitudes colaPrioridadSolicitudes;
+    private GrafoAfinidad redAfinidad;
     private List<GrupoEstudio> gruposEstudio;
     private transient ArbolABB arbolPublicaciones;
     private GestorGruposEstudio gestorGruposEstudio;
 
     public Sistema() {
+        this.conexionAfinidad = new HashMap<>();
         this.estudiantes = new ArrayList<>();
         this.moderadores = new ArrayList<>();
         this.gruposEstudio = new ArrayList<>();
         this.publicacions = new ArrayList<>();
-        this.grafoAfinidad = new GrafoAfinidad();
         this.gestorGruposEstudio = new GestorGruposEstudio();
         this.listaEstudiantes = new ListaEnlazada<>();
         this.listaModeradores = new ListaEnlazada<>();
         this.listaPublicaciones = new ListaEnlazada<>();
         this.colaPrioridadSolicitudes = new ColaPrioridadSolicitudes();
         this.listaSolicitudesAyuda = new ArrayList<>();
+        this.redAfinidad = new GrafoAfinidad();
     }
 
     public void inicializarSistema() {
@@ -47,13 +50,14 @@ public class Sistema implements Serializable {
             colaPrioridadSolicitudes.insertar(solicitudAyuda);
         }
         for (Estudiante estudiante : estudiantes) {
-            listaEstudiantes.agregar(estudiante);
+            listaEstudiantes.add(estudiante);
+            redAfinidad.agregarEstudiante(estudiante);
         }
         for (Moderador moderador : moderadores) {
-            listaModeradores.agregar(moderador);
+            listaModeradores.add(moderador);
         }
         for (Publicacion publicacion : publicacions) {
-            listaPublicaciones.agregar(publicacion);
+            listaPublicaciones.add(publicacion);
         }
     }
 
@@ -78,7 +82,7 @@ public class Sistema implements Serializable {
     public void guardarEstudiante(Estudiante estudiante) {
         estudiante.setId(estudiantes.size()+1);
         estudiantes.add(estudiante);
-        listaEstudiantes.agregar(estudiante);
+        listaEstudiantes.add(estudiante);
     }
 
     public Moderador buscarModerador(String correo) {

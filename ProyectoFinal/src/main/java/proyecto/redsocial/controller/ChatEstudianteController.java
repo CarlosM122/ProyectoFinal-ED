@@ -1,16 +1,11 @@
 package proyecto.redsocial.controller;
 
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
-import java.net.URL;
 import java.util.List;
 import java.util.Objects;
-import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -23,10 +18,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import proyecto.redsocial.factory.ModelFactory;
 import proyecto.redsocial.model.Estudiante;
+import proyecto.redsocial.utils.RedSocialUtils;
 
 public class ChatEstudianteController {
 
@@ -105,7 +99,7 @@ public class ChatEstudianteController {
     }
 
     private void cargarAmigo(Estudiante estudiante) {
-        HBox tarjeta = crearTarjetaChatLista(estudiante);
+        HBox tarjeta = RedSocialUtils.crearTarjetaEstudiante(estudiante);
 
         tarjeta.setUserData(estudiante);
         tarjeta.setOnMouseClicked(event -> {
@@ -137,53 +131,6 @@ public class ChatEstudianteController {
         } catch (Exception e) {
             System.out.println("No se pudo cargar la imagen de perfil: " + e.getMessage());
         }
-    }
-
-    private HBox crearTarjetaChatLista(Estudiante estudiante) {
-        HBox tarjeta = new HBox(10);
-        tarjeta.setAlignment(Pos.CENTER_LEFT);
-        tarjeta.setPadding(new Insets(8));
-        tarjeta.setStyle("""
-                    -fx-background-color: #f4f4f8;
-                    -fx-background-radius: 10;
-                    -fx-cursor: hand;
-                """);
-
-        // Crear avatar circular (placeholder)
-        Circle avatar = new Circle(20, Color.web("#6a8caf"));
-        // Si tienes imagen, usar ImageView así:
-        // ImageView avatar = new ImageView(new Image("ruta/al/avatar.png"));
-        // avatar.setFitWidth(40);
-        // avatar.setFitHeight(40);
-        // avatar.setClip(new Circle(20, 20, 20));
-
-        // Nombre
-        Label nombre = new Label(estudiante.getNombre());
-        nombre.setFont(Font.font("System", FontWeight.BOLD, 14));
-        nombre.setTextFill(Color.web("#333333"));
-
-        // Estado o info adicional (puedes cambiar texto)
-        Label estado = new Label("Activo ahora");
-        estado.setFont(Font.font("System", 12));
-        estado.setTextFill(Color.web("#777777"));
-
-        VBox textos = new VBox(4, nombre, estado);
-
-        tarjeta.getChildren().addAll(avatar, textos);
-
-        // Estilo hover para mejor experiencia
-        tarjeta.setOnMouseEntered(e -> tarjeta.setStyle("""
-                    -fx-background-color: #e0e5f2;
-                    -fx-background-radius: 10;
-                    -fx-cursor: hand;
-                """));
-        tarjeta.setOnMouseExited(e -> tarjeta.setStyle("""
-                    -fx-background-color: #f4f4f8;
-                    -fx-background-radius: 10;
-                    -fx-cursor: hand;
-                """));
-
-        return tarjeta;
     }
 
     private void enviarMensaje() {

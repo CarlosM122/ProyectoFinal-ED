@@ -2,6 +2,7 @@ package proyecto.redsocial.factory;
 
 import lombok.Getter;
 import proyecto.redsocial.model.*;
+import proyecto.redsocial.model.EstructurasPropias.ListaEnlazada;
 import proyecto.redsocial.utils.Persistencia;
 import proyecto.redsocial.utils.RedSocialUtils;
 
@@ -50,7 +51,6 @@ public class ModelFactory {
             nuevoEstudiante.setCorreo(correo);
             nuevoEstudiante.setContrasenia(RedSocialUtils.encriptarSHA256(contrasenia));
             sistema.guardarEstudiante(nuevoEstudiante);
-            sistema.getGrafoAfinidad().agregarEstudiante(nuevoEstudiante);
             guardarRecursosXML();
             registrado = true;
         }
@@ -111,15 +111,6 @@ public class ModelFactory {
         guardarRecursosXML();
     }
 
-    public void actualizarRedAfinidad(Estudiante estudianteActual, String tema) {
-        for (Estudiante otro : sistema.getEstudiantes()) {
-            if (!otro.equals(estudianteActual) && otro.getIntereses().contains(tema)) {
-                sistema.getGrafoAfinidad().agregarRelacion(estudianteActual, otro);
-                return;
-            }
-        }
-    }
-
     public void asignarAGrupoDeEstudio(Estudiante estudiante, String tema) {
         sistema.getGestorGruposEstudio().agregarEstudianteAGrupo(estudiante, tema, this);
     }
@@ -127,6 +118,10 @@ public class ModelFactory {
     public void agregarGrupo(GrupoEstudio grupoEstudio) {
         sistema.getGruposEstudio().add(grupoEstudio);
         sistema.getGestorGruposEstudio().agregarGrupos(sistema.getGruposEstudio());
+    }
+
+    public ListaEnlazada<Estudiante> obtenerAmigosRecomendados(Estudiante estudiante) {
+        return sistema.getRedAfinidad().amigosRecomendados(estudiante);
     }
 
     private static class SingletonHolder {
