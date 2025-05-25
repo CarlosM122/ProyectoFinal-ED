@@ -35,14 +35,14 @@ public class RedSocialUtils {
         String contraseniaEncriptada = encriptarSHA256("123456");
         est.setContrasenia(contraseniaEncriptada);
         est.setRutaArchivoImagen("/proyecto/redsocial/imagenesFotoPerfil/July.png");
-        s.getEstudiantes().add(est);
+        s.getListaEstudiantes().agregar(est);
 
         Estudiante est1 = new Estudiante();
         est1.setNombre("AlejoElAmorDeMaria");
         est1.setCorreo("Alejo@edu.co");
         String contrasenia = encriptarSHA256("123456");
         est1.setContrasenia(contrasenia);
-        s.getEstudiantes().add(est1);
+        s.getListaEstudiantes().agregar(est1);
 
         est.getAmigos().add(est1);
         est1.getAmigos().add(est);
@@ -53,7 +53,7 @@ public class RedSocialUtils {
         est2.setCorreo("Samuel@edu.co");
         est2.setContrasenia(encriptarSHA256("samuel123"));
         est2.setRutaArchivoImagen("/proyecto/redsocial/imagenesFotoPerfil/Samu.jpg");
-        s.getEstudiantes().add(est2);
+        s.getListaEstudiantes().agregar(est2);
 
         est1.getAmigos().add(est2);
         est2.getAmigos().add(est1);
@@ -66,14 +66,12 @@ public class RedSocialUtils {
         String passModerador = "admin123";
         String passEncriptadaMod = encriptarSHA256(passModerador);
         mod.setContrasenia(passEncriptadaMod);
-        s.getModeradores().add(mod);
+        s.getListaModeradores().agregar(mod);
 
-        s.getGestorGruposEstudio().asignarEstudiantesAGrupos(s.getEstudiantes());
-
+        s.getGestorGruposEstudio().asignarEstudiantesAGrupos(s.getListaEstudiantes().aLista());
         s.inicializarSistema();
-        s.getRedAfinidad().conectarEstudiantes(est, est1);
-        s.getRedAfinidad().conectarEstudiantes(est1, est2);
-
+        s.getRedAfinidad().conectarEstudiantes(est, est1,s.getConexionesAfinidad());
+        s.getRedAfinidad().conectarEstudiantes(est1, est2, s.getConexionesAfinidad());
         return s;
     }
 

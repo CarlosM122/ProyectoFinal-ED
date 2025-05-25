@@ -148,7 +148,7 @@
 
     <!-- Panel derecho -->
     <right>
-        <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="235.0" spacing="10" styleClass="side-bar" BorderPane.alignment="CENTER">
+        <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="286.0" spacing="10" styleClass="side-bar" BorderPane.alignment="CENTER">
             <padding>
                 <Insets bottom="10" left="10" right="10" top="20" />
             </padding>

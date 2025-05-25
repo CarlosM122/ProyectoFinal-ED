@@ -2,8 +2,15 @@ package proyecto.redsocial.model.EstructurasPropias;
 
 import proyecto.redsocial.model.SolicitudAyuda;
 
-public class ColaPrioridadSolicitudes {
+import java.io.Serializable;
+
+public class ColaPrioridadSolicitudes implements Serializable {
+    private static final long serialVersionUID = 1L;
     private NodoSolicitud cabeza;
+
+    public ColaPrioridadSolicitudes() {
+        this.cabeza = null;
+    }
 
     public void insertar (SolicitudAyuda solicitudAyuda){
         NodoSolicitud nuevo = new NodoSolicitud(solicitudAyuda);

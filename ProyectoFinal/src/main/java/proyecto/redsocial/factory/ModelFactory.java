@@ -7,13 +7,15 @@ import proyecto.redsocial.utils.Persistencia;
 import proyecto.redsocial.utils.RedSocialUtils;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
 @Getter
-public class ModelFactory {
+public class ModelFactory implements Serializable {
+    private static final long serialVersionUID = 1L;
     private Sistema sistema;
 
     private ModelFactory() {
@@ -59,7 +61,6 @@ public class ModelFactory {
 
     public void guardarSolicitud(SolicitudAyuda solicitudAyuda) {
         sistema.getColaPrioridadSolicitudes().insertar(solicitudAyuda);
-        sistema.getListaSolicitudesAyuda().add(solicitudAyuda);
     }
 
     public Object obtnerUsuario(String correo) {
@@ -71,7 +72,7 @@ public class ModelFactory {
     }
 
     public void guardarPublicacion(Publicacion publicacion) {
-        sistema.getPublicacions().add(publicacion);
+        sistema.getListaPublicaciones().agregar(publicacion);
         sistema.getArbolPublicaciones().insertar(publicacion);
         Estudiante estudiante = publicacion.getAutor();
         estudiante.publicarContenido(publicacion);
@@ -98,7 +99,7 @@ public class ModelFactory {
     }
 
     public void eliminarPublicacion(Publicacion publicacion) {
-        sistema.getPublicacions().remove(publicacion);
+        sistema.getListaPublicaciones().eliminar(publicacion);
         if (publicacion.getRutaArchivoAdjunto() != null) {
             Path path = Paths.get(publicacion.getRutaArchivoAdjunto());
             try {
@@ -116,12 +117,17 @@ public class ModelFactory {
     }
 
     public void agregarGrupo(GrupoEstudio grupoEstudio) {
-        sistema.getGruposEstudio().add(grupoEstudio);
-        sistema.getGestorGruposEstudio().agregarGrupos(sistema.getGruposEstudio());
+        sistema.getListaGruposEstudio().agregar(grupoEstudio);
+        sistema.getGestorGruposEstudio().agregarGrupos(sistema.getListaGruposEstudio());
     }
 
     public ListaEnlazada<Estudiante> obtenerAmigosRecomendados(Estudiante estudiante) {
         return sistema.getRedAfinidad().amigosRecomendados(estudiante);
+    }
+
+    public void agregarAmigo(Estudiante estudiante, Estudiante estudianteAgregar) {
+        sistema.getRedAfinidad().conectarEstudiantes(estudiante, estudianteAgregar, sistema.getConexionesAfinidad());
+        guardarRecursosXML();
     }
 
     private static class SingletonHolder {

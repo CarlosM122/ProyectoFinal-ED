@@ -2,12 +2,19 @@ package proyecto.redsocial.model.EstructurasPropias;
 
 import proyecto.redsocial.model.Publicacion;
 
+import java.io.Serializable;
 import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArbolABB {
+public class ArbolABB implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private NodoABB raiz;
+
+    public ArbolABB() {
+        raiz = null;
+    }
     private String normalizarTexto(String texto) {
         if (texto == null) return null;
         return Normalizer.normalize(texto, Normalizer.Form.NFD)

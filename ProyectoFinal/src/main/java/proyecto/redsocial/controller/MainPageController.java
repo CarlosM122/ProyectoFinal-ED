@@ -160,7 +160,7 @@ public class MainPageController {
         String textoBusqueda = txtBusqueda.getText();
         if (textoBusqueda == null || textoBusqueda.isBlank()) {
             contenedorPublicaciones.getChildren().clear();
-            cargarPublicaciones(estudiante);
+            cargarPublicaciones();
             return;
         }
 
@@ -200,7 +200,7 @@ public class MainPageController {
         txtNombre.setText(estudiante.getNombre());
         txtInformacion.setText(estudiante.getCorreo());
         cargarFotoPerfilprincipal(estudiante.getRutaArchivoImagen());
-        cargarPublicaciones(estudiante);
+        cargarPublicaciones();
         cargarGrupos(this.estudiante);
         cargarAmigosSugeridos();
     }
@@ -222,12 +222,12 @@ public class MainPageController {
         tarjeta.setAlignment(Pos.CENTER_LEFT);
         tarjeta.setPadding(new Insets(10));
         tarjeta.setStyle("""
-                -fx-background-color: #eaf1fb;
-                -fx-background-radius: 10;
-                -fx-border-color: #cddbf0;
-                -fx-border-radius: 10;
-                -fx-cursor: hand;
-            """);
+                    -fx-background-color: #eaf1fb;
+                    -fx-background-radius: 10;
+                    -fx-border-color: #cddbf0;
+                    -fx-border-radius: 10;
+                    -fx-cursor: hand;
+                """);
 
         Circle avatar = new Circle(20, Color.web("#6a8caf"));
 
@@ -244,9 +244,25 @@ public class MainPageController {
         Region espacio = new Region();
         HBox.setHgrow(espacio, Priority.ALWAYS);
 
-        tarjeta.getChildren().addAll(avatar, textos, espacio);
+        tarjeta.setUserData(estudiante);
+        Button botonAgregar = new Button("Agregar");
+        botonAgregar.setStyle("""
+                    -fx-background-color: #5075a8;
+                    -fx-text-fill: white;
+                    -fx-background-radius: 5;
+                    -fx-font-size: 12px;
+                """);
+        botonAgregar.setOnAction(e -> {
+            agregarEstudiante((Estudiante) tarjeta.getUserData(), estudiante);
+        });
+
+        tarjeta.getChildren().addAll(avatar, textos, espacio, botonAgregar);
 
         return tarjeta;
+    }
+
+    private void agregarEstudiante(Estudiante estudianteAgregar, Estudiante estudiante) {
+        modelFactory.agregarAmigo(estudiante, estudianteAgregar);
     }
 
     public void cargarGrupos(Estudiante estudiante) {
@@ -377,7 +393,7 @@ public class MainPageController {
     }
 
 
-    private void cargarPublicaciones(Estudiante estudiante) {
+    private void cargarPublicaciones() {
         List<Publicacion> publicaciones = modelFactory.obtenerPublicaciones();
         for (Publicacion publicacion : publicaciones) {
             cargarEnVistaPrincipal(publicacion, this.estudiante);

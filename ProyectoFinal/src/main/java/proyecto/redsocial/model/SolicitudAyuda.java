@@ -3,9 +3,13 @@ package proyecto.redsocial.model;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
-public class SolicitudAyuda implements Comparable<SolicitudAyuda> {
+public class SolicitudAyuda implements Comparable<SolicitudAyuda>, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private Estudiante estudiante;
     private String tema;

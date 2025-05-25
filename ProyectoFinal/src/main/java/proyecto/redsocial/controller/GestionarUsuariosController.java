@@ -62,7 +62,7 @@ public class GestionarUsuariosController {
             return new javafx.beans.property.SimpleStringProperty(String.format("%.1f", promedio));
         });
 
-        ObservableList<Estudiante> lista = FXCollections.observableArrayList(sistema.getEstudiantes());
+        ObservableList<Estudiante> lista = FXCollections.observableArrayList(sistema.getListaEstudiantes().aLista());
         tablaUsuarios.setItems(lista);
     }
 

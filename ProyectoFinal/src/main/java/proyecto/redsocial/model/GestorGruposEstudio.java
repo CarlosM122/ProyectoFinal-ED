@@ -1,19 +1,22 @@
 package proyecto.redsocial.model;
 
 import proyecto.redsocial.factory.ModelFactory;
+import proyecto.redsocial.model.EstructurasPropias.ListaEnlazada;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GestorGruposEstudio {
+public class GestorGruposEstudio implements Serializable {
+    private static final long serialVersionUID = 1L;
     private final List<GrupoEstudio> gruposPorTema = new ArrayList<>();
     private ModelFactory modelFactory;
 
     public GestorGruposEstudio() {
     }
 
-    public void agregarGrupos(List<GrupoEstudio> grupos) {
-        gruposPorTema.addAll(grupos);
+    public void agregarGrupos(ListaEnlazada<GrupoEstudio> grupos) {
+        gruposPorTema.addAll(grupos.aLista());
     }
 
     public void agregarEstudianteAGrupo(Estudiante estudiante, String tema, ModelFactory modelFactory) {

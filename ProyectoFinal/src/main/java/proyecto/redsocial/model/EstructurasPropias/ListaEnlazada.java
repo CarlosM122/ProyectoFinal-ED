@@ -1,18 +1,19 @@
 package proyecto.redsocial.model.EstructurasPropias;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class ListaEnlazada <T> implements Iterable<T>{
-
+public class ListaEnlazada <T> implements Iterable<T>, Serializable {
+    private static final long serialVersionUID = 1L;
     private Nodo<T> cabeza;
 
     public ListaEnlazada() {
         this.cabeza = null;
     }
 
-    public void add(T dato) {
+    public void agregar(T dato) {
         Nodo<T> nuevo = new Nodo<>(dato);
         if (cabeza == null) {
             cabeza = nuevo;
@@ -23,33 +24,6 @@ public class ListaEnlazada <T> implements Iterable<T>{
             }
             actual.setSiguiente(nuevo);
         }
-    }
-
-    public T get(int index) {
-        Nodo<T> actual = cabeza;
-        int contador = 0;
-        while (actual != null) {
-            if (contador == index) {
-                return actual.getDato();
-            }
-            actual = actual.getSiguiente();
-            contador++;
-        }
-        throw new IndexOutOfBoundsException("Índice fuera de rango: " + index);
-    }
-
-    public int size() {
-        int contador = 0;
-        Nodo<T> actual = cabeza;
-        while (actual != null) {
-            contador++;
-            actual = actual.getSiguiente();
-        }
-        return contador;
-    }
-
-    public void clear() {
-        cabeza = null;
     }
 
     public void eliminar(T nodo){
@@ -112,5 +86,16 @@ public class ListaEnlazada <T> implements Iterable<T>{
             actual = actual.getSiguiente();
         }
         return false;
+    }
+
+    public int size() {
+        int contador = 0;
+        if (cabeza == null) return 0;
+        Nodo<T> actual = cabeza;
+        while (actual != null) {
+            contador++;
+            actual = actual.getSiguiente();
+        }
+        return contador;
     }
 }

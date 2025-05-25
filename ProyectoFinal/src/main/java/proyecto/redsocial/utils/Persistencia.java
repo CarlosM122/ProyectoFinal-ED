@@ -2,36 +2,35 @@ package proyecto.redsocial.utils;
 
 import proyecto.redsocial.model.Sistema;
 
-import java.io.File;
+import java.io.*;
 
 public class Persistencia {
 
-    private static final String RUTA_MODELO_XML = "data/model.xml";
-
-
-
-    public static boolean existeArchivoXML() {
-        File archivo = new File(RUTA_MODELO_XML);
-        return archivo.exists() && archivo.length() > 0;
-    }
+    private static final String RUTA_ARCHIVO_BINARIO = "src/main/resources/persistencia/sistema.dat";
 
     public static void guardarRecursosXML(Sistema sistema) {
         try {
-            ArchivoUtils.guardarSerializadoXML(RUTA_MODELO_XML,sistema);
-        }catch (Exception e) {
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(RUTA_ARCHIVO_BINARIO));
+            oos.writeObject(sistema);
+            oos.close();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public static Sistema cargarRecursosXML() {
         Sistema sistema = null;
-
         try {
-            sistema = (Sistema)ArchivoUtils.cargarRecursoSerializadoXML(RUTA_MODELO_XML);
-        } catch (Exception e) {
-            // TODO Auto-generated catch block
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(RUTA_ARCHIVO_BINARIO));
+            sistema = (Sistema) ois.readObject();
+            ois.close();
+        } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
         }
         return sistema;
+    }
+
+    public static boolean existeArchivoXML() {
+        return new File(RUTA_ARCHIVO_BINARIO).exists();
     }
 }

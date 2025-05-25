@@ -3,13 +3,15 @@ package proyecto.redsocial.model;
 import lombok.Data;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 @Data
 @ToString(exclude = {"gruposEstudio", "contenidosPublicados", "amigos"})
 
 
-public class Estudiante {
+public class Estudiante implements Serializable {
+    private static final long serialVersionUID = 1L;
     private int id;
     private String nombre;
     private String correo;

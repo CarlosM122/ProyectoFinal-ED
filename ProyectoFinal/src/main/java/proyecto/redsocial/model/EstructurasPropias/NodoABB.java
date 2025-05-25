@@ -3,10 +3,12 @@ package proyecto.redsocial.model.EstructurasPropias;
 import lombok.Data;
 import proyecto.redsocial.model.Publicacion;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 @Data
-public class NodoABB {
+public class NodoABB implements Serializable {
+    private static final long serialVersionUID = 1L;
     private String tema;
     private List<Publicacion> publicaciones;
     private NodoABB izquierdo;
