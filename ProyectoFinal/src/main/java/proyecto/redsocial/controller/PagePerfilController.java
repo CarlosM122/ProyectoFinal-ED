@@ -1,5 +1,9 @@
 package proyecto.redsocial.controller;
+import java.io.File;
+import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
@@ -26,7 +30,7 @@ public class PagePerfilController {
     private Estudiante estudiante;
     private ModelFactory modelFactory= ModelFactory.getInstance();
     private MainPageController mainPageController;
-
+    private final File carpetaImagenesPerfil = new File("archivos_perfil");
 
     @FXML
     private ResourceBundle resources;
@@ -89,17 +93,10 @@ public class PagePerfilController {
             txtnombreUsuario.setText(nuevoNombre);
 
             Alert alerta = new Alert(Alert.AlertType.INFORMATION);
-            alerta.setTitle("Nombre actualizado");
+            alerta.setTitle("Datos Actualizados Correctamente");
             alerta.setHeaderText(null);
-            alerta.setContentText("El nombre se actualizó correctamente.");
+            alerta.setContentText("La Informacion se actualizó correctamente.");
             alerta.showAndWait();
-        } else {
-            Alert alerta = new Alert(Alert.AlertType.WARNING);
-            alerta.setTitle("Nombre inválido");
-            alerta.setHeaderText(null);
-            alerta.setContentText("Por favor, ingresa un nombre válido.");
-            alerta.showAndWait();
-
         }
         modelFactory.guardarRecursosXML();
         mainPageController.cargarDatosVista(estudiante);
@@ -111,10 +108,16 @@ public class PagePerfilController {
          stage.close();
     }
 
-    private void cargarFotoPerfilprincipal(String rutaArchivoImagen) {
+    private void cargarFotoPerfilprincipal(String nombreArchivo) {
         try {
-            if (rutaArchivoImagen != null && !rutaArchivoImagen.isBlank()) {
-                Image imagen = new Image(Objects.requireNonNull(getClass().getResource(rutaArchivoImagen)).toExternalForm());
+            if (nombreArchivo != null && !nombreArchivo.isBlank()) {
+                File archivoImagen = new File("archivos_perfil", nombreArchivo);
+
+                if (!archivoImagen.exists()) {
+                    throw new IllegalArgumentException("No se encontró la imagen: " + archivoImagen.getAbsolutePath());
+                }
+
+                Image imagen = new Image(archivoImagen.toURI().toString());
 
                 double radioPerfil = 70;
                 Circle circlePerfil = new Circle(radioPerfil);
@@ -125,36 +128,39 @@ public class PagePerfilController {
                 ContenedorFotoPErfil.getChildren().clear();
                 ContenedorFotoPErfil.getChildren().add(circlePerfil);
             }
-
         } catch (Exception e) {
             System.out.println("No se pudo cargar la imagen de perfil: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
+
+
     private void cambiarFotoPerfil() {
         FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Abrir Archivo");
+        fileChooser.setTitle("Seleccionar nueva foto de perfil");
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("Imagenes", "*.jpg", "*.png", "*.gif")
+                new FileChooser.ExtensionFilter("Imágenes", "*.jpg", "*.png", "*.gif")
         );
 
-        fileChooser.setInitialDirectory(new java.io.File(System.getProperty("user.home")));
-        java.io.File archivo = fileChooser.showOpenDialog(btnCambiarFoto.getScene().getWindow());
+        File archivo = fileChooser.showOpenDialog(btnCambiarFoto.getScene().getWindow());
+
         if (archivo != null) {
             try {
-                java.io.File carpetaDestino = new java.io.File(String.valueOf(PagePerfilController.class.getResource("/proyecto/redsocial/imagenesFotoPerfil")));
-                if (!carpetaDestino.exists()) {
-                    carpetaDestino.mkdir();
+                if (!carpetaImagenesPerfil.exists()) {
+                    carpetaImagenesPerfil.mkdirs();
                 }
 
-                java.io.File archivoDestino = new java.io.File(carpetaDestino, archivo.getName());
-                java.nio.file.Files.copy(
+                File archivoDestino = new File(carpetaImagenesPerfil, archivo.getName());
+
+                Files.copy(
                         archivo.toPath(),
                         archivoDestino.toPath(),
-                        java.nio.file.StandardCopyOption.REPLACE_EXISTING
+                        StandardCopyOption.REPLACE_EXISTING
                 );
 
-                estudiante.setRutaArchivoImagen(archivoDestino.getAbsolutePath());
+                estudiante.setRutaArchivoImagen(archivoDestino.getName());
+
                 cargarFotoPerfilprincipal(estudiante.getRutaArchivoImagen());
 
             } catch (Exception e) {
@@ -163,6 +169,3 @@ public class PagePerfilController {
         }
     }
 }
-
-
-

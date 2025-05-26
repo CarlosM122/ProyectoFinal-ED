@@ -21,6 +21,7 @@ import proyecto.redsocial.model.Moderador;
 import proyecto.redsocial.model.Publicacion;
 import proyecto.redsocial.model.Sistema;
 import proyecto.redsocial.model.Valoracion;
+import proyecto.redsocial.utils.RedSocialUtils;
 
 import java.io.IOException;
 import java.util.List;
@@ -265,12 +266,7 @@ public class ModeradorController {
 
     private Button crearBotonAbrirArchivo(String rutaArchivo) {
         Button boton = new Button("Abrir archivo");
-        boton.setStyle("-fx-background-color: linear-gradient(to right, #f9d423, #ff4e50);\n" +
-                "    -fx-background-radius: 90;\n" +
-                "    -fx-padding: 6 16 6 16;\n" +
-                "    -fx-text-fill: #333333;\n" +
-                "    -fx-font-weight: bold;\n" +
-                "    -fx-font-size: 13px;");
+        RedSocialUtils.aplicarEstiloBotonGradiente(boton);
         boton.setCursor(Cursor.HAND);
         boton.setOnAction(event -> {
             try {
@@ -312,7 +308,7 @@ public class ModeradorController {
                     nuevaValoracion.setPublicacion(publicacion);
                     // Puedes agregar más lógica aquí si quieres guardar quién valoró
                     if (publicacion.getValoraciones() != null) {
-                        publicacion.getValoraciones().add(nuevaValoracion);
+                        publicacion.getValoraciones().agregar(nuevaValoracion);
                     }
                     mostrarAlerta("Valoración registrada", "¡Gracias por valorar!");
                 } catch (NumberFormatException e) {

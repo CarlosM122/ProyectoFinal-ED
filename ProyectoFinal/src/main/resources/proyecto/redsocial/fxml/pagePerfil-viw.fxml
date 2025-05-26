@@ -12,10 +12,10 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="314.0" prefWidth="745.0" stylesheets="@../css/estiloMainPage.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyecto.redsocial.controller.PagePerfilController">
+<AnchorPane prefHeight="314.0" prefWidth="561.0" stylesheets="@../css/estiloMainPage.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyecto.redsocial.controller.PagePerfilController">
     <children>
 
-                    <Button fx:id="btnGuardarCambios" alignment="CENTER" layoutX="324.0" layoutY="267.0" mnemonicParsing="false" onAction="#onGuardarCambios" prefHeight="32.0" prefWidth="134.0" styleClass="group-suggestion-label" stylesheets="@../css/estiloMainPage.css" text="Guardar Cambios" />
+                    <Button fx:id="btnGuardarCambios" alignment="CENTER" layoutX="323.0" layoutY="268.0" mnemonicParsing="false" onAction="#onGuardarCambios" prefHeight="32.0" prefWidth="148.0" styleClass="group-suggestion-label" stylesheets="@../css/estiloMainPage.css" text="Guardar Cambios" />
 
                     <HBox alignment="CENTER_LEFT" layoutX="51.0" layoutY="57.0" prefHeight="198.0" prefWidth="510.0" spacing="15.0">
             <children>
@@ -39,25 +39,29 @@
                                       <Font name="System Bold" size="29.0" />
                                   </font>
                               </TextField>
-                              <Label fx:id="txtnombreUsuario" prefHeight="42.0" prefWidth="212.0" stylesheets="@../css/estiloMainPage.css" text="Nombre Usuario">
+                              <Label fx:id="txtnombreUsuario" prefHeight="43.0" prefWidth="344.0" stylesheets="@../css/estiloMainPage.css" text="Nombre Usuario">
                                   <font>
                                       <Font name="System Bold" size="29.0" />
                                   </font>
                               </Label>
                           </children>
                       </StackPane>
-                  <Label fx:id="txtInformacion" prefHeight="0.0" prefWidth="231.0" text="Informacion" />
-                  <TextField fx:id="txtCambiarNombre" prefHeight="27.0" prefWidth="249.0" promptText="CambiarNombre" />
+                  <Label fx:id="txtInformacion" prefHeight="194.0" prefWidth="231.0" text="Informacion">
+                     <font>
+                        <Font name="Tahoma Bold" size="12.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtCambiarNombre" prefHeight="58.0" prefWidth="321.0" promptText="CambiarNombre" />
                </children>
             </VBox>
             </children>
         </HBox>
-      <Separator layoutX="2.0" layoutY="49.0" prefHeight="0.0" prefWidth="743.0" />
-      <Label layoutX="299.0" layoutY="8.0" text="EDITAR PERFIL" textFill="#ff6f08">
+      <Separator layoutX="2.0" layoutY="49.0" prefHeight="0.0" prefWidth="577.0" />
+      <Label layoutX="228.0" layoutY="14.0" styleClass="group-suggestion-label" text="EDITAR PERFIL" textFill="#ff6f08">
          <font>
             <Font name="System Bold Italic" size="27.0" />
          </font>
       </Label>
-      <Button fx:id="btnCambiarFoto" layoutX="570.0" layoutY="133.0" mnemonicParsing="false" onAction="#onCambiarFoto" prefHeight="32.0" prefWidth="107.0" styleClass="group-suggestion-label" stylesheets="@../css/estiloMainPage.css" text="Cambiar Foto" />
+      <Button fx:id="btnCambiarFoto" layoutX="75.0" layoutY="268.0" mnemonicParsing="false" onAction="#onCambiarFoto" prefHeight="32.0" prefWidth="121.0" styleClass="group-suggestion-label" stylesheets="@../css/estiloMainPage.css" text="Cambiar Foto" />
     </children>
 </AnchorPane>

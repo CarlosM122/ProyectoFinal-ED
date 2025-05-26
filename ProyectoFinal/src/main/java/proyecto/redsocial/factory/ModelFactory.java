@@ -61,6 +61,7 @@ public class ModelFactory implements Serializable {
 
     public void guardarSolicitud(SolicitudAyuda solicitudAyuda) {
         sistema.getColaPrioridadSolicitudes().insertar(solicitudAyuda);
+
     }
 
     public Object obtnerUsuario(String correo) {
@@ -123,7 +124,7 @@ public class ModelFactory implements Serializable {
     }
 
     public ListaEnlazada<Estudiante> obtenerAmigosRecomendados(Estudiante estudiante) {
-        return sistema.getRedAfinidad().amigosRecomendados(estudiante);
+        return sistema.getRedAfinidad().amigosRecomendados(estudiante,sistema);
     }
 
     public void agregarAmigo(Estudiante estudiante, Estudiante estudianteAgregar) {

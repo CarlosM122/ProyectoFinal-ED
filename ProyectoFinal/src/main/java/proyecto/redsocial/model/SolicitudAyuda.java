@@ -14,6 +14,7 @@ public class SolicitudAyuda implements Comparable<SolicitudAyuda>, Serializable 
     private Estudiante estudiante;
     private String tema;
     private int urgencia;
+    private String descripcion;
 
     public SolicitudAyuda() {
     }

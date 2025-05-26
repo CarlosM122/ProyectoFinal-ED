@@ -94,6 +94,9 @@
                       </ImageView>
                   <Circle fill="#1f93ff00" radius="55.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="3.0" />
                </children>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </StackPane>
                 <Label fx:id="txtNombre" styleClass="profile-name" text="Nombre" />
                 <Label fx:id="txtInformacion" styleClass="profile-info" text="informacion" />
@@ -126,6 +129,9 @@
                                     </ImageView>
                            <Circle fill="#1f93ff00" radius="45.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="3.0" />
                         </children>
+                        <cursor>
+                           <Cursor fx:constant="HAND" />
+                        </cursor>
                      </StackPane>
                             <AnchorPane prefHeight="100.0" prefWidth="535.0">
                                 <children>

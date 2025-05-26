@@ -14,6 +14,8 @@ import proyecto.redsocial.utils.RedSocialUtils;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static proyecto.redsocial.utils.RedSocialUtils.mostrarMensaje;
+
 public class RegistroController {
 
     private ModelFactory modelFactory;
@@ -73,13 +75,4 @@ public class RegistroController {
         Stage stage = (Stage) btnRegistro.getScene().getWindow();
         stage.close();
     }
-
-    private void mostrarMensaje(String titulo, String header, String contenido, Alert.AlertType alertType) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(titulo);
-        alert.setHeaderText(header);
-        alert.setContentText(contenido);
-        alert.show();
-    }
-
 }

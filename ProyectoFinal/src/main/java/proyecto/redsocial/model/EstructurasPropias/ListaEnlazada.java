@@ -148,4 +148,18 @@ public class ListaEnlazada <T> implements Iterable<T>, Serializable {
             this.agregar(elemento);
         }
     }
+
+    public void reemplazarEn(int indice, T elemento) {
+        if (indice < 0 || indice >= size()) {
+            throw new IndexOutOfBoundsException("Índice fuera de rango");
+        }
+
+        Nodo<T> actual = cabeza;
+        for (int i = 0; i < indice; i++) {
+            actual = actual.getSiguiente();
+        }
+
+        actual.setDato(elemento);
+    }
+
 }

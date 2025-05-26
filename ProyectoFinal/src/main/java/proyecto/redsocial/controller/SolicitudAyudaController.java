@@ -1,18 +1,22 @@
 package proyecto.redsocial.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 import proyecto.redsocial.factory.ModelFactory;
+import proyecto.redsocial.model.EstructurasPropias.ListaEnlazada;
 import proyecto.redsocial.model.Estudiante;
 import proyecto.redsocial.model.SolicitudAyuda;
 
-import java.awt.*;
+import java.io.File;
+import java.lang.annotation.Target;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +27,7 @@ public class SolicitudAyudaController {
     private final ModelFactory modelFactory = ModelFactory.getInstance();
     private Estudiante estudiante;
     private MainPageController mainPageController;
+
     @FXML
     private ResourceBundle resources;
 
@@ -54,36 +59,19 @@ public class SolicitudAyudaController {
     private Label txtInformacion;
 
     @FXML
+    private VBox contenedorImagenPerfil;
+
+    @FXML
     private Label txtNombre;
 
     @FXML
-    void OnAyuda(MouseEvent event) {
-
-    }
-
-    @FXML
-    void Onmensajes(MouseEvent event) {
-
-    }
-
-    @FXML
-    public void OnbtnGenerarSolicitud(MouseEvent event) {
+    public void OnbtnGenerarSolicitud(ActionEvent event) {
         enviarSolicitud();
     }
 
     @FXML
-    void onAmigos(MouseEvent event) {
-
-    }
-
-    @FXML
     void onInicio(MouseEvent event) {
-
-    }
-
-    @FXML
-    void onNotificaciones(MouseEvent event) {
-
+        cerrarVentana();
     }
 
     @FXML
@@ -105,75 +93,100 @@ public class SolicitudAyudaController {
         this.estudiante = estudiante;
         this.mainPageController = mainPageController;
         txtNombre.setText(estudiante.getNombre());
+        txtInformacion.setText(estudiante.getInformacion());
+        cargarSolicitudes();
+        cargarFotoPerfil(estudiante.getRutaArchivoImagen());
+    }
+
+    private void cargarSolicitudes() {
+        ListaEnlazada<SolicitudAyuda> listaSolicitudes = estudiante.getSolicitudesAyuda();
+        for (SolicitudAyuda solicitudAyuda : listaSolicitudes){
+            VBox tarjeta = crearTarjetaSolicitud(solicitudAyuda.getTema(),solicitudAyuda.getDescripcion(),solicitudAyuda.getUrgencia());
+            contenedorSolicitudes.getChildren().add(tarjeta);
+        }
+    }
+
+    private void cargarFotoPerfil(String nombreArchivo) {
+        try {
+            if (nombreArchivo != null && !nombreArchivo.isBlank()) {
+                File archivoImagen = new File("archivos_perfil", nombreArchivo);
+
+                if (!archivoImagen.exists()) {
+                    throw new IllegalArgumentException("No se encontró la imagen: " + archivoImagen.getAbsolutePath());
+                }
+
+                Image imagen = new Image(archivoImagen.toURI().toString());
+
+                double radioPerfil = 45;
+                Circle circlePerfil = new Circle(radioPerfil);
+                circlePerfil.setFill(new ImagePattern(imagen));
+                circlePerfil.setStroke(Color.BLACK);
+                circlePerfil.setStrokeWidth(2);
+
+                contenedorImagenPerfil.getChildren().clear();
+                contenedorImagenPerfil.getChildren().add(circlePerfil);
+            }
+        } catch (Exception e) {
+            System.out.println("No se pudo cargar la imagen de perfil: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+    private void cerrarVentana() {
+        Stage stage = (Stage) VboxInicio.getScene().getWindow();
+        stage.close();
     }
 
     private void enviarSolicitud() {
         String tema = CBTemas.getValue();
         if (tema != null && txtDescripcion.getText() != null) {
-            int urgencia = obtenerUrgencia(CBTemas.getValue());
+            int urgencia = obtenerUrgencia(tema);
             SolicitudAyuda solicitudAyuda = new SolicitudAyuda();
             solicitudAyuda.setTema(tema);
             solicitudAyuda.setUrgencia(urgencia);
             solicitudAyuda.setEstudiante(estudiante);
+            solicitudAyuda.setDescripcion(txtDescripcion.getText());
+            estudiante.solicitarAyuda(solicitudAyuda);
             modelFactory.guardarSolicitud(solicitudAyuda);
-            Node descripcion = crearTarjetaContenido(txtDescripcion.getText() + "\n" + urgencia);
-            Label titulo = crearTarjetaTema(tema);
-            VBox tarjeta = crearTarjetaSolicitud();
-            tarjeta.getChildren().addAll(titulo, descripcion);
+
+            VBox tarjeta = crearTarjetaSolicitud(tema, txtDescripcion.getText(), urgencia);
             contenedorSolicitudes.getChildren().add(tarjeta);
+
             modelFactory.guardarRecursosXML();
         }
     }
 
-    private Label crearTarjetaTema(String temaTexto) {
-        Label tema = new Label(temaTexto);
-        tema.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2a2a2a;");
-        return tema;
-    }
+    private VBox crearTarjetaSolicitud(String tema, String descripcion, int urgencia) {
+        VBox tarjeta = new VBox(8);
+        tarjeta.setStyle("""
+            -fx-background-color: #f9f9f9;
+            -fx-padding: 16;
+            -fx-background-radius: 14;
+            -fx-border-color: #d0d0d0;
+            -fx-border-width: 1;
+            -fx-border-radius: 14;
+            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 6, 0.1, 0, 3);
+        """);
 
-    private Node crearTarjetaContenido(String texto) {
-        Label contenido = new Label(texto);
-        contenido.setWrapText(true);
-        contenido.setStyle("-fx-font-size: 13px; -fx-text-fill: #444444;");
-        return contenido;
+        Label lblTema = new Label("Tema: " + tema);
+        lblTema.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2a2a2a;");
+
+        Label lblDescripcion = new Label("Descripción: " + descripcion);
+        lblDescripcion.setWrapText(true);
+        lblDescripcion.setStyle("-fx-font-size: 13px; -fx-text-fill: #444444;");
+
+        Label lblUrgencia = new Label("Nivel de urgencia: " + urgencia);
+        lblUrgencia.setStyle("-fx-font-size: 12px; -fx-text-fill: #ff4444;");
+
+        tarjeta.getChildren().addAll(lblTema, lblDescripcion, lblUrgencia);
+        return tarjeta;
     }
 
     private int obtenerUrgencia(String value) {
-        switch (value) {
-            case "No puedo subir archivos":
-            case "Error en publicaciones":
-                return 2;
-
-            case "Cambio de contraseña":
-            case "Problemas técnicos":
-            case "No puedo iniciar sesión":
-            case "Solicitud de eliminación de cuenta":
-                return 3;
-
-            default:
-                return 1;
-        }
-    }
-
-    private void mostrarMensaje(String titulo, String header, String contenido, Alert.AlertType alertType) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(titulo);
-        alert.setHeaderText(header);
-        alert.setContentText(contenido);
-        alert.show();
-    }
-
-    private VBox crearTarjetaSolicitud() {
-        VBox tarjeta = new VBox(8);
-        tarjeta.setStyle("""
-                
-                        -fx-background-color: #ffffff;
-                -fx-padding: 12;
-                -fx-background-radius: 12;
-                -fx-border-color: #dddddd;
-                -fx-border-radius: 12;
-                -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
-                """);
-        return tarjeta;
+        return switch (value) {
+            case "No puedo subir archivos", "Error en publicaciones" -> 2;
+            case "Cambio de contraseña", "Problemas técnicos", "No puedo iniciar sesión", "Solicitud de eliminación de cuenta" -> 3;
+            default -> 1;
+        };
     }
 }

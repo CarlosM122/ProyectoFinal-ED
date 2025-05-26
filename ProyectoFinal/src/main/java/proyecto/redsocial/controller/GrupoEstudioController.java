@@ -6,9 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -19,11 +17,14 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import proyecto.redsocial.RedSocialApplication;
+import proyecto.redsocial.model.EstructurasPropias.ListaEnlazada;
 import proyecto.redsocial.model.Estudiante;
 import proyecto.redsocial.model.GrupoEstudio;
 import proyecto.redsocial.model.Publicacion;
+import proyecto.redsocial.model.Valoracion;
 import proyecto.redsocial.utils.RedSocialUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -130,30 +131,29 @@ public class GrupoEstudioController {
         }
     }
 
-    private void cargarFotoPerfilprincipal(String rutaArchivoImagen) {
+    private void cargarFotoPerfilprincipal(String nombreArchivo) {
         try {
-            if (rutaArchivoImagen != null && !rutaArchivoImagen.isBlank()) {
-                Image imagen = new Image(Objects.requireNonNull(getClass().getResource(rutaArchivoImagen)).toExternalForm());
+            if (nombreArchivo != null && !nombreArchivo.isBlank()) {
+                File archivoImagen = new File("archivos_perfil", nombreArchivo);
 
-                double radioPerfil = 55;
+                if (!archivoImagen.exists()) {
+                    throw new IllegalArgumentException("No se encontró la imagen: " + archivoImagen.getAbsolutePath());
+                }
+
+                Image imagen = new Image(archivoImagen.toURI().toString());
+
+                double radioPerfil = 45;
                 Circle circlePerfil = new Circle(radioPerfil);
                 circlePerfil.setFill(new ImagePattern(imagen));
                 circlePerfil.setStroke(Color.BLACK);
                 circlePerfil.setStrokeWidth(2);
 
-                double radioPerfilpublicacion = 45;
-                Circle circlePublicacion = new Circle(radioPerfilpublicacion);
-                circlePublicacion.setFill(new ImagePattern(imagen));
-                circlePublicacion.setStroke(Color.BLACK);
-                circlePublicacion.setStrokeWidth(2);
-
                 contenedorImagenPerfil.getChildren().clear();
                 contenedorImagenPerfil.getChildren().add(circlePerfil);
-                contenedorImagenPublicacion.getChildren().clear();
-                contenedorImagenPublicacion.getChildren().add(circlePublicacion);
             }
         } catch (Exception e) {
             System.out.println("No se pudo cargar la imagen de perfil: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -336,11 +336,107 @@ public class GrupoEstudioController {
             Button botonEliminar = crearBotonEliminar(publicacion);
             tarjeta.getChildren().add(botonEliminar);
         } else {
-            Button botonValorar = crearBotonValorar();
+            VBox botonValorar = crearValoracionInteractiva(publicacion,estudiante);
             tarjeta.getChildren().add(botonValorar);
         }
 
         contenedorPublicaciones.getChildren().addFirst(tarjeta);
+    }
+
+    private VBox crearValoracionInteractiva(Publicacion publicacion, Estudiante usuarioActual) {
+        VBox contenedor = new VBox(8);
+        contenedor.setAlignment(Pos.CENTER_LEFT);
+
+        Label label = new Label("Valorar publicación:");
+        label.setStyle("-fx-font-size: 13px; -fx-font-weight: bold;");
+
+        HBox botones = new HBox(10);
+        botones.setAlignment(Pos.CENTER_LEFT);
+
+        ToggleGroup grupoValoracion = new ToggleGroup();
+        List<ToggleButton> botonesLista = new ArrayList<>();
+
+        String estiloNormal =
+                "-fx-background-color: linear-gradient(to right, #f9d423, #ff4e50);" +
+                        "-fx-background-radius: 90;" +
+                        "-fx-padding: 6 16 6 16;" +
+                        "-fx-text-fill: #333333;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-font-size: 13px;";
+
+        String estiloSeleccionado = estiloNormal +
+                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 6, 0.0, 0, 1);" +
+                "-fx-border-color: #ff4e50;" +
+                "-fx-border-width: 2;" +
+                "-fx-border-radius: 90;";
+
+        for (int i = 1; i <= 3; i++) {
+            final int valor = i;
+            ToggleButton boton = new ToggleButton("★".repeat(i));
+            boton.setToggleGroup(grupoValoracion);
+            boton.setUserData(valor);
+            boton.setCursor(Cursor.HAND);
+            boton.setStyle(estiloNormal);
+
+            boton.setOnAction(e -> {
+                for (ToggleButton b : botonesLista) {
+                    b.setStyle(estiloNormal);
+                }
+                boton.setStyle(estiloSeleccionado);
+            });
+
+            botonesLista.add(boton);
+            botones.getChildren().add(boton);
+        }
+
+        TextArea comentarioArea = new TextArea();
+        comentarioArea.setPromptText("Deja un comentario (opcional)");
+        comentarioArea.setPrefRowCount(2);
+        comentarioArea.setWrapText(true);
+        comentarioArea.setStyle("-fx-font-size: 12px;");
+
+        Button enviarValoracion = new Button("Enviar valoración");
+        enviarValoracion.setStyle(estiloNormal);
+        enviarValoracion.setCursor(Cursor.HAND);
+
+        enviarValoracion.setOnAction(e -> {
+            Toggle selectedToggle = grupoValoracion.getSelectedToggle();
+            if (selectedToggle == null) {
+                System.out.println("Debe seleccionar una valoración.");
+                return;
+            }
+
+            int valor = (int) selectedToggle.getUserData();
+            String comentario = comentarioArea.getText().trim();
+
+            Valoracion nuevaValoracion = new Valoracion();
+            nuevaValoracion.setValoracion(valor);
+            nuevaValoracion.setComentario(comentario);
+            nuevaValoracion.setPublicacion(publicacion);
+            nuevaValoracion.setEstudiante(estudiante);
+
+            ListaEnlazada<Valoracion> listaValoraciones = publicacion.getValoraciones();
+            boolean reemplazada = false;
+
+            for (int i = 0; i < listaValoraciones.size(); i++) {
+                Valoracion existente = listaValoraciones.get(i);
+                if (existente.getEstudiante().equals(estudiante)) {
+                    listaValoraciones.reemplazarEn(i, nuevaValoracion);
+                    reemplazada = true;
+                    break;
+                }
+            }
+
+            if (!reemplazada) {
+                listaValoraciones.agregar(nuevaValoracion);
+            }
+
+            estudiante.valorarContenido(valor, publicacion, comentario);
+            comentarioArea.clear();
+        });
+
+        contenedor.getChildren().addAll(label, botones, comentarioArea, enviarValoracion);
+        return contenedor;
     }
 
     private String obtenerExtensionArchivo(String ruta) {
@@ -383,12 +479,7 @@ public class GrupoEstudioController {
 
     private Button crearBotonAbrirArchivo(String rutaArchivo) {
         Button boton = new Button("Abrir archivo");
-        boton.setStyle("-fx-background-color: linear-gradient(to right, #f9d423, #ff4e50);\n" +
-                "    -fx-background-radius: 90;\n" +
-                "    -fx-padding: 6 16 6 16;\n" +
-                "    -fx-text-fill: #333333;\n" +
-                "    -fx-font-weight: bold;\n" +
-                "    -fx-font-size: 13px;");
+        RedSocialUtils.aplicarEstiloBotonGradiente(boton);
         boton.setCursor(Cursor.HAND);
         boton.setOnAction(event -> {
             try {
@@ -400,29 +491,9 @@ public class GrupoEstudioController {
         return boton;
     }
 
-    private Button crearBotonValorar() {
-        Button boton = new Button("Valorar");
-        boton.setStyle("-fx-background-color: linear-gradient(to right, #f9d423, #ff4e50);\n" +
-                "    -fx-background-radius: 90;\n" +
-                "    -fx-padding: 6 16 6 16;\n" +
-                "    -fx-text-fill: #333333;\n" +
-                "    -fx-font-weight: bold;\n" +
-                "    -fx-font-size: 13px;");
-        boton.setCursor(Cursor.HAND);
-        boton.setOnAction(event -> {
-            System.out.println("Boton Valoracion");
-        });
-        return boton;
-    }
-
     private Button crearBotonEliminar(Publicacion publicacion) {
         Button boton = new Button("Eliminar");
-        boton.setStyle("-fx-background-color: linear-gradient(to right, #f9d423, #ff4e50);\n" +
-                "    -fx-background-radius: 90;\n" +
-                "    -fx-padding: 6 16 6 16;\n" +
-                "    -fx-text-fill: #333333;\n" +
-                "    -fx-font-weight: bold;\n" +
-                "    -fx-font-size: 13px;");
+        RedSocialUtils.aplicarEstiloBotonGradiente(boton);
         boton.setCursor(Cursor.HAND);
         boton.setOnAction(event -> {
             grupoEstudio.getPublicaciones().eliminar(publicacion);

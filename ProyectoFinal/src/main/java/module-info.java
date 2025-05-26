@@ -5,13 +5,12 @@ module proyecto.redsocial {
     requires java.desktop;
     requires javafx.graphics;
 
+    opens proyecto.redsocial to javafx.graphics, javafx.fxml;
+    opens proyecto.redsocial.controller to javafx.fxml;
 
-    opens proyecto.redsocial to javafx.fxml;
     exports proyecto.redsocial;
     exports proyecto.redsocial.model;
-    opens proyecto.redsocial.factory;
-    exports proyecto.redsocial.factory;
-
-    opens proyecto.redsocial.controller to javafx.fxml;
     exports proyecto.redsocial.model.EstructurasPropias;
+    exports proyecto.redsocial.controller;
+    exports proyecto.redsocial.factory;
 }

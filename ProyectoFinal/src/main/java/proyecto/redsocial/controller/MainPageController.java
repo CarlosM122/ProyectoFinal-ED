@@ -28,24 +28,26 @@ import proyecto.redsocial.model.EstructurasPropias.ListaEnlazada;
 import proyecto.redsocial.model.Estudiante;
 import proyecto.redsocial.model.GrupoEstudio;
 import proyecto.redsocial.model.Publicacion;
+import proyecto.redsocial.model.Valoracion;
 import proyecto.redsocial.utils.RedSocialUtils;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.text.Normalizer;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static proyecto.redsocial.utils.RedSocialUtils.mostrarMensaje;
 
 public class MainPageController {
 
     private final ModelFactory modelFactory = ModelFactory.getInstance();
     private final List<String> temas = new ArrayList<>();
     private final List<String> temasNormalizados = new ArrayList<>();
-    private Estudiante estudiante;
+    private Estudiante estudianteActual;
+    private final File carpetaImagenesPerfil = new File("archivos_perfil");
     @FXML
     private Label LbPublicacion;
 
@@ -93,12 +95,7 @@ public class MainPageController {
 
     @FXML
     void OnAyuda(MouseEvent event) {
-
-    }
-
-    @FXML
-    void OnGrupos(MouseEvent event) {
-
+        cargarVistaAyuda();
     }
 
     @FXML
@@ -108,7 +105,7 @@ public class MainPageController {
 
     @FXML
     void onAmigos(MouseEvent event) {
-
+        cargarVistaAmigosTest();
     }
 
     @FXML
@@ -125,18 +122,8 @@ public class MainPageController {
     }
 
     @FXML
-    void onNotificaciones(MouseEvent event) {
-
-    }
-
-    @FXML
     void onPublicar(MouseEvent event) {
         abrirVentanaPublicacion();
-    }
-
-    @FXML
-    void onSubirArchivo(MouseEvent event) {
-
     }
 
     @FXML
@@ -154,6 +141,20 @@ public class MainPageController {
         for (String tema : temas) {
             temasNormalizados.add(normalizarTexto(tema));
         }
+    }
+
+    public void cargarDatosVista(Estudiante estudiante) {
+        VboxInicio.getChildren().clear();
+        contenedorPublicaciones.getChildren().clear();
+        VBoxGrupos.getChildren().clear();
+        VBoxAmigosSugeridos.getChildren().clear();
+        this.estudianteActual = estudiante;
+        txtNombre.setText(estudiante.getNombre());
+        txtInformacion.setText(estudiante.getInformacion());
+        cargarFotoPerfilprincipal(estudiante.getRutaArchivoImagen());
+        cargarPublicaciones();
+        cargarGrupos(this.estudianteActual);
+        cargarAmigosSugeridos();
     }
 
     private void buscarPublicacionesPorTema() {
@@ -182,7 +183,7 @@ public class MainPageController {
         } else {
             contenedorPublicaciones.getChildren().clear();
             for (Publicacion publicacion : listaDePublicaciones) {
-                cargarEnVistaPrincipal(publicacion, estudiante);
+                cargarEnVistaPrincipal(publicacion, estudianteActual);
             }
         }
     }
@@ -195,18 +196,9 @@ public class MainPageController {
         return textoSinTildes.toLowerCase();
     }
 
-    public void cargarDatosVista(Estudiante estudiante) {
-        this.estudiante = estudiante;
-        txtNombre.setText(estudiante.getNombre());
-        txtInformacion.setText(estudiante.getCorreo());
-        cargarFotoPerfilprincipal(estudiante.getRutaArchivoImagen());
-        cargarPublicaciones();
-        cargarGrupos(this.estudiante);
-        cargarAmigosSugeridos();
-    }
-
     private void cargarAmigosSugeridos() {
-        ListaEnlazada<Estudiante> amigosSugeridos = modelFactory.obtenerAmigosRecomendados(estudiante);
+        VBoxAmigosSugeridos.getChildren().clear();
+        ListaEnlazada<Estudiante> amigosSugeridos = modelFactory.obtenerAmigosRecomendados(estudianteActual);
         for (Estudiante amigoSugerido : amigosSugeridos) {
             cargarEnAmigosSugueridos(amigoSugerido);
         }
@@ -217,7 +209,7 @@ public class MainPageController {
         VBoxAmigosSugeridos.getChildren().add(tarjeta);
     }
 
-    private HBox crearTarjetaSugerido(Estudiante estudiante) {
+    private HBox crearTarjetaSugerido(Estudiante compañero) {
         HBox tarjeta = new HBox(10);
         tarjeta.setAlignment(Pos.CENTER_LEFT);
         tarjeta.setPadding(new Insets(10));
@@ -231,7 +223,7 @@ public class MainPageController {
 
         Circle avatar = new Circle(20, Color.web("#6a8caf"));
 
-        Label nombre = new Label(estudiante.getNombre());
+        Label nombre = new Label(compañero.getNombre());
         nombre.setFont(Font.font("System", FontWeight.BOLD, 14));
         nombre.setTextFill(Color.web("#2a2a2a"));
 
@@ -244,7 +236,7 @@ public class MainPageController {
         Region espacio = new Region();
         HBox.setHgrow(espacio, Priority.ALWAYS);
 
-        tarjeta.setUserData(estudiante);
+        tarjeta.setUserData(compañero);
         Button botonAgregar = new Button("Agregar");
         botonAgregar.setStyle("""
                     -fx-background-color: #5075a8;
@@ -253,7 +245,19 @@ public class MainPageController {
                     -fx-font-size: 12px;
                 """);
         botonAgregar.setOnAction(e -> {
-            agregarEstudiante((Estudiante) tarjeta.getUserData(), estudiante);
+            Estudiante estudianteAgregar = (Estudiante) tarjeta.getUserData();
+
+            Alert alerta = new Alert(Alert.AlertType.CONFIRMATION);
+            alerta.setTitle("Agregar Compañero");
+            alerta.setHeaderText(null);
+            alerta.setContentText("¿Desea agregar a " + estudianteAgregar.getNombre() + "?");
+
+            Optional<ButtonType> resultado = alerta.showAndWait();
+            if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
+                agregarEstudiante(estudianteAgregar, estudianteActual);
+                cargarAmigosSugeridos();
+                modelFactory.guardarRecursosXML();
+            }
         });
 
         tarjeta.getChildren().addAll(avatar, textos, espacio, botonAgregar);
@@ -272,12 +276,18 @@ public class MainPageController {
         }
     }
 
-    private void cargarFotoPerfilprincipal(String rutaArchivoImagen) {
+    private void cargarFotoPerfilprincipal(String nombreArchivo) {
         try {
-            if (rutaArchivoImagen != null && !rutaArchivoImagen.isBlank()) {
-                Image imagen = new Image(Objects.requireNonNull(getClass().getResource(rutaArchivoImagen)).toExternalForm());
+            if (nombreArchivo != null && !nombreArchivo.isBlank()) {
+                File archivoImagen = new File("archivos_perfil", nombreArchivo);
 
-                double radioPerfil = 55;
+                if (!archivoImagen.exists()) {
+                    throw new IllegalArgumentException("No se encontró la imagen: " + archivoImagen.getAbsolutePath());
+                }
+
+                Image imagen = new Image(archivoImagen.toURI().toString());
+
+                double radioPerfil = 70;
                 Circle circlePerfil = new Circle(radioPerfil);
                 circlePerfil.setFill(new ImagePattern(imagen));
                 circlePerfil.setStroke(Color.BLACK);
@@ -289,26 +299,52 @@ public class MainPageController {
                 circlePublicacion.setStroke(Color.BLACK);
                 circlePublicacion.setStrokeWidth(2);
 
-                circlePerfil.setOnMouseClicked(event -> {
-                    cargarVistaPerfil();
-                });
-
                 contenedorImagenPerfil.getChildren().clear();
                 contenedorImagenPerfil.getChildren().add(circlePerfil);
                 contenedorImagenPerfilPublicacion.getChildren().clear();
                 contenedorImagenPerfilPublicacion.getChildren().add(circlePublicacion);
+
+                contenedorImagenPerfil.setOnMouseClicked(e -> {
+                    cargarVistaPerfil();
+                });
+                contenedorImagenPerfilPublicacion.setOnMouseClicked(e -> {
+                    cargarVistaPerfil();
+                });
             }
         } catch (Exception e) {
             System.out.println("No se pudo cargar la imagen de perfil: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
     private void cargarVistaPerfil() {
-        FXMLLoader fxmlLoader= new FXMLLoader(getClass().getResource("/proyecto/redsocial/fxml/pagePerfil-viw.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/proyecto/redsocial/fxml/pagePerfil-viw.fxml"));
         try {
-            RedSocialUtils.CargaVentana(fxmlLoader, "Editar perfil");
+            RedSocialUtils.CargaVentana(fxmlLoader, "Edición De Perfil");
             PagePerfilController pagePerfilController = fxmlLoader.getController();
-            pagePerfilController.inicializarDatos(estudiante, this);
+            pagePerfilController.inicializarDatos(estudianteActual, this);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void cargarVistaAmigosTest() {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/proyecto/redsocial/fxml/amigos-view.fxml"));
+        try {
+            RedSocialUtils.CargaVentana(fxmlLoader, "Listado De Amigos");
+            AmigosController pagePerfilController = fxmlLoader.getController();
+            pagePerfilController.inicializarDatos(estudianteActual, this);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void cargarVistaAyuda() {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/proyecto/redsocial/fxml/solicitudAyuda-view.fxml"));
+        try {
+            RedSocialUtils.CargaVentana(fxmlLoader,"Solicitar Ayuda");
+            SolicitudAyudaController controller = fxmlLoader.getController();
+            controller.cargarDatos(estudianteActual,this);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -401,7 +437,7 @@ public class MainPageController {
         try {
             RedSocialUtils.CargaVentana(fxmlLoader, "Grupos");
             GrupoEstudioController controller = fxmlLoader.getController();
-            controller.inicializar(grupoSeleccionado, this, estudiante);
+            controller.inicializar(grupoSeleccionado, this, estudianteActual);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -411,7 +447,7 @@ public class MainPageController {
     private void cargarPublicaciones() {
         List<Publicacion> publicaciones = modelFactory.obtenerPublicaciones();
         for (Publicacion publicacion : publicaciones) {
-            cargarEnVistaPrincipal(publicacion, this.estudiante);
+            cargarEnVistaPrincipal(publicacion, this.estudianteActual);
         }
     }
 
@@ -426,7 +462,7 @@ public class MainPageController {
             FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/publicacion-view.fxml"));
             RedSocialUtils.CargaVentana(fxmlLoader, "Publicar");
             PublicacionController publicacionController = fxmlLoader.getController();
-            publicacionController.cargarDatos(estudiante, this, contenedorImagenPerfilPublicacion);
+            publicacionController.cargarDatos(estudianteActual, this);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -437,7 +473,7 @@ public class MainPageController {
             FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/chatEstudiante-view.fxml"));
             Parent root = fxmlLoader.load();
             ChatEstudianteController controller = fxmlLoader.getController();
-            controller.initData(estudiante);
+            controller.initData(estudianteActual);
             Scene scene = new Scene(root);
             Stage nuevaVentana = new Stage();
             nuevaVentana.setTitle("Chat Estudiante");
@@ -485,11 +521,109 @@ public class MainPageController {
             Button botonEliminar = crearBotonEliminar(publicacion);
             tarjeta.getChildren().add(botonEliminar);
         } else {
-            Button botonValorar = crearBotonValorar();
+            VBox botonValorar = crearValoracionInteractiva(publicacion);
             tarjeta.getChildren().add(botonValorar);
         }
 
         contenedorPublicaciones.getChildren().addFirst(tarjeta);
+    }
+
+    private VBox crearValoracionInteractiva(Publicacion publicacion) {
+        VBox contenedor = new VBox(8);
+        contenedor.setAlignment(Pos.CENTER_LEFT);
+
+        Label label = new Label("Valorar publicación:");
+        label.setStyle("-fx-font-size: 13px; -fx-font-weight: bold;");
+
+        HBox botones = new HBox(10);
+        botones.setAlignment(Pos.CENTER_LEFT);
+
+        ToggleGroup grupoValoracion = new ToggleGroup();
+        List<ToggleButton> botonesLista = new ArrayList<>();
+
+        String estiloNormal =
+                "-fx-background-color: linear-gradient(to right, #f9d423, #ff4e50);" +
+                        "-fx-background-radius: 90;" +
+                        "-fx-padding: 6 16 6 16;" +
+                        "-fx-text-fill: #333333;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-font-size: 13px;";
+
+        String estiloSeleccionado = estiloNormal +
+                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 6, 0.0, 0, 1);" +
+                "-fx-border-color: #ff4e50;" +
+                "-fx-border-width: 2;" +
+                "-fx-border-radius: 90;";
+
+        for (int i = 1; i <= 3; i++) {
+            final int valor = i;
+            ToggleButton boton = new ToggleButton("★".repeat(i));
+            boton.setToggleGroup(grupoValoracion);
+            boton.setUserData(valor);
+            boton.setCursor(Cursor.HAND);
+            boton.setStyle(estiloNormal);
+
+            boton.setOnAction(e -> {
+                for (ToggleButton b : botonesLista) {
+                    b.setStyle(estiloNormal);
+                }
+                boton.setStyle(estiloSeleccionado);
+            });
+
+            botonesLista.add(boton);
+            botones.getChildren().add(boton);
+        }
+
+        TextArea comentarioArea = new TextArea();
+        comentarioArea.setPromptText("Deja un comentario (opcional)");
+        comentarioArea.setPrefRowCount(2);
+        comentarioArea.setWrapText(true);
+        comentarioArea.setStyle("-fx-font-size: 12px;");
+
+        Button enviarValoracion = new Button("Enviar valoración");
+        enviarValoracion.setStyle(estiloNormal);
+        enviarValoracion.setCursor(Cursor.HAND);
+
+        enviarValoracion.setOnAction(e -> {
+            Toggle selectedToggle = grupoValoracion.getSelectedToggle();
+            if (selectedToggle == null) {
+                System.out.println("Debe seleccionar una valoración.");
+                return;
+            }
+
+            int valor = (int) selectedToggle.getUserData();
+            String comentario = comentarioArea.getText().trim();
+
+            Valoracion nuevaValoracion = new Valoracion();
+            nuevaValoracion.setValoracion(valor);
+            nuevaValoracion.setComentario(comentario);
+            nuevaValoracion.setPublicacion(publicacion);
+            nuevaValoracion.setEstudiante(estudianteActual);
+
+            ListaEnlazada<Valoracion> listaValoraciones = publicacion.getValoraciones();
+            boolean reemplazada = false;
+
+            for (int i = 0; i < listaValoraciones.size(); i++) {
+                Valoracion existente = listaValoraciones.get(i);
+                if (existente.getEstudiante().equals(estudianteActual)) {
+                    listaValoraciones.reemplazarEn(i, nuevaValoracion);
+                    reemplazada = true;
+                    break;
+                }
+            }
+
+            if (!reemplazada) {
+                listaValoraciones.agregar(nuevaValoracion);
+            }
+
+            estudianteActual.valorarContenido(valor, publicacion, comentario);
+            comentarioArea.clear();
+            mostrarMensaje("Valoracion","Valoracion Guardada","Su valoracion fue correctamente cargada", Alert.AlertType.INFORMATION);
+            modelFactory.guardarRecursosXML();
+        });
+
+        contenedor.getChildren().addAll(label, botones, comentarioArea, enviarValoracion);
+        return contenedor;
     }
 
     private VBox crearTarjetaPublicacion() {
@@ -526,12 +660,7 @@ public class MainPageController {
 
     private Button crearBotonAbrirArchivo(String rutaArchivo) {
         Button boton = new Button("Abrir archivo");
-        boton.setStyle("-fx-background-color: linear-gradient(to right, #f9d423, #ff4e50);\n" +
-                "    -fx-background-radius: 90;\n" +
-                "    -fx-padding: 6 16 6 16;\n" +
-                "    -fx-text-fill: #333333;\n" +
-                "    -fx-font-weight: bold;\n" +
-                "    -fx-font-size: 13px;");
+        RedSocialUtils.aplicarEstiloBotonGradiente(boton);
         boton.setCursor(Cursor.HAND);
         boton.setOnAction(event -> {
             try {
@@ -543,29 +672,9 @@ public class MainPageController {
         return boton;
     }
 
-    private Button crearBotonValorar() {
-        Button boton = new Button("Valorar");
-        boton.setStyle("-fx-background-color: linear-gradient(to right, #f9d423, #ff4e50);\n" +
-                "    -fx-background-radius: 90;\n" +
-                "    -fx-padding: 6 16 6 16;\n" +
-                "    -fx-text-fill: #333333;\n" +
-                "    -fx-font-weight: bold;\n" +
-                "    -fx-font-size: 13px;");
-        boton.setCursor(Cursor.HAND);
-        boton.setOnAction(event -> {
-            System.out.println("Boton Valoracion");
-        });
-        return boton;
-    }
-
     private Button crearBotonEliminar(Publicacion publicacion) {
         Button boton = new Button("Eliminar");
-        boton.setStyle("-fx-background-color: linear-gradient(to right, #f9d423, #ff4e50);\n" +
-                "    -fx-background-radius: 90;\n" +
-                "    -fx-padding: 6 16 6 16;\n" +
-                "    -fx-text-fill: #333333;\n" +
-                "    -fx-font-weight: bold;\n" +
-                "    -fx-font-size: 13px;");
+        RedSocialUtils.aplicarEstiloBotonGradiente(boton);
         boton.setCursor(Cursor.HAND);
         boton.setOnAction(event -> {
             modelFactory.eliminarPublicacion(publicacion);
@@ -631,13 +740,5 @@ public class MainPageController {
         }
 
         return contenedor;
-    }
-
-    private void mostrarMensaje(String titulo, String header, String contenido, Alert.AlertType alertType) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(titulo);
-        alert.setHeaderText(header);
-        alert.setContentText(contenido);
-        alert.show();
     }
 }

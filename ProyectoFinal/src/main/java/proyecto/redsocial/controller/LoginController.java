@@ -18,6 +18,8 @@ import proyecto.redsocial.utils.RedSocialUtils;
 
 import java.io.IOException;
 
+import static proyecto.redsocial.utils.RedSocialUtils.mostrarMensaje;
+
 public class LoginController {
 
     private ModelFactory modelFactory;
@@ -103,14 +105,6 @@ public class LoginController {
 
     private boolean validarDatos() {
         return !txtContrasenia.getText().isEmpty() && !txtUsuario.getText().isEmpty();
-    }
-
-    private void mostrarMensaje(String titulo, String header, String contenido, Alert.AlertType alertType) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(titulo);
-        alert.setHeaderText(header);
-        alert.setContentText(contenido);
-        alert.show();
     }
 
     private void CargaVentana(FXMLLoader fxmlLoader) throws IOException {

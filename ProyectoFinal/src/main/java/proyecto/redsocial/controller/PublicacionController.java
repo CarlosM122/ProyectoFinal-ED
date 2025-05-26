@@ -1,7 +1,9 @@
 package proyecto.redsocial.controller;
 
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 
+import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -12,11 +14,17 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import proyecto.redsocial.factory.ModelFactory;
 import proyecto.redsocial.model.Publicacion;
 import proyecto.redsocial.model.Estudiante;
+
+import static proyecto.redsocial.utils.RedSocialUtils.mostrarMensaje;
 
 public class PublicacionController {
 
@@ -35,7 +43,7 @@ public class PublicacionController {
     private HBox HBoxArchivo;
 
     @FXML
-    private StackPane fotoPerfil;
+    private VBox contenedorImagenPerfil;
 
     @FXML
     private Button btnPublicar;
@@ -83,11 +91,37 @@ public class PublicacionController {
         CBTemas.setValue("Selecciona un tema");
     }
 
-    public void cargarDatos(Estudiante estudiante, MainPageController mainPageController, StackPane contenedorImagenPerfilPublicacion) {
+    public void cargarDatos(Estudiante estudiante, MainPageController mainPageController) {
         this.mainPageController = mainPageController;
         this.estudiante = estudiante;
         nombreUsuario.setText(estudiante.getNombre());
-        this.fotoPerfil.getChildren().add(contenedorImagenPerfilPublicacion);
+        cargarFotoPerfil(estudiante.getRutaArchivoImagen());
+    }
+
+    private void cargarFotoPerfil(String nombreArchivo) {
+        try {
+            if (nombreArchivo != null && !nombreArchivo.isBlank()) {
+                File archivoImagen = new File("archivos_perfil", nombreArchivo);
+
+                if (!archivoImagen.exists()) {
+                    throw new IllegalArgumentException("No se encontró la imagen: " + archivoImagen.getAbsolutePath());
+                }
+
+                Image imagen = new Image(archivoImagen.toURI().toString());
+
+                double radioPerfil = 45;
+                Circle circlePerfil = new Circle(radioPerfil);
+                circlePerfil.setFill(new ImagePattern(imagen));
+                circlePerfil.setStroke(Color.BLACK);
+                circlePerfil.setStrokeWidth(2);
+
+                contenedorImagenPerfil.getChildren().clear();
+                contenedorImagenPerfil.getChildren().add(circlePerfil);
+            }
+        } catch (Exception e) {
+            System.out.println("No se pudo cargar la imagen de perfil: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void subirArchivo() {
@@ -136,6 +170,7 @@ public class PublicacionController {
             publicacion.setTema(tema);
             publicacion.setTexto(texto);
             publicacion.setAutor(estudiante);
+            estudiante.getContenidosPublicados().agregar(publicacion);
             publicacion.setFechaPublicacion(LocalDate.now().toString());
 
             if (rutaArchivoAdjunto != null) {
@@ -145,8 +180,7 @@ public class PublicacionController {
             estudiante.agregarInteres(tema);
             modelFactory.asignarAGrupoDeEstudio(estudiante, tema);
             modelFactory.guardarPublicacion(publicacion);
-            mainPageController.cargarEnVistaPrincipal(publicacion, estudiante);
-            mainPageController.cargarGrupos(estudiante);
+            mainPageController.cargarDatosVista(estudiante);
             cerrarVentana();
             modelFactory.guardarRecursosXML();
         } else {
@@ -157,13 +191,5 @@ public class PublicacionController {
     private void cerrarVentana() {
         Stage stage = (Stage) btnPublicar.getScene().getWindow();
         stage.close();
-    }
-
-    private void mostrarMensaje(String titulo, String header, String contenido, Alert.AlertType alertType) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(titulo);
-        alert.setHeaderText(header);
-        alert.setContentText(contenido);
-        alert.show();
     }
 }

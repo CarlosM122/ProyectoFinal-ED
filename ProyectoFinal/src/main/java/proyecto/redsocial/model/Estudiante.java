@@ -20,10 +20,12 @@ public class Estudiante extends Usuario implements Serializable {
     private ListaEnlazada<String> intereses;
     private ListaEnlazada<Publicacion> contenidosPublicados;
     private ListaEnlazada<Valoracion> valoracions;
+    private ListaEnlazada<SolicitudAyuda> solicitudesAyuda;
     private ListaEnlazada<GrupoEstudio> gruposEstudio;
     private ListaEnlazada<Mensaje> ListMensajes;
 
     public Estudiante() {
+        this.solicitudesAyuda = new ListaEnlazada<>();
         this.ListMensajes = new ListaEnlazada<>();
         this.amigos = new ListaEnlazada<>();
         this.contenidosPublicados = new ListaEnlazada<>();
@@ -41,6 +43,8 @@ public class Estudiante extends Usuario implements Serializable {
         v.setPublicacion(publicacion);
         v.setValoracion(valoracion);
         v.setComentario(comentario);
+        v.setEstudiante(this);
+        publicacion.getValoraciones().agregar(v);
         valoracions.agregar(v);
     }
 
@@ -49,10 +53,12 @@ public class Estudiante extends Usuario implements Serializable {
     }
 
     public void solicitarAyuda(SolicitudAyuda solicitudAyuda){
-    }
-
-    public void enviarMensaje(String mensaje,Estudiante estudiante){
-
+        if (solicitudesAyuda == null){
+            solicitudesAyuda = new ListaEnlazada<>();
+            solicitudesAyuda.agregar(solicitudAyuda);
+            return;
+        }
+        solicitudesAyuda.agregar(solicitudAyuda);
     }
 
     public void agregarInteres(String interes){

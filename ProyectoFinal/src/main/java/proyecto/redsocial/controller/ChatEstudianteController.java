@@ -4,8 +4,8 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 
+import java.io.File;
 import java.util.List;
-import java.util.Objects;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -28,6 +28,7 @@ public class ChatEstudianteController {
     private ModelFactory modelFactory;
 
     private Estudiante estudiante1;
+
     private Estudiante estudiante2;
 
     @FXML
@@ -55,7 +56,10 @@ public class ChatEstudianteController {
     private TextField txtBuscar;
 
     @FXML
-    private HBox contenerdorImagenPerfil;
+    private VBox contenedorImagenPerfil;
+
+    @FXML
+    private HBox contenerdorImagenPerfilCompañero;
 
     @FXML
     private TextField txtMensaje;
@@ -86,7 +90,8 @@ public class ChatEstudianteController {
     public void initData(Estudiante estudiante) {
         estudiante1 = estudiante;
         txtnombre.setText(estudiante1.getNombre());
-        txtinformacion.setText(estudiante1.getCorreo());
+        txtinformacion.setText(estudiante1.getInformacion());
+        cargarFotoPerfilPrincipal(estudiante1.getRutaArchivoImagen());
         cargarListaAmigos();
     }
 
@@ -107,7 +112,7 @@ public class ChatEstudianteController {
             Estudiante estudianteCompañero = (Estudiante) tarjeta.getUserData();
             estudiante2 = estudianteCompañero;
             nombreCompañero.setText(estudiante2.getNombre());
-            cargarFotoPerfil(estudianteCompañero.getRutaArchivoImagen());
+            cargarFotoPerfilCompañero(estudianteCompañero.getRutaArchivoImagen());
             infoCompañero.setText(estudiante2.getCorreo());
             List<Mensaje> mensajes = modelFactory.obtenerMensajes(estudiante,estudianteCompañero);
             cargarMensajes(mensajes);
@@ -116,6 +121,32 @@ public class ChatEstudianteController {
         });
 
         listCompañeros.getChildren().add(tarjeta);
+    }
+
+    private void cargarFotoPerfilCompañero(String nombreArchivo) {
+        try {
+            if (nombreArchivo != null && !nombreArchivo.isBlank()) {
+                File archivoImagen = new File("archivos_perfil", nombreArchivo);
+
+                if (!archivoImagen.exists()) {
+                    throw new IllegalArgumentException("No se encontró la imagen: " + archivoImagen.getAbsolutePath());
+                }
+
+                Image imagen = new Image(archivoImagen.toURI().toString());
+
+                double radioPerfil = 45;
+                Circle circlePerfil = new Circle(radioPerfil);
+                circlePerfil.setFill(new ImagePattern(imagen));
+                circlePerfil.setStroke(Color.BLACK);
+                circlePerfil.setStrokeWidth(2);
+
+                contenerdorImagenPerfilCompañero.getChildren().clear();
+                contenerdorImagenPerfilCompañero.getChildren().add(circlePerfil);
+            }
+        } catch (Exception e) {
+            System.out.println("No se pudo cargar la imagen de perfil: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void cargarMensajes(List<Mensaje> mensajes) {
@@ -129,10 +160,16 @@ public class ChatEstudianteController {
         }
     }
 
-    private void cargarFotoPerfil(String rutaArchivoImagen) {
+    private void cargarFotoPerfilPrincipal(String nombreArchivo) {
         try {
-            if (rutaArchivoImagen != null && !rutaArchivoImagen.isBlank()) {
-                Image imagen = new Image(Objects.requireNonNull(getClass().getResource(rutaArchivoImagen)).toExternalForm());
+            if (nombreArchivo != null && !nombreArchivo.isBlank()) {
+                File archivoImagen = new File("archivos_perfil", nombreArchivo);
+
+                if (!archivoImagen.exists()) {
+                    throw new IllegalArgumentException("No se encontró la imagen: " + archivoImagen.getAbsolutePath());
+                }
+
+                Image imagen = new Image(archivoImagen.toURI().toString());
 
                 double radioPerfil = 45;
                 Circle circlePerfil = new Circle(radioPerfil);
@@ -140,11 +177,12 @@ public class ChatEstudianteController {
                 circlePerfil.setStroke(Color.BLACK);
                 circlePerfil.setStrokeWidth(2);
 
-                contenerdorImagenPerfil.getChildren().clear();
-                contenerdorImagenPerfil.getChildren().add(circlePerfil);
+                contenedorImagenPerfil.getChildren().clear();
+                contenedorImagenPerfil.getChildren().add(circlePerfil);
             }
         } catch (Exception e) {
             System.out.println("No se pudo cargar la imagen de perfil: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

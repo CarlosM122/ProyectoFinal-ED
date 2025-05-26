@@ -3,8 +3,11 @@ package proyecto.redsocial.utils;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -32,32 +35,35 @@ public class RedSocialUtils {
         Estudiante est = new Estudiante();
         est.setNombre("July");
         est.setCorreo("July@edu.co");
+        est.setInformacion("Universidad Del Quindio\nFacultad de Ingenieria\nIngenieria de Sistemas");
         String contraseniaEncriptada = encriptarSHA256("123456");
         est.setContrasenia(contraseniaEncriptada);
-        est.setRutaArchivoImagen("/proyecto/redsocial/imagenesFotoPerfil/July.png");
+        est.setRutaArchivoImagen("July.png");
         s.getListaEstudiantes().agregar(est);
 
         Estudiante est1 = new Estudiante();
         est1.setNombre("AlejoElAmorDeMaria");
         est1.setCorreo("Alejo@edu.co");
+        est1.setInformacion("Universidad Del Quindio\nFacultad de Ingenieria\nIngenieria de Sistemas");
         String contrasenia = encriptarSHA256("123456");
         est1.setContrasenia(contrasenia);
         s.getListaEstudiantes().agregar(est1);
-
-        est.getAmigos().agregar(est1);
-        est1.getAmigos().agregar(est);
-
 
         Estudiante est2 = new Estudiante();
         est2.setNombre("Samuel");
         est2.setCorreo("Samuel@edu.co");
         est2.setContrasenia(encriptarSHA256("samuel123"));
-        est2.setRutaArchivoImagen("/proyecto/redsocial/imagenesFotoPerfil/Samu.jpg");
+        est2.setInformacion("Universidad Del Quindio\nFacultad de Ingenieria\nIngenieria de Sistemas");
+        est2.setRutaArchivoImagen("Samu.jpg");
         s.getListaEstudiantes().agregar(est2);
 
-        est1.getAmigos().agregar(est2);
-        est2.getAmigos().agregar(est1);
-
+        Estudiante est3 = new Estudiante();
+        est3.setNombre("Pablo");
+        est3.setCorreo("Pablo@edu.co");
+        est3.setContrasenia(encriptarSHA256("pablo123"));
+        est3.setInformacion("Universidad Del Quindio\nFacultad de Ingenieria\nIngenieria de Sistemas");
+        est3.setRutaArchivoImagen("Pablo.jpg");
+        s.getListaEstudiantes().agregar(est3);
 
         // Crear moderador
         Moderador mod = new Moderador();
@@ -70,7 +76,7 @@ public class RedSocialUtils {
 
         s.getGestorGruposEstudio().asignarEstudiantesAGrupos(s.getListaEstudiantes().aLista());
         s.inicializarSistema();
-        s.getRedAfinidad().conectarEstudiantes(est, est1,s.getConexionesAfinidad());
+        s.getRedAfinidad().conectarEstudiantes(est, est1, s.getConexionesAfinidad());
         s.getRedAfinidad().conectarEstudiantes(est1, est2, s.getConexionesAfinidad());
         return s;
     }
@@ -137,6 +143,26 @@ public class RedSocialUtils {
         return tarjeta;
     }
 
+    public static void mostrarMensaje(String titulo, String header, String contenido, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(titulo);
+        alert.setHeaderText(header);
+        alert.setContentText(contenido);
+        alert.show();
+    }
+
+    public static void aplicarEstiloBotonGradiente(Button boton) {
+        boton.setStyle("""
+                    -fx-background-color: linear-gradient(to right, #f9d423, #ff4e50);
+                    -fx-background-radius: 90;
+                    -fx-padding: 6 16 6 16;
+                    -fx-text-fill: #333333;
+                    -fx-font-weight: bold;
+                    -fx-font-size: 13px;
+                """);
+        boton.setCursor(Cursor.HAND);
+    }
+
 
     public static void cargarVistaPrincipal(Estudiante estudiante) {
         try {
@@ -158,7 +184,7 @@ public class RedSocialUtils {
         }
     }
 
-    public static void CargaVentana(FXMLLoader fxmlLoader,String titulo) throws IOException {
+    public static void CargaVentana(FXMLLoader fxmlLoader, String titulo) throws IOException {
         Parent root = fxmlLoader.load();
         Stage nuevaVentana = new Stage();
         Scene scene = new Scene(root);
