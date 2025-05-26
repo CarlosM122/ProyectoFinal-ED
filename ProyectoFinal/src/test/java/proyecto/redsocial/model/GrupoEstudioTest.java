@@ -35,4 +35,22 @@ class GrupoEstudioTest {
         assertEquals(1, grupo.getMiembros().size());
         assertSame(estudiante, grupo.getMiembros().get(0));
     }
+
+    @Test
+    void esMiembro() {
+        Estudiante estudiante1 = new Estudiante();
+        estudiante1.setNombre("Carlos");
+
+        Estudiante estudiante2 = new Estudiante();
+        estudiante2.setNombre("Ana");
+
+        // Agregar solo estudiante1
+        grupo.agregarMiembro(estudiante1);
+
+        // Verificar que estudiante1 es miembro
+        assertTrue(grupo.esMiembro(estudiante1));
+
+        // Verificar que estudiante2 no es miembro
+        assertFalse(grupo.esMiembro(estudiante2));
+    }
 }
