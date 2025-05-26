@@ -14,6 +14,7 @@ import java.util.List;
 public class Estudiante extends Usuario implements Serializable {
     private static final long serialVersionUID = 1L;
     private int id;
+    private String informacion;
     private ListaEnlazada<Estudiante> amigos;
     private String rutaArchivoImagen;
     private ListaEnlazada<String> intereses;
