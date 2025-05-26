@@ -4,6 +4,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -15,11 +16,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import proyecto.redsocial.RedSocialApplication;
+import proyecto.redsocial.factory.ModelFactory;
 import proyecto.redsocial.model.Estudiante;
+import proyecto.redsocial.utils.RedSocialUtils;
 
 public class PagePerfilController {
     private Estudiante estudiante;
+    private ModelFactory modelFactory= ModelFactory.getInstance();
+    private MainPageController mainPageController;
 
 
     @FXML
@@ -69,6 +75,7 @@ public class PagePerfilController {
 
     public void inicializarDatos(Estudiante estudiante, MainPageController mainPageController) {
         this.estudiante = estudiante;
+        this.mainPageController= mainPageController;
         txtnombreUsuario.setText(estudiante.getNombre());
         txtInformacion.setText(estudiante.getInformacion());
         cargarFotoPerfilprincipal(estudiante.getRutaArchivoImagen());
@@ -92,7 +99,16 @@ public class PagePerfilController {
             alerta.setHeaderText(null);
             alerta.setContentText("Por favor, ingresa un nombre válido.");
             alerta.showAndWait();
+
         }
+        modelFactory.guardarRecursosXML();
+        mainPageController.cargarDatosVista(estudiante);
+        cerrarVentana();
+    }
+
+    private void cerrarVentana() {
+         Stage stage = (Stage) btnGuardarCambios.getScene().getWindow();
+         stage.close();
     }
 
     private void cargarFotoPerfilprincipal(String rutaArchivoImagen) {
