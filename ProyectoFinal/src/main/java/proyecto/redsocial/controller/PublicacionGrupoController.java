@@ -3,8 +3,13 @@ package proyecto.redsocial.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Circle;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import proyecto.redsocial.factory.ModelFactory;
@@ -12,6 +17,7 @@ import proyecto.redsocial.model.Estudiante;
 import proyecto.redsocial.model.GrupoEstudio;
 import proyecto.redsocial.model.Publicacion;
 
+import java.io.File;
 import java.net.URL;
 import java.time.LocalDate;
 import java.util.List;
@@ -49,6 +55,12 @@ public class PublicacionGrupoController {
 
     @FXML
     private TextArea txtAreaTexto;
+
+    @FXML
+    private VBox contenedorImagenPerfil;
+
+    @FXML
+    private VBox contenedorImagenPublicacion;
 
     @FXML
     private Label txtNombreGrupo;
@@ -98,6 +110,40 @@ public class PublicacionGrupoController {
             modelFactory.guardarRecursosXML();
         } else {
             mostrarMensaje("Error", "Datos Nulos", "Por favor rellena los campos necesarios.", Alert.AlertType.ERROR);
+        }
+    }
+
+    private void cargarFotoPerfilprincipal(String nombreArchivo) {
+        try {
+            if (nombreArchivo != null && !nombreArchivo.isBlank()) {
+                File archivoImagen = new File("archivos_perfil", nombreArchivo);
+
+                if (!archivoImagen.exists()) {
+                    throw new IllegalArgumentException("No se encontró la imagen: " + archivoImagen.getAbsolutePath());
+                }
+
+                Image imagen = new Image(archivoImagen.toURI().toString());
+
+                double radioPerfil = 70;
+                Circle circlePerfil = new Circle(radioPerfil);
+                circlePerfil.setFill(new ImagePattern(imagen));
+                circlePerfil.setStroke(Color.BLACK);
+                circlePerfil.setStrokeWidth(2);
+
+                double radioPerfilpublicacion = 45;
+                Circle circlePublicacion = new Circle(radioPerfilpublicacion);
+                circlePublicacion.setFill(new ImagePattern(imagen));
+                circlePublicacion.setStroke(Color.BLACK);
+                circlePublicacion.setStrokeWidth(2);
+
+                contenedorImagenPerfil.getChildren().clear();
+                contenedorImagenPerfil.getChildren().add(circlePerfil);
+                contenedorImagenPublicacion.getChildren().clear();
+                contenedorImagenPublicacion.getChildren().add(circlePublicacion);
+            }
+        } catch (Exception e) {
+            System.out.println("No se pudo cargar la imagen de perfil: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 

@@ -40,6 +40,15 @@ public class RegistroController {
     private TextField txtNombre;
 
     @FXML
+    private TextField txtFacultad;
+
+    @FXML
+    private TextField txtPrograma;
+
+    @FXML
+    private TextField txtUniversidad;
+
+    @FXML
     void onRegistrarse(ActionEvent event) {
         crearRegistro();
     }
@@ -54,7 +63,8 @@ public class RegistroController {
             String correo = txtCorreo.getText();
             String nombre = txtNombre.getText();
             String contrasenia = txtContrasenia.getText().trim();
-            if (modelFactory.registrarUsuario(nombre, correo, contrasenia)) {
+            String informacion = txtUniversidad.getText() + "\n" + txtFacultad.getText() + "\n" + txtPrograma.getText();
+            if (modelFactory.registrarUsuario(nombre, correo, contrasenia,informacion)) {
                 Object usuario = modelFactory.obtnerUsuario(correo);
                 RedSocialUtils.cargarVistaPrincipal((Estudiante) usuario);
                 mostrarMensaje("Registro", "Registro Exitoso", "Su registro fue exitoso.", Alert.AlertType.INFORMATION);

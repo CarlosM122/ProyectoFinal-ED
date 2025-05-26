@@ -10,7 +10,7 @@ import java.util.*;
 public class Sistema implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    private Map<String, List<String>> conexionesAfinidad;
+    private Mapa<String, ListaEnlazada<String>> conexionesAfinidad;;
     private ListaEnlazada<GrupoEstudio> listaGruposEstudio;
     private  ListaEnlazada<Estudiante> listaEstudiantes;
     private  ListaEnlazada<Moderador> listaModeradores;
@@ -22,7 +22,7 @@ public class Sistema implements Serializable {
 
     public Sistema() {
         this.listaGruposEstudio = new ListaEnlazada<>();
-        this.conexionesAfinidad = new HashMap<>();
+        this.conexionesAfinidad = new Mapa<>();
         this.listaEstudiantes = new ListaEnlazada<>();
         this.listaModeradores = new ListaEnlazada<>();
         this.listaPublicaciones = new ListaEnlazada<>();
@@ -48,12 +48,15 @@ public class Sistema implements Serializable {
      * Reconstruye las conexiones del grafo de afinidad a partir del mapa serializado.
      */
     public void reconstruirConexionesDesdeMapa() {
-        for (Map.Entry<String, List<String>> entrada : conexionesAfinidad.entrySet()) {
+        for (Mapa.Entry<String, ListaEnlazada<String>> entrada : conexionesAfinidad) {
             String correoEstudiante = entrada.getKey();
+            ListaEnlazada<String> amigos = entrada.getValue();
+
             Estudiante estudiante = buscarEstudiante(correoEstudiante);
             NodoGrafo nodo = redAfinidad.buscarEstudiante(estudiante);
 
-            for (String correoAmigo : entrada.getValue()) {
+            for (int j = 0; j < amigos.size(); j++) {
+                String correoAmigo = amigos.get(j);
                 Estudiante amigo = buscarEstudiante(correoAmigo);
                 NodoGrafo nodoAmigo = redAfinidad.buscarEstudiante(amigo);
 
@@ -63,6 +66,9 @@ public class Sistema implements Serializable {
             }
         }
     }
+
+
+
 
     /**
      * Reconstruye el árbol de publicaciones ordenadas.

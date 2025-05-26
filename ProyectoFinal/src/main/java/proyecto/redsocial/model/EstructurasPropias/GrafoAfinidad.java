@@ -20,7 +20,7 @@ public class GrafoAfinidad implements Serializable {
         nodos.agregar(new NodoGrafo(estudiante));
     }
 
-    public void conectarEstudiantes(Estudiante estudiante1, Estudiante estudiante2, Map<String, List<String>> conexionesAfinidad) {
+    public void conectarEstudiantes(Estudiante estudiante1, Estudiante estudiante2, Mapa<String, ListaEnlazada<String>> conexionesAfinidad) {
         NodoGrafo nodo1 = buscarEstudiante(estudiante1);
         NodoGrafo nodo2 = buscarEstudiante(estudiante2);
 
@@ -35,11 +35,11 @@ public class GrafoAfinidad implements Serializable {
         }
     }
 
-    private void guardarConexion(Map<String, List<String>> mapa, String origen, String destino) {
-        mapa.putIfAbsent(origen, new ArrayList<>());
-        List<String> adyacentes = mapa.get(origen);
-        if (!adyacentes.contains(destino)) {
-            adyacentes.add(destino);
+    private void guardarConexion(Mapa<String, ListaEnlazada<String>> mapa, String origen, String destino) {
+        mapa.putIfAbsent(origen, new ListaEnlazada<>());
+        ListaEnlazada<String> adyacentes = mapa.get(origen);
+        if (!adyacentes.contiene(destino)) {
+            adyacentes.agregar(destino);
         }
     }
 

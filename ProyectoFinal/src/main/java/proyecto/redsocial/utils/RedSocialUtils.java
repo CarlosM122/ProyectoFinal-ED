@@ -9,6 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -22,6 +24,7 @@ import proyecto.redsocial.model.Estudiante;
 import proyecto.redsocial.model.Moderador;
 import proyecto.redsocial.model.Sistema;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -101,44 +104,56 @@ public class RedSocialUtils {
         tarjeta.setAlignment(Pos.CENTER_LEFT);
         tarjeta.setPadding(new Insets(8));
         tarjeta.setStyle("""
-                    -fx-background-color: #f4f4f8;
-                    -fx-background-radius: 10;
-                    -fx-cursor: hand;
-                """);
+                -fx-background-color: #f4f4f8;
+                -fx-background-radius: 10;
+                -fx-cursor: hand;
+            """);
 
-        // Crear avatar circular (placeholder)
-        Circle avatar = new Circle(20, Color.web("#6a8caf"));
-        // Si tienes imagen, usar ImageView así:
-        // ImageView avatar = new ImageView(new Image("ruta/al/avatar.png"));
-        // avatar.setFitWidth(40);
-        // avatar.setFitHeight(40);
-        // avatar.setClip(new Circle(20, 20, 20));
+        // Cargar imagen de perfil
+        Image imagen;
+        if (estudiante.getRutaArchivoImagen() != null && !estudiante.getRutaArchivoImagen().isBlank()) {
+            File archivo = new File("archivos_perfil", estudiante.getRutaArchivoImagen());
+            if (archivo.exists()) {
+                imagen = new Image(archivo.toURI().toString());
+            } else {
+                imagen = new Image(new File("archivos_perfil/usuario.png").toURI().toString());
+            }
+        } else {
+            imagen = new Image(new File("archivos_perfil/usuario.png").toURI().toString());
+        }
+
+        // Crear avatar circular con imagen
+        ImageView avatarView = new ImageView(imagen);
+        avatarView.setFitWidth(40);
+        avatarView.setFitHeight(40);
+        Circle clip = new Circle(20, 20, 20);
+        avatarView.setClip(clip);
 
         // Nombre
         Label nombre = new Label(estudiante.getNombre());
         nombre.setFont(Font.font("System", FontWeight.BOLD, 14));
         nombre.setTextFill(Color.web("#333333"));
 
-        // Estado o info adicional (puedes cambiar texto)
+        // Estado o info adicional
         Label estado = new Label("Activo ahora");
         estado.setFont(Font.font("System", 12));
         estado.setTextFill(Color.web("#777777"));
 
         VBox textos = new VBox(4, nombre, estado);
 
-        tarjeta.getChildren().addAll(avatar, textos);
+        tarjeta.getChildren().addAll(avatarView, textos);
 
-        // Estilo hover para mejor experiencia
+        // Estilo hover
         tarjeta.setOnMouseEntered(e -> tarjeta.setStyle("""
-                    -fx-background-color: #e0e5f2;
-                    -fx-background-radius: 10;
-                    -fx-cursor: hand;
-                """));
+                -fx-background-color: #e0e5f2;
+                -fx-background-radius: 10;
+                -fx-cursor: hand;
+            """));
         tarjeta.setOnMouseExited(e -> tarjeta.setStyle("""
-                    -fx-background-color: #f4f4f8;
-                    -fx-background-radius: 10;
-                    -fx-cursor: hand;
-                """));
+                -fx-background-color: #f4f4f8;
+                -fx-background-radius: 10;
+                -fx-cursor: hand;
+            """));
 
         return tarjeta;
     }

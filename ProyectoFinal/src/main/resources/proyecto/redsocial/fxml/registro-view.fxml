@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="480.0" prefWidth="800.0" style="-fx-background-color: #f0f4f8;" stylesheets="@../css/estilo.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyecto.redsocial.controller.RegistroController">
+<AnchorPane style="-fx-background-color: #f0f4f8;" stylesheets="@../css/estilo.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="proyecto.redsocial.controller.RegistroController">
    <children>
-      <VBox alignment="CENTER" spacing="20.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 30;" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="80.0">
+      <VBox alignment="CENTER" prefHeight="411.0" prefWidth="858.0" spacing="20.0" style="-fx-background-color: white; -fx-background-radius: 12; -fx-padding: 30;" AnchorPane.bottomAnchor="3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
 
             <Label text="Registro">
@@ -19,9 +19,12 @@
                </font>
             </Label>
 
-            <TextField fx:id="txtNombre" prefWidth="300" promptText="Nombre completo" style="-fx-background-radius: 6; -fx-padding: 10;" />
+            <TextField fx:id="txtNombre" prefHeight="38.0" prefWidth="378.0" promptText="Nombre completo" style="-fx-background-radius: 6; -fx-padding: 10;" />
 
             <TextField fx:id="txtCorreo" prefWidth="300" promptText="Correo electrónico" style="-fx-background-radius: 6; -fx-padding: 10;" />
+            <TextField fx:id="txtUniversidad" prefHeight="38.0" prefWidth="378.0" promptText="Universidad" style="-fx-background-radius: 6; -fx-padding: 10;" />
+            <TextField fx:id="txtFacultad" prefHeight="38.0" prefWidth="378.0" promptText="Facultad" style="-fx-background-radius: 6; -fx-padding: 10;" />
+            <TextField fx:id="txtPrograma" prefHeight="38.0" prefWidth="378.0" promptText="Programa" style="-fx-background-radius: 6; -fx-padding: 10;" />
 
             <PasswordField fx:id="txtContrasenia" prefWidth="300" promptText="Contraseña" style="-fx-background-radius: 6; -fx-padding: 10;" />
 

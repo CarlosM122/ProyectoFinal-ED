@@ -67,9 +67,6 @@ public class MainPageController {
     private URL location;
 
     @FXML
-    private VBox VboxInicio;
-
-    @FXML
     private VBox contenedorPublicaciones;
 
     @FXML
@@ -109,12 +106,6 @@ public class MainPageController {
     }
 
     @FXML
-    void onInicio(MouseEvent event) {
-
-    }
-
-
-    @FXML
     void buscarPorTema(KeyEvent event) {
         if (event.getCode() == KeyCode.ENTER) {
             buscarPublicacionesPorTema();
@@ -144,7 +135,6 @@ public class MainPageController {
     }
 
     public void cargarDatosVista(Estudiante estudiante) {
-        VboxInicio.getChildren().clear();
         contenedorPublicaciones.getChildren().clear();
         VBoxGrupos.getChildren().clear();
         VBoxAmigosSugeridos.getChildren().clear();
@@ -205,7 +195,7 @@ public class MainPageController {
     }
 
     private void cargarEnAmigosSugueridos(Estudiante amigoSugerido) {
-        HBox tarjeta = crearTarjetaSugerido(amigoSugerido);
+        HBox tarjeta = RedSocialUtils.crearTarjetaEstudiante(amigoSugerido);
         VBoxAmigosSugeridos.getChildren().add(tarjeta);
     }
 
@@ -473,7 +463,7 @@ public class MainPageController {
             FXMLLoader fxmlLoader = new FXMLLoader(RedSocialApplication.class.getResource("/proyecto/redsocial/fxml/chatEstudiante-view.fxml"));
             Parent root = fxmlLoader.load();
             ChatEstudianteController controller = fxmlLoader.getController();
-            controller.initData(estudianteActual);
+            controller.cargarDatos(estudianteActual,this);
             Scene scene = new Scene(root);
             Stage nuevaVentana = new Stage();
             nuevaVentana.setTitle("Chat Estudiante");

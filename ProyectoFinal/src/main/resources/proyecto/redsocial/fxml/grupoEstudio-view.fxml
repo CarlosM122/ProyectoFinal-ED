@@ -78,7 +78,7 @@
             <padding>
                 <Insets bottom="10" left="10" right="10" top="20" />
             </padding>
-         <VBox fx:id="contenedorImagenPerfil" prefHeight="161.0" prefWidth="158.0" />
+         <VBox fx:id="contenedorImagenPerfil" alignment="CENTER" prefHeight="161.0" prefWidth="158.0" />
               <VBox alignment="CENTER" prefHeight="78.0" prefWidth="158.0">
                   <Label fx:id="txtNombre" styleClass="profile-name" text="Nombre" />
                   <Label fx:id="txtInformacion" styleClass="profile-info" text="informacion" />

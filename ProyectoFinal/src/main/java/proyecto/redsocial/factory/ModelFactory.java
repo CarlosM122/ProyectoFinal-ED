@@ -44,13 +44,14 @@ public class ModelFactory implements Serializable {
         sistema = RedSocialUtils.inicializarSistema();
     }
 
-    public boolean registrarUsuario(String nombre, String correo, String contrasenia) {
+    public boolean registrarUsuario(String nombre, String correo, String contrasenia, String informacion) {
         boolean registrado = false;
         Estudiante estudiante = sistema.buscarEstudiante(correo);
         if (estudiante == null) {
             Estudiante nuevoEstudiante = new Estudiante();
             nuevoEstudiante.setNombre(nombre);
             nuevoEstudiante.setCorreo(correo);
+            nuevoEstudiante.setInformacion(informacion);
             nuevoEstudiante.setContrasenia(RedSocialUtils.encriptarSHA256(contrasenia));
             sistema.guardarEstudiante(nuevoEstudiante);
             guardarRecursosXML();

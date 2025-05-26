@@ -13,11 +13,13 @@ import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
+import javafx.stage.Stage;
 import proyecto.redsocial.factory.ModelFactory;
 import proyecto.redsocial.model.Estudiante;
 import proyecto.redsocial.model.Mensaje;
@@ -26,6 +28,8 @@ import proyecto.redsocial.utils.RedSocialUtils;
 public class ChatEstudianteController {
 
     private ModelFactory modelFactory;
+
+    private MainPageController mainPageController;
 
     private Estudiante estudiante1;
 
@@ -83,11 +87,30 @@ public class ChatEstudianteController {
     }
 
     @FXML
+    void onAyuda(MouseEvent event) {
+        mainPageController.OnAyuda(event);
+    }
+
+    @FXML
+    void onInicio(MouseEvent event) {
+        Stage stage = (Stage) btnEnviar.getScene().getWindow();
+        stage.close();
+    }
+
+    @FXML
+    void onBuscar(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            buscarAmigo();
+        }
+    }
+
+    @FXML
     void initialize() {
         modelFactory = ModelFactory.getInstance();
     }
 
-    public void initData(Estudiante estudiante) {
+    public void cargarDatos(Estudiante estudiante, MainPageController mainPageController) {
+        this.mainPageController = mainPageController;
         estudiante1 = estudiante;
         txtnombre.setText(estudiante1.getNombre());
         txtinformacion.setText(estudiante1.getInformacion());
@@ -109,11 +132,12 @@ public class ChatEstudianteController {
 
         tarjeta.setUserData(estudiante);
         tarjeta.setOnMouseClicked(event -> {
+            contenerdorImagenPerfilCompañero.getChildren().clear();
             Estudiante estudianteCompañero = (Estudiante) tarjeta.getUserData();
             estudiante2 = estudianteCompañero;
             nombreCompañero.setText(estudiante2.getNombre());
             cargarFotoPerfilCompañero(estudianteCompañero.getRutaArchivoImagen());
-            infoCompañero.setText(estudiante2.getCorreo());
+            infoCompañero.setText(estudiante2.getInformacion());
             List<Mensaje> mensajes = modelFactory.obtenerMensajes(estudiante,estudianteCompañero);
             cargarMensajes(mensajes);
             txtMensaje.requestFocus();
@@ -202,6 +226,19 @@ public class ChatEstudianteController {
             chatBox.getChildren().add(tarjeta);
             txtMensaje.clear();
             modelFactory.guardarRecursosXML();
+        }
+    }
+
+    private void buscarAmigo() {
+        listCompañeros.getChildren().clear();
+        if (txtBuscar.getText().trim().isEmpty()) {
+            cargarListaAmigos();
+        }
+        String nombreCompañero = txtBuscar.getText().trim();
+        for (Estudiante estudiante : estudiante1.getAmigos()) {
+            if (estudiante.getNombre().equals(nombreCompañero)){
+                cargarAmigo(estudiante);
+            }
         }
     }
 

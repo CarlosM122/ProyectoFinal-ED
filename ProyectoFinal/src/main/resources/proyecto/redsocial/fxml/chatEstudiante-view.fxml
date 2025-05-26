@@ -18,9 +18,9 @@
    <left>
       <VBox alignment="CENTER" prefHeight="720.0" prefWidth="149.0" styleClass="controlBotones" BorderPane.alignment="CENTER">
          <children>
-            <VBox alignment="TOP_CENTER" maxWidth="151.0" prefHeight="581.0" prefWidth="150.0">
+            <VBox alignment="TOP_CENTER" maxWidth="151.0" prefHeight="581.0" prefWidth="150.0" spacing="10.0" styleClass="nav">
                <children>
-                  <VBox fx:id="boxInicio" alignment="CENTER" prefHeight="85.0" prefWidth="80.0">
+                  <VBox fx:id="boxInicio" alignment="CENTER" onMousePressed="#onInicio" prefHeight="85.0" prefWidth="80.0" styleClass="nav-button">
                      <children>
                         <ImageView fitHeight="46.0" fitWidth="42.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -33,7 +33,7 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </VBox>
-                  <VBox fx:id="boxAyuda" alignment="CENTER" prefHeight="85.0" prefWidth="80.0">
+                  <VBox fx:id="boxAyuda" alignment="CENTER" onMousePressed="#onAyuda" prefHeight="85.0" prefWidth="80.0" styleClass="nav-button">
                      <children>
                         <ImageView fitHeight="42.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                            <image>
@@ -79,7 +79,7 @@
          <children>
             <HBox alignment="CENTER" prefHeight="94.0" prefWidth="343.0">
                <children>
-                  <TextField fx:id="txtBuscar" alignment="BASELINE_LEFT" prefHeight="26.0" prefWidth="317.0" promptText="Buscar" style="-fx-border-radius: 45;" styleClass="barra-busqueda" />
+                  <TextField fx:id="txtBuscar" alignment="BASELINE_LEFT" onKeyPressed="#onBuscar" prefHeight="26.0" prefWidth="317.0" promptText="Buscar" style="-fx-border-radius: 45;" styleClass="barra-busqueda" />
                </children>
             </HBox>
             <VBox fx:id="listCompañeros" prefHeight="628.0" prefWidth="343.0" />
@@ -112,7 +112,7 @@
             <HBox alignment="CENTER" prefHeight="82.0" prefWidth="759.0">
                <children>
                   <TextField fx:id="txtMensaje" onKeyPressed="#enviar" prefHeight="31.0" prefWidth="608.0" promptText="Escribe un mensaje..." />
-                  <Button fx:id="btnEnviar" mnemonicParsing="false" onAction="#OnEnviar" prefHeight="33.0" prefWidth="78.0" styleClass="boton-post" text="Enviar">
+                  <Button fx:id="btnEnviar" mnemonicParsing="false" onAction="#OnEnviar" prefHeight="33.0" prefWidth="78.0" styleClass="group-suggestion-label" text="Enviar">
                      <HBox.margin>
                         <Insets left="25.0" />
                      </HBox.margin>

@@ -41,14 +41,6 @@
                      <TextField fx:id="txtBusqueda" layoutX="14.0" layoutY="31.0" onKeyPressed="#buscarPorTema" prefHeight="36.0" prefWidth="348.0" promptText="Buscar Un Tema De Interes" styleClass="barra-busqueda" />
                   </children>
                </AnchorPane>
-                    <VBox fx:id="VboxInicio" alignment="CENTER" onMousePressed="#onInicio" styleClass="nav-button">
-                        <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
-                            <image>
-                                <Image url="@../images/casa.png" />
-                            </image>
-                        </ImageView>
-                        <Label styleClass="nav-label" text="Inicio" />
-                    </VBox>
                     <VBox alignment="CENTER" onMousePressed="#onAmigos" styleClass="nav-button">
                         <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
                             <image>
@@ -156,11 +148,8 @@
             <padding>
                 <Insets bottom="10" left="10" right="10" top="20" />
             </padding>
-         <VBox fx:id="VBoxAmigosSugeridos" alignment="TOP_CENTER" prefHeight="445.0" prefWidth="194.0" spacing="10.0">
-            <children>
-               <Label alignment="CENTER" prefHeight="44.0" prefWidth="161.0" styleClass="friends-suggestion-label" text="Amigos Sugeridos" textAlignment="CENTER" />
-            </children>
-         </VBox>
+         <Label alignment="CENTER" prefHeight="44.0" prefWidth="161.0" styleClass="friends-suggestion-label" text="Amigos Sugeridos" textAlignment="CENTER" />
+         <VBox fx:id="VBoxAmigosSugeridos" alignment="TOP_CENTER" prefHeight="445.0" prefWidth="194.0" spacing="10.0" />
             <Label text="Anuncios" />
         </VBox>
     </right>

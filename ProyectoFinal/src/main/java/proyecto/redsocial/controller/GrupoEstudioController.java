@@ -58,7 +58,6 @@ public class GrupoEstudioController {
     @FXML
     private VBox contenedorImagenPublicacion;
 
-
     @FXML
     private VBox contenedorPublicaciones;
 
@@ -88,7 +87,8 @@ public class GrupoEstudioController {
 
     @FXML
     void onInicio(MouseEvent event) {
-
+        Stage stage = (Stage) VboxInicio.getScene().getWindow();
+        stage.close();
     }
 
     @FXML
@@ -142,14 +142,22 @@ public class GrupoEstudioController {
 
                 Image imagen = new Image(archivoImagen.toURI().toString());
 
-                double radioPerfil = 45;
+                double radioPerfil = 70;
                 Circle circlePerfil = new Circle(radioPerfil);
                 circlePerfil.setFill(new ImagePattern(imagen));
                 circlePerfil.setStroke(Color.BLACK);
                 circlePerfil.setStrokeWidth(2);
 
+                double radioPerfilpublicacion = 45;
+                Circle circlePublicacion = new Circle(radioPerfilpublicacion);
+                circlePublicacion.setFill(new ImagePattern(imagen));
+                circlePublicacion.setStroke(Color.BLACK);
+                circlePublicacion.setStrokeWidth(2);
+
                 contenedorImagenPerfil.getChildren().clear();
                 contenedorImagenPerfil.getChildren().add(circlePerfil);
+                contenedorImagenPublicacion.getChildren().clear();
+                contenedorImagenPublicacion.getChildren().add(circlePublicacion);
             }
         } catch (Exception e) {
             System.out.println("No se pudo cargar la imagen de perfil: " + e.getMessage());
