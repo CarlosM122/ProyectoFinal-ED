@@ -1,19 +1,12 @@
 package proyecto.redsocial.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class Moderador implements Serializable {
+public class Moderador extends Usuario implements Serializable {
     private static final long serialVersionUID = 1L;
-    private String nombre;
-    private String correo;
-    private String contrasenia; // ← Añadir este campo
 
     public void gestionarUsuarios() {
         // Implementar lógica
@@ -31,5 +24,4 @@ public class Moderador implements Serializable {
         // Implementar lógica
     }
 }
-
 

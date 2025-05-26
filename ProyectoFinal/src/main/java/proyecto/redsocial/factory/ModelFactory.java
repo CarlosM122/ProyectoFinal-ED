@@ -11,7 +11,6 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -75,8 +74,9 @@ public class ModelFactory implements Serializable {
     public void guardarPublicacion(Publicacion publicacion) {
         sistema.getListaPublicaciones().agregar(publicacion);
         sistema.getArbolPublicaciones().insertar(publicacion);
-        Estudiante estudiante = publicacion.getAutor();
-        estudiante.publicarContenido(publicacion);
+        if (publicacion.getAutor() instanceof Estudiante estudiante) {
+            estudiante.publicarContenido(publicacion);
+        }
     }
 
     public boolean verificarCredenciales(String correo, String contrasenia) {
