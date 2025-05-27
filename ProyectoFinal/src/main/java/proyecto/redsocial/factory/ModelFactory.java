@@ -19,6 +19,8 @@ public class ModelFactory implements Serializable {
     private Sistema sistema;
 
     private ModelFactory() {
+//        inicializarDatosBase();
+//        guardarRecursosXML();
         if (Persistencia.existeArchivoXML()) {
             cargarRecursosXML();
         } else {
