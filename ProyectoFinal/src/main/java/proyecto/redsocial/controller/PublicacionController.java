@@ -23,14 +23,14 @@ import javafx.stage.Stage;
 import proyecto.redsocial.factory.ModelFactory;
 import proyecto.redsocial.model.Publicacion;
 import proyecto.redsocial.model.Estudiante;
-import proyecto.redsocial.model.Moderador;
-import proyecto.redsocial.model.Usuario;
+
+import static proyecto.redsocial.utils.RedSocialUtils.mostrarMensaje;
 
 public class PublicacionController {
 
-    private Usuario usuario;
+    private Estudiante estudiante;
     private final ModelFactory modelFactory = ModelFactory.getInstance();
-    private Object mainController;
+    private MainPageController mainPageController;
     private String rutaArchivoAdjunto;
 
     @FXML
@@ -91,11 +91,11 @@ public class PublicacionController {
         CBTemas.setValue("Selecciona un tema");
     }
 
-    public void cargarDatos(Usuario usuario, Object mainController) {
-        this.mainController = mainController;
-        this.usuario = usuario;
-        nombreUsuario.setText(usuario.getNombre());
-        cargarFotoPerfil(usuario.getRutaArchivoImagen());
+    public void cargarDatos(Estudiante estudiante, MainPageController mainPageController) {
+        this.mainPageController = mainPageController;
+        this.estudiante = estudiante;
+        nombreUsuario.setText(estudiante.getNombre());
+        cargarFotoPerfil(estudiante.getRutaArchivoImagen());
     }
 
     private void cargarFotoPerfil(String nombreArchivo) {
@@ -169,48 +169,27 @@ public class PublicacionController {
             publicacion.setIdContenido(texto.hashCode());
             publicacion.setTema(tema);
             publicacion.setTexto(texto);
-            publicacion.setAutor(usuario);
+            publicacion.setAutor(estudiante);
+            estudiante.getContenidosPublicados().agregar(publicacion);
             publicacion.setFechaPublicacion(LocalDate.now().toString());
 
             if (rutaArchivoAdjunto != null) {
                 publicacion.setRutaArchivoAdjunto(rutaArchivoAdjunto);
             }
 
-            // Si el usuario es Estudiante, agrega intereses y asigna a grupo
-            if (usuario instanceof Estudiante) {
-                Estudiante est = (Estudiante) usuario;
-                est.getContenidosPublicados().agregar(publicacion);
-                est.agregarInteres(tema);
-                modelFactory.asignarAGrupoDeEstudio(est, tema);
-            } else if (usuario instanceof Moderador) {
-                Moderador mod = (Moderador) usuario;
-                mod.getContenidosPublicados().agregar(publicacion);
-            }
-
-            modelFactory.guardarRecursosXML();
-            mostrarMensaje("Publicación", null, "¡Publicación realizada con éxito!", Alert.AlertType.INFORMATION);
+            estudiante.agregarInteres(tema);
+            modelFactory.asignarAGrupoDeEstudio(estudiante, tema);
+            modelFactory.guardarPublicacion(publicacion);
+            mainPageController.cargarDatosVista(estudiante);
             cerrarVentana();
-            // Recargar publicaciones en la ventana principal si es posible
-            if (mainController instanceof MainPageController) {
-                ((MainPageController) mainController).cargarPublicaciones();
-            } else if (mainController instanceof ModeradorController) {
-                ((ModeradorController) mainController).cargarPublicaciones();
-            }
+            modelFactory.guardarRecursosXML();
         } else {
-            mostrarMensaje("Error", null, "Debes escribir un texto y seleccionar un tema.", Alert.AlertType.ERROR);
+            mostrarMensaje("Error", "Datos Nulos", "Por favor rellena los campos necesarios.", Alert.AlertType.ERROR);
         }
     }
 
     private void cerrarVentana() {
         Stage stage = (Stage) btnPublicar.getScene().getWindow();
         stage.close();
-    }
-
-    private void mostrarMensaje(String titulo, String header, String mensaje, Alert.AlertType tipo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(header);
-        alert.setContentText(mensaje);
-        alert.showAndWait();
     }
 }
