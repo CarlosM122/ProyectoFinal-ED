@@ -12,7 +12,6 @@ public class Mapa<K, V> implements Iterable<Mapa.Entry<K, V>>, Serializable {
 
     private ListaEnlazada<Entry<K, V>> entries = new ListaEnlazada<>();
 
-    // ✅ Clase estática, pública y genérica
     public static class Entry<K, V> implements Serializable {
         private static final long serialVersionUID = 1L;
         private K key;

@@ -13,9 +13,11 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import proyecto.redsocial.factory.ModelFactory;
 import proyecto.redsocial.model.Estudiante;
 import proyecto.redsocial.model.Moderador;
 import proyecto.redsocial.model.Sistema;
+import proyecto.redsocial.utils.RedSocialUtils;
 
 import java.io.IOException;
 
@@ -135,26 +137,50 @@ public class GestionarUsuariosController {
             String nuevoCorreo = txtCorreoUsuario.getText().trim();
             String nuevaContrasenia = txtContrasenaUsuario.getText().trim();
 
+            // Validar nombre solo si se quiere cambiar
             if (!nuevoNombre.isEmpty() && nuevoNombre.length() <= 50) {
                 seleccionado.setNombre(nuevoNombre);
+            } else if (nuevoNombre.isEmpty()) {
+                // No hacer nada, se mantiene el nombre anterior
             } else {
-                mostrarAlerta("Nombre inválido. Asegúrese de que no esté vacío y tenga menos de 50 caracteres.");
+                mostrarAlerta("Nombre inválido. Debe tener menos de 50 caracteres.");
                 return;
             }
 
+            // Validar correo solo si se quiere cambiar
             if (!nuevoCorreo.isEmpty() && nuevoCorreo.length() <= 50) {
-                seleccionado.setCorreo(nuevoCorreo);
-            } else {
-                mostrarAlerta("Correo inválido. Asegúrese de que no esté vacío y tenga menos de 50 caracteres.");
+                // Si el correo fue cambiado, verificar que no exista otro estudiante con ese correo
+                if (!nuevoCorreo.equals(seleccionado.getCorreo())) {
+                    boolean correoExistente = false;
+                    for (int i = 0; i < sistema.getListaEstudiantes().size(); i++) {
+                        Estudiante e = sistema.getListaEstudiantes().get(i);
+                        if (e.getCorreo().equalsIgnoreCase(nuevoCorreo)) {
+                            correoExistente = true;
+                            break;
+                        }
+                    }
+                    if (correoExistente) {
+                        mostrarAlerta("Ya existe un usuario con ese correo electrónico.");
+                        return;
+                    }
+                    seleccionado.setCorreo(nuevoCorreo);
+                }
+            } else if (!nuevoCorreo.isEmpty()) {
+                mostrarAlerta("Correo inválido. Debe tener menos de 50 caracteres.");
                 return;
             }
 
-            if (!nuevaContrasenia.isEmpty() && nuevaContrasenia.length() <= 50) {
-                seleccionado.setContrasenia(nuevaContrasenia);
-            } else {
-                mostrarAlerta("Contraseña inválida. Asegúrese de que no esté vacía y tenga menos de 50 caracteres.");
-                return;
+            // Validar y actualizar contraseña solo si se quiere cambiar
+            if (!nuevaContrasenia.isEmpty()) {
+                if (nuevaContrasenia.length() > 50) {
+                    mostrarAlerta("Contraseña inválida. Debe tener menos de 50 caracteres.");
+                    return;
+                }
+                seleccionado.setContrasenia(RedSocialUtils.encriptarSHA256(nuevaContrasenia));
             }
+
+            // Guardar el sistema para persistir los cambios
+            ModelFactory.getInstance().guardarRecursosXML();
 
             tablaUsuarios.refresh();
             cargarEstudiantes(sistema, moderador);
@@ -166,11 +192,14 @@ public class GestionarUsuariosController {
 
     @FXML
     void initialize() {
+        if (sistema == null) {
+            sistema = ModelFactory.getInstance().getSistema();
+        }
         tablaUsuarios.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 txtNombreUsuario.setText(newSelection.getNombre());
                 txtCorreoUsuario.setText(newSelection.getCorreo());
-                txtContrasenaUsuario.setText(newSelection.getContrasenia());
+                txtContrasenaUsuario.setText(""); // Siempre dejar vacío para forzar ingreso de nueva contraseña
             }
         });
     }
@@ -180,15 +209,10 @@ public class GestionarUsuariosController {
      */
     public void cargarDatosVista(Moderador moderador) {
         this.moderador = moderador;
-        // Si necesitas cargar datos adicionales del sistema, hazlo aquí
-        // Por ejemplo, cargar la lista de estudiantes:
-        if (sistema == null && moderador != null) {
-            // Si tienes acceso a ModelFactory, puedes obtener el sistema aquí
-            // sistema = ModelFactory.getInstance().getSistema();
+        if (sistema == null) {
+            sistema = ModelFactory.getInstance().getSistema();
         }
         cargarEstudiantes(sistema, moderador);
-        // Puedes agregar aquí la carga de otros datos que se muestran al moderador
-        // como nombre, información, etc.
         if (moderador != null) {
             txtNombre.setText(moderador.getNombre());
             txtInformacion.setText("Bienvenido, " + moderador.getNombre());
