@@ -46,6 +46,7 @@ public class Estudiante extends Usuario implements Serializable {
         v.setComentario(comentario);
         v.setEstudiante(this);
         publicacion.getValoraciones().agregar(v);
+        agregarInteres(publicacion.getTema());
         valoracions.agregar(v);
     }
 

@@ -132,4 +132,14 @@ public class Sistema implements Serializable {
         }
         return estudiantes;
     }
+
+    public List<Publicacion> buscarPublicacionPornNombre(String nombre) {
+        ListaEnlazada<Publicacion> lista = new ListaEnlazada<>();
+        for (Publicacion publicacion: listaPublicaciones){
+            if (publicacion.getAutor().getNombre().equalsIgnoreCase(nombre)){
+                lista.agregar(publicacion);
+            }
+        }
+        return lista.aLista();
+    }
 }

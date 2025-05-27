@@ -10,13 +10,13 @@ import java.util.List;
 public class NodoABB implements Serializable {
     private static final long serialVersionUID = 1L;
     private String tema;
-    private List<Publicacion> publicaciones;
+    private ListaEnlazada<Publicacion> publicaciones;
     private NodoABB izquierdo;
     private NodoABB derecho;
 
     public NodoABB(Publicacion publicacion) {
         this.tema = publicacion.getTema();
-        this.publicaciones = new ArrayList<>();
-        this.publicaciones.add(publicacion);
+        this.publicaciones = new ListaEnlazada<>();
+        this.publicaciones.agregar(publicacion);
     }
 }

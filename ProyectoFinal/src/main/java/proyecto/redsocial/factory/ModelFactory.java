@@ -144,6 +144,10 @@ public class ModelFactory implements Serializable {
         return mensajeList.aLista();
     }
 
+    public List<Publicacion> obtenerPublicacionesPorNombre(String textoBusqueda) {
+        return sistema.buscarPublicacionPornNombre(textoBusqueda);
+    }
+
     private static class SingletonHolder {
         private final static ModelFactory eINSTANCE = new ModelFactory();
     }

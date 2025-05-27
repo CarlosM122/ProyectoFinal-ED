@@ -39,7 +39,7 @@ public class ArbolABB implements Serializable {
         } else if (comparacion > 0) {
             actual.setDerecho(insertarRec(actual.getDerecho(), publicacion));
         } else {
-            actual.getPublicaciones().add(publicacion);
+            actual.getPublicaciones().agregar(publicacion);
         }
 
         return actual;
@@ -56,7 +56,7 @@ public class ArbolABB implements Serializable {
                 .compareTo(normalizarTexto(actual.getTema()));
 
         if (comparacion == 0) {
-            return actual.getPublicaciones();
+            return actual.getPublicaciones().aLista();
         } else if (comparacion < 0) {
             return buscarRec(actual.getIzquierdo(), tema);
         } else {
@@ -75,7 +75,7 @@ public class ArbolABB implements Serializable {
                 .compareTo(normalizarTexto(actual.getTema()));
 
         if (comparacion == 0) {
-            return actual.getPublicaciones();
+            return actual.getPublicaciones().aLista();
         } else if (comparacion < 0) {
             return obtenerPublicacionesRec(actual.getIzquierdo(), tema);
         } else {

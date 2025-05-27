@@ -22,6 +22,9 @@ public class GestorGruposEstudio implements Serializable {
     public void agregarEstudianteAGrupo(Estudiante estudiante, String tema, ModelFactory modelFactory) {
         this.modelFactory = modelFactory;
         GrupoEstudio grupoEstudio = buscarGrupoPorTema(tema);
+        if (grupoEstudio.esMiembro(estudiante)) {
+            return;
+        }
         grupoEstudio.agregarMiembro(estudiante);
         estudiante.getGruposEstudio().agregar(grupoEstudio);
     }

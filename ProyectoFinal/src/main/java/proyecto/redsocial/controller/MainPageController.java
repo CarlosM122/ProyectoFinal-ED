@@ -113,6 +113,26 @@ public class MainPageController {
     }
 
     @FXML
+    void OnCerrarSesion(MouseEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/proyecto/redsocial/fxml/login-view.fxml"));
+            Parent root = loader.load();
+
+            Stage stage = new Stage();
+            stage.setScene(new Scene(root));
+            stage.setTitle("Iniciar Sesión");
+            stage.show();
+
+            // Cierra la ventana actual
+            Stage ventanaActual = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            ventanaActual.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @FXML
     void onPublicar(MouseEvent event) {
         abrirVentanaPublicacion();
     }
@@ -154,19 +174,17 @@ public class MainPageController {
             cargarPublicaciones();
             return;
         }
-
+        List<Publicacion> listaDePublicaciones;
         String temaNormalizado = normalizarTexto(textoBusqueda);
 
         int indiceTema = temasNormalizados.indexOf(temaNormalizado);
 
         if (indiceTema == -1) {
-            mostrarMensaje("Error", "Tema no encontrado", "El tema que busca no existe.", Alert.AlertType.ERROR);
-            return;
+            listaDePublicaciones = modelFactory.obtenerPublicacionesPorNombre(textoBusqueda);
+        }else {
+            String temaOriginal = temas.get(indiceTema);
+            listaDePublicaciones = modelFactory.obtenerPublicacionesPorTema(temaOriginal);
         }
-
-        String temaOriginal = temas.get(indiceTema);
-
-        List<Publicacion> listaDePublicaciones = modelFactory.obtenerPublicacionesPorTema(temaOriginal);
 
         if (listaDePublicaciones.isEmpty()) {
             mostrarMensaje("Problema", "Publicaciones No Encontradas.", "No se encuentran publicaciones relacionadas con el tema.", Alert.AlertType.INFORMATION);
@@ -195,11 +213,11 @@ public class MainPageController {
     }
 
     private void cargarEnAmigosSugueridos(Estudiante amigoSugerido) {
-        HBox tarjeta = RedSocialUtils.crearTarjetaEstudiante(amigoSugerido);
+        HBox tarjeta = crearTarjetaSugerido(amigoSugerido);
         VBoxAmigosSugeridos.getChildren().add(tarjeta);
     }
 
-    private HBox crearTarjetaSugerido(Estudiante compañero) {
+    private HBox crearTarjetaSugerido(Estudiante estudiante) {
         HBox tarjeta = new HBox(10);
         tarjeta.setAlignment(Pos.CENTER_LEFT);
         tarjeta.setPadding(new Insets(10));
@@ -211,9 +229,26 @@ public class MainPageController {
                     -fx-cursor: hand;
                 """);
 
-        Circle avatar = new Circle(20, Color.web("#6a8caf"));
+        Image imagen;
+        if (estudiante.getRutaArchivoImagen() != null && !estudiante.getRutaArchivoImagen().isBlank()) {
+            File archivo = new File("archivos_perfil", estudiante.getRutaArchivoImagen());
+            if (archivo.exists()) {
+                imagen = new Image(archivo.toURI().toString());
+            } else {
+                imagen = new Image(new File("archivos_perfil/usuario.png").toURI().toString());
+            }
+        } else {
+            imagen = new Image(new File("archivos_perfil/usuario.png").toURI().toString());
+        }
 
-        Label nombre = new Label(compañero.getNombre());
+        // Crear avatar circular con imagen
+        ImageView avatarView = new ImageView(imagen);
+        avatarView.setFitWidth(40);
+        avatarView.setFitHeight(40);
+        Circle clip = new Circle(20, 20, 20);
+        avatarView.setClip(clip);
+
+        Label nombre = new Label(estudiante.getNombre());
         nombre.setFont(Font.font("System", FontWeight.BOLD, 14));
         nombre.setTextFill(Color.web("#2a2a2a"));
 
@@ -226,7 +261,7 @@ public class MainPageController {
         Region espacio = new Region();
         HBox.setHgrow(espacio, Priority.ALWAYS);
 
-        tarjeta.setUserData(compañero);
+        tarjeta.setUserData(estudiante);
         Button botonAgregar = new Button("Agregar");
         botonAgregar.setStyle("""
                     -fx-background-color: #5075a8;
@@ -250,7 +285,7 @@ public class MainPageController {
             }
         });
 
-        tarjeta.getChildren().addAll(avatar, textos, espacio, botonAgregar);
+        tarjeta.getChildren().addAll(avatarView, textos, espacio, botonAgregar);
 
         return tarjeta;
     }
