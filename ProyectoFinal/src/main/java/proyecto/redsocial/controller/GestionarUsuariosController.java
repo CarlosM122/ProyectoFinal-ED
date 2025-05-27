@@ -93,30 +93,14 @@ public class GestionarUsuariosController {
     @FXML
     private TextField txtContrasenaUsuario; // Nuevo campo
 
+        // Cierra la ventana de gestión de usuarios
     @FXML
     void OnCerrarSesion(MouseEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/proyecto/redsocial/fxml/ModeradorView.fxml"));
-            Parent root = loader.load();
-
-            ModeradorController moderadorController = loader.getController();
-            moderadorController.cargarDatosVista(moderador);
-
-
-            Stage stage = new Stage();
-            stage.setScene(new Scene(root));
-            stage.setTitle("Panel de Administrador");
-            stage.show();
-
-            Stage ventanaActual = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            ventanaActual.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        Stage ventanaActual = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        ventanaActual.close();
     }
 
+    // Elimina el usuario seleccionado de la tabla y del sistema
     @FXML
     void OnEliminarUsuario(ActionEvent event) {
         Estudiante seleccionado = tablaUsuarios.getSelectionModel().getSelectedItem();
@@ -129,6 +113,7 @@ public class GestionarUsuariosController {
         }
     }
 
+    // Edita los datos del usuario seleccionado
     @FXML
     void OnEditarUsuario(ActionEvent event) {
         Estudiante seleccionado = tablaUsuarios.getSelectionModel().getSelectedItem();
@@ -190,6 +175,7 @@ public class GestionarUsuariosController {
         }
     }
 
+    // Inicializa la tabla de usuarios y su comportamiento
     @FXML
     void initialize() {
         if (sistema == null) {
@@ -219,6 +205,7 @@ public class GestionarUsuariosController {
         }
     }
 
+    // Carga los estudiantes en la tabla de usuarios
     protected void cargarEstudiantes(Sistema sistema, Moderador moderador) {
         ObservableList<Estudiante> estudiantes = FXCollections.observableArrayList();
         var lista = sistema.getListaEstudiantes();
@@ -255,6 +242,7 @@ public class GestionarUsuariosController {
         this.moderador = moderador;
     }
 
+    // Muestra una alerta informativa
     private void mostrarAlerta(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Información");

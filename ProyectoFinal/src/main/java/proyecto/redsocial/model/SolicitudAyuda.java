@@ -19,6 +19,10 @@ public class SolicitudAyuda implements Comparable<SolicitudAyuda>, Serializable 
     public SolicitudAyuda() {
     }
 
+    public String getNombreEstudiante() {
+        return estudiante != null ? estudiante.getNombre() : "";
+    }
+
     @Override
     public int compareTo(SolicitudAyuda otra) {
         return Integer.compare(otra.urgencia, this.urgencia);

@@ -48,7 +48,7 @@
                            <Image url="@../images/images-removebg-preview.png" />
                         </image>
                      </ImageView>
-                     <Label styleClass="nav-label" text="Salir" />
+                     <Label styleClass="nav-label" text="Cerrar" />
                   </children>
                </VBox>
                 </children>

@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -34,11 +33,6 @@
             <!-- Botones de navegación -->
             <HBox alignment="CENTER" prefHeight="98.0" prefWidth="1141.0" spacing="30" styleClass="nav-buttons">
                 <children>
-               <AnchorPane prefHeight="98.0" prefWidth="367.0">
-                  <children>
-                     <TextField fx:id="txtBusqueda" layoutX="14.0" layoutY="31.0" prefHeight="36.0" prefWidth="348.0" promptText="Buscar" styleClass="barra-busqueda" />
-                  </children>
-               </AnchorPane>
                     <VBox fx:id="GestionarUsuarios" alignment="CENTER" onMouseClicked="#OnGestionarusuarios" styleClass="nav-button">
                         <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
                             <image>
@@ -48,6 +42,17 @@
                         <Label styleClass="nav-label" text="Gestionar" />
                   <Label styleClass="nav-label" text="usuarios" />
                     </VBox>
+               <VBox fx:id="GestionarSolicitudes" alignment="CENTER" onMouseClicked="#OnGestionarSolicitudes" styleClass="nav-button">
+                  <children>
+                     <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">
+                        <image>
+                           <Image url="@../images/ayudar.png" />
+                        </image>
+                     </ImageView>
+                     <Label styleClass="nav-label" text="Gestionar" />
+                     <Label styleClass="nav-label" text="Solicitudes" />
+                  </children>
+               </VBox>
                <VBox fx:id="CerrarSecion" alignment="CENTER" onMouseClicked="#OnCerrarSesion" styleClass="nav-button">
                   <children>
                      <ImageView fitHeight="30" fitWidth="30" preserveRatio="true">

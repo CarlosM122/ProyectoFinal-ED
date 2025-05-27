@@ -67,8 +67,26 @@ public class Sistema implements Serializable {
         }
     }
 
-
-
+    public GrafoAfinidad getRedAfinidad() {
+        // Crear un nuevo grafo vacío
+        GrafoAfinidad grafo = new GrafoAfinidad();
+        // Agregar todos los estudiantes como nodos
+        for (Estudiante estudiante : listaEstudiantes) {
+            grafo.agregarEstudiante(estudiante);
+        }
+        // Conectar los estudiantes según sus amigos
+        for (Estudiante estudiante : listaEstudiantes) {
+            for (Estudiante amigo : estudiante.getAmigos()) {
+                // Evitar duplicar conexiones
+                NodoGrafo nodo = grafo.buscarEstudiante(estudiante);
+                NodoGrafo nodoAmigo = grafo.buscarEstudiante(amigo);
+                if (nodo != null && nodoAmigo != null && !nodo.getAdyacentes().contiene(nodoAmigo)) {
+                    nodo.getAdyacentes().agregar(nodoAmigo);
+                }
+            }
+        }
+        return grafo;
+    }
 
     /**
      * Reconstruye el árbol de publicaciones ordenadas.

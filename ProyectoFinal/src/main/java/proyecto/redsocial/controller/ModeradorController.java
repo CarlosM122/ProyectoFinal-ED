@@ -1,9 +1,7 @@
 package proyecto.redsocial.controller;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
@@ -12,17 +10,13 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import proyecto.redsocial.RedSocialApplication;
 import proyecto.redsocial.factory.ModelFactory;
-import proyecto.redsocial.model.EstructurasPropias.ListaEnlazada;
 import proyecto.redsocial.model.Estudiante;
 import proyecto.redsocial.model.Moderador;
 import proyecto.redsocial.model.Publicacion;
 import proyecto.redsocial.model.Sistema;
-import proyecto.redsocial.model.Valoracion;
 import proyecto.redsocial.utils.RedSocialUtils;
 
 import java.io.IOException;
@@ -31,8 +25,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static proyecto.redsocial.utils.RedSocialUtils.mostrarMensaje;
-
 public class ModeradorController {
 
     private Estudiante estudiante;
@@ -40,10 +32,6 @@ public class ModeradorController {
     private Moderador moderador;
     private Sistema sistema;
     private Estudiante estudianteActual;
-
-    public void setSistema(Sistema sistema) {
-        this.sistema = sistema;
-    }
 
     @FXML
     private VBox CerrarSecion;
@@ -62,9 +50,6 @@ public class ModeradorController {
 
     @FXML
     private VBox contenedorPublicaciones;
-
-    @FXML
-    private TextField txtBusqueda;
 
     @FXML
     private Label txtInformacion;
@@ -88,6 +73,7 @@ public class ModeradorController {
     @FXML
     private Button btnReporteParticipacion;
 
+    // Cierra la sesión del moderador y vuelve a la pantalla de login
     @FXML
     void OnCerrarSesion(MouseEvent event) {
         try {
@@ -108,6 +94,7 @@ public class ModeradorController {
         }
     }
 
+    // Abre la ventana para gestionar usuarios
     @FXML
     void OnGestionarusuarios(MouseEvent event) {
         try {
@@ -122,21 +109,37 @@ public class ModeradorController {
             nuevoStage.setTitle("Gestión de Usuarios");
             nuevoStage.show();
 
-            Stage ventanaActual = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            ventanaActual.close();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    // Abre la ventana para gestionar solicitudes de ayuda
+    @FXML
+    void OnGestionarSolicitudes(MouseEvent event) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/proyecto/redsocial/fxml/gestionarSolicitudes-view.fxml"));
+            Parent root = loader.load();
+
+            GestionarSolicitudesController controller = loader.getController();
+            controller.cargarSolicitudes(modelFactory.getSistema());
+
+            Stage nuevoStage = new Stage();
+            nuevoStage.setScene(new Scene(root));
+            nuevoStage.setTitle("Gestión de Solicitudes");
+            nuevoStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Muestra el grafo de afinidad entre estudiantes
     @FXML
     void onVerGrafo(MouseEvent event) {
         // Visualizar el grafo de afinidad (solo ejemplo textual)
         if (sistema == null) sistema = modelFactory.getSistema();
         StringBuilder sb = new StringBuilder();
         sb.append("Grafo de afinidad (conexiones):\n");
-        // Suponiendo que tienes un método para obtener todos los estudiantes y sus amigos
         for (Estudiante e : sistema.getListaEstudiantes()) {
             sb.append(e.getNombre()).append(" -> ");
             for (Estudiante amigo : e.getAmigos()) {
@@ -147,6 +150,7 @@ public class ModeradorController {
         mostrarAlerta(sb.toString());
     }
 
+    // Muestra el reporte de los contenidos más valorados
     @FXML
     void onReporteValorados(MouseEvent event) {
         // Contenidos más valorados usando ListaEnlazada propia
@@ -166,6 +170,7 @@ public class ModeradorController {
         mostrarAlerta(sb.toString());
     }
 
+    // Muestra el reporte de los estudiantes con más conexiones
     @FXML
     void onReporteConexiones(MouseEvent event) {
         // Estudiantes con más conexiones usando ListaEnlazada propia
@@ -185,6 +190,7 @@ public class ModeradorController {
         mostrarAlerta(sb.toString());
     }
 
+    // Muestra el camino más corto entre dos estudiantes
     @FXML
     void onReporteCaminos(MouseEvent event) {
         // Caminos más cortos entre dos estudiantes usando solo estructuras propias
@@ -258,6 +264,7 @@ public class ModeradorController {
         mostrarAlerta(sb.toString());
     }
 
+    // Muestra las comunidades de estudio detectadas
     @FXML
     void onReporteComunidades(MouseEvent event) {
         // Detección de comunidades de estudio (clústeres) usando solo estructuras propias
@@ -290,6 +297,7 @@ public class ModeradorController {
         mostrarAlerta(sb.toString());
     }
 
+    // Algoritmo DFS para encontrar comunidades de estudio
     private void dfsComunidadesPropio(proyecto.redsocial.model.EstructurasPropias.NodoGrafo nodo, proyecto.redsocial.model.EstructurasPropias.ConjuntoEnlazado<proyecto.redsocial.model.Estudiante> visitados, proyecto.redsocial.model.EstructurasPropias.ListaEnlazada<String> comunidad) {
         var estudiante = nodo.getEstudiante();
         visitados.agregar(estudiante);
@@ -304,6 +312,7 @@ public class ModeradorController {
         }
     }
 
+    // Muestra el reporte de participación de los estudiantes
     @FXML
     void onReporteParticipacion(MouseEvent event) {
         // Niveles de participación usando ListaEnlazada propia
@@ -323,11 +332,6 @@ public class ModeradorController {
         mostrarAlerta(sb.toString());
     }
 
-    @FXML
-    private void onPublicar(ActionEvent event) {
-        // Lógica del botón publicar
-    }
-
     /**
      * Carga los datos de la vista para el moderador, igual que al iniciar sesión.
      */
@@ -342,6 +346,7 @@ public class ModeradorController {
         cargarPublicaciones();
     }
 
+    // Carga todas las publicaciones en la vista del moderador
     protected void cargarPublicaciones() {
         List<Publicacion> publicaciones = modelFactory.obtenerPublicaciones();
         for (Publicacion publicacion : publicaciones) {
@@ -349,6 +354,7 @@ public class ModeradorController {
         }
     }
 
+    // Carga una publicación en la vista del moderador
     public void cargarEnVistaModerador(Publicacion publicacion, Estudiante usuarioActual) {
         VBox tarjeta = crearTarjetaPublicacion();
 
@@ -390,6 +396,7 @@ public class ModeradorController {
         contenedorPublicaciones.getChildren().addFirst(tarjeta);
     }
 
+    // Crea la tarjeta visual para una publicación
     private VBox crearTarjetaPublicacion() {
         VBox tarjeta = new VBox(8);
         tarjeta.setStyle("""
@@ -403,104 +410,7 @@ public class ModeradorController {
         return tarjeta;
     }
 
-    private VBox crearValoracionInteractiva(Publicacion publicacion) {
-        VBox contenedor = new VBox(8);
-        contenedor.setAlignment(Pos.CENTER_LEFT);
-
-        Label label = new Label("Valorar publicación:");
-        label.setStyle("-fx-font-size: 13px; -fx-font-weight: bold;");
-
-        HBox botones = new HBox(10);
-        botones.setAlignment(Pos.CENTER_LEFT);
-
-        ToggleGroup grupoValoracion = new ToggleGroup();
-        List<ToggleButton> botonesLista = new ArrayList<>();
-
-        String estiloNormal =
-                "-fx-background-color: linear-gradient(to right, #f9d423, #ff4e50);" +
-                        "-fx-background-radius: 90;" +
-                        "-fx-padding: 6 16 6 16;" +
-                        "-fx-text-fill: #333333;" +
-                        "-fx-font-weight: bold;" +
-                        "-fx-font-size: 13px;";
-
-        String estiloSeleccionado = estiloNormal +
-                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 6, 0.0, 0, 1);" +
-                "-fx-border-color: #ff4e50;" +
-                "-fx-border-width: 2;" +
-                "-fx-border-radius: 90;";
-
-        for (int i = 1; i <= 3; i++) {
-            final int valor = i;
-            ToggleButton boton = new ToggleButton("★".repeat(i));
-            boton.setToggleGroup(grupoValoracion);
-            boton.setUserData(valor);
-            boton.setCursor(Cursor.HAND);
-            boton.setStyle(estiloNormal);
-
-            boton.setOnAction(e -> {
-                for (ToggleButton b : botonesLista) {
-                    b.setStyle(estiloNormal);
-                }
-                boton.setStyle(estiloSeleccionado);
-            });
-
-            botonesLista.add(boton);
-            botones.getChildren().add(boton);
-        }
-
-        TextArea comentarioArea = new TextArea();
-        comentarioArea.setPromptText("Deja un comentario (opcional)");
-        comentarioArea.setPrefRowCount(2);
-        comentarioArea.setWrapText(true);
-        comentarioArea.setStyle("-fx-font-size: 12px;");
-
-        Button enviarValoracion = new Button("Enviar valoración");
-        enviarValoracion.setStyle(estiloNormal);
-        enviarValoracion.setCursor(Cursor.HAND);
-
-        enviarValoracion.setOnAction(e -> {
-            Toggle selectedToggle = grupoValoracion.getSelectedToggle();
-            if (selectedToggle == null) {
-                System.out.println("Debe seleccionar una valoración.");
-                return;
-            }
-
-            int valor = (int) selectedToggle.getUserData();
-            String comentario = comentarioArea.getText().trim();
-
-            Valoracion nuevaValoracion = new Valoracion();
-            nuevaValoracion.setValoracion(valor);
-            nuevaValoracion.setComentario(comentario);
-            nuevaValoracion.setPublicacion(publicacion);
-            nuevaValoracion.setEstudiante(estudianteActual);
-
-            ListaEnlazada<Valoracion> listaValoraciones = publicacion.getValoraciones();
-            boolean reemplazada = false;
-
-            for (int i = 0; i < listaValoraciones.size(); i++) {
-                Valoracion existente = listaValoraciones.get(i);
-                if (existente.getEstudiante().equals(estudianteActual)) {
-                    listaValoraciones.reemplazarEn(i, nuevaValoracion);
-                    reemplazada = true;
-                    break;
-                }
-            }
-
-            if (!reemplazada) {
-                listaValoraciones.agregar(nuevaValoracion);
-            }
-
-            estudianteActual.valorarContenido(valor, publicacion, comentario);
-            comentarioArea.clear();
-            mostrarMensaje("Valoracion","Valoracion Guardada","Su valoracion fue correctamente cargada", Alert.AlertType.INFORMATION);
-            modelFactory.guardarRecursosXML();
-        });
-
-        contenedor.getChildren().addAll(label, botones, comentarioArea, enviarValoracion);
-        return contenedor;
-    }
-
+    // Crea el botón para eliminar una publicación
     private Button crearBotonEliminar(Publicacion publicacion) {
         Button boton = new Button("Eliminar");
         RedSocialUtils.aplicarEstiloBotonGradiente(boton);
@@ -512,6 +422,7 @@ public class ModeradorController {
         return boton;
     }
 
+    // Crea el botón para abrir un archivo adjunto
     private Button crearBotonAbrirArchivo(String rutaArchivo) {
         Button boton = new Button("Abrir archivo");
         RedSocialUtils.aplicarEstiloBotonGradiente(boton);
@@ -526,17 +437,20 @@ public class ModeradorController {
         return boton;
     }
 
+    // Obtiene la extensión de un archivo
     private String obtenerExtensionArchivo(String ruta) {
         int lastIndex = ruta.lastIndexOf(".");
         if (lastIndex == -1) return "";
         return ruta.substring(lastIndex + 1).toLowerCase();
     }
 
+    // Verifica si una publicación tiene archivo adjunto
     private boolean tieneArchivoAdjunto(Publicacion publicacion) {
         String ruta = publicacion.getRutaArchivoAdjunto();
         return ruta != null && !ruta.isEmpty();
     }
 
+    // Crea la etiqueta con la información de la publicación
     private Label crearLabelInfo(Publicacion publicacion) {
         String texto = "Publicado por " + publicacion.getAutor().getNombre() +
                 " | 📅 " + publicacion.getFechaPublicacion();
@@ -545,6 +459,7 @@ public class ModeradorController {
         return info;
     }
 
+    // Crea el contenido visual de una publicación, detectando enlaces
     private Node crearContenido(String texto) {
         VBox contenedor = new VBox(6);
 
@@ -604,33 +519,14 @@ public class ModeradorController {
         return contenedor;
     }
 
+    // Crea la etiqueta del tema de la publicación
     private Label crearLabelTema(String temaTexto) {
         Label tema = new Label(temaTexto);
         tema.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2a2a2a;");
         return tema;
     }
 
-    private VBox crearTarjetaPublicacion(Publicacion pub) {
-        VBox tarjeta = new VBox(5);
-        tarjeta.setStyle("-fx-background-color: #f4f4f8; -fx-background-radius: 10; -fx-padding: 10;");
-        Label autor = new Label("Autor: " + (pub.getAutor() != null ? pub.getAutor().getNombre() : "Desconocido"));
-        autor.setStyle("-fx-font-weight: bold; -fx-font-size: 13px;");
-        Label texto = new Label(pub.getTexto());
-        texto.setWrapText(true);
-        // Si Publicacion no tiene getFecha(), no mostrar la fecha
-        Label fecha = new Label();
-        try {
-            java.lang.reflect.Method m = pub.getClass().getMethod("getFecha");
-            Object fechaObj = m.invoke(pub);
-            fecha.setText("Fecha: " + (fechaObj != null ? fechaObj.toString() : ""));
-        } catch (Exception e) {
-            fecha.setText("");
-        }
-        fecha.setStyle("-fx-font-size: 11px; -fx-text-fill: #888;");
-        tarjeta.getChildren().addAll(autor, texto, fecha);
-        return tarjeta;
-    }
-
+    // Muestra una alerta con un mensaje
     private void mostrarAlerta(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Información");
@@ -639,3 +535,4 @@ public class ModeradorController {
         alert.showAndWait();
     }
 }
+
