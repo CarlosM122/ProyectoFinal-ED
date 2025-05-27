@@ -75,11 +75,6 @@
                   </VBox>
             </children>
          </AnchorPane>
-         <VBox fx:id="VBoxGrupos" alignment="TOP_CENTER" prefHeight="415.0" prefWidth="199.0">
-            <children>
-               <Label alignment="CENTER" prefHeight="44.0" prefWidth="161.0" styleClass="group-suggestion-label" text="Tus Grupos" textAlignment="CENTER" />
-            </children>
-         </VBox>
         </VBox>
     </left>
 
@@ -109,27 +104,18 @@
                    <TableColumn fx:id="colNombre" prefWidth="200.0" text="Nombre" />
                    <TableColumn fx:id="colCorreo" minWidth="0.0" prefWidth="200.0" text="Correo" />
                    <TableColumn fx:id="colContrasena" prefWidth="163.0" text="Contraseña" />
+                   <TableColumn fx:id="colSolicitudesAyuda" prefWidth="100.0" text="Solicitudes Ayuda" />
+                   <TableColumn fx:id="colMensajes" prefWidth="100.0" text="Mensajes" />
+                   <TableColumn fx:id="colAmigos" prefWidth="100.0" text="Amigos" />
+                   <TableColumn fx:id="colContenidos" prefWidth="100.0" text="Contenidos" />
+                   <TableColumn fx:id="colValoraciones" prefWidth="100.0" text="Valoraciones" />
+                   <TableColumn fx:id="colGrupos" prefWidth="100.0" text="Grupos" />
+                   <TableColumn fx:id="colIntereses" prefWidth="100.0" text="Intereses" />
                  </columns>
                </TableView>
                 </VBox>
             </content>
         </ScrollPane>
     </center>
-
-    <!-- Panel derecho -->
-    <right>
-        <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="235.0" spacing="10" styleClass="side-bar" BorderPane.alignment="CENTER">
-            <padding>
-                <Insets bottom="10" left="10" right="10" top="20" />
-            </padding>
-         <VBox fx:id="VBoxAmigosSugeridos" alignment="TOP_CENTER" prefHeight="445.0" prefWidth="194.0">
-            <children>
-               <Label alignment="CENTER" prefHeight="44.0" prefWidth="161.0" styleClass="friends-suggestion-label" text="Amigos Sugeridos" textAlignment="CENTER" />
-            </children>
-         </VBox>
-         <Label alignment="CENTER" prefHeight="44.0" prefWidth="161.0" styleClass="friends-suggestion-label" text="Anuncios" textAlignment="CENTER" />
-         <VBox prefHeight="200.0" prefWidth="100.0" />
-        </VBox>
-    </right>
 
 </BorderPane>

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
@@ -66,13 +65,13 @@
 
     <!-- Panel izquierdo -->
     <left>
-        <VBox alignment="TOP_CENTER" prefHeight="455.0" prefWidth="199.0" spacing="10" styleClass="side-bar" BorderPane.alignment="CENTER">
+        <VBox alignment="TOP_CENTER" prefHeight="601.0" prefWidth="365.0" spacing="10" styleClass="side-bar" BorderPane.alignment="CENTER">
             <padding>
                 <Insets bottom="10" left="10" right="10" top="20" />
             </padding>
          <AnchorPane prefHeight="208.0" prefWidth="158.0">
             <children>
-                  <VBox alignment="CENTER" prefHeight="178.0" prefWidth="158.0">
+                  <VBox alignment="CENTER" prefHeight="171.0" prefWidth="339.0">
                       <ImageView fitHeight="95.0" fitWidth="107.0" preserveRatio="true">
                           <image>
                               <Image url="@../images/usuario.png" />
@@ -83,41 +82,31 @@
                   </VBox>
             </children>
          </AnchorPane>
-         <VBox fx:id="VBoxGrupos" alignment="TOP_CENTER" prefHeight="415.0" prefWidth="199.0">
-            <children>
-               <Label alignment="CENTER" prefHeight="44.0" prefWidth="161.0" styleClass="group-suggestion-label" text="Tus Grupos" textAlignment="CENTER" />
-            </children>
+           <VBox alignment="TOP_CENTER" prefHeight="601.0" prefWidth="336.0" spacing="10" styleClass="side-bar">
+               <padding>
+                   <Insets bottom="10" left="10" right="10" top="20" />
+               </padding>
+            <Label alignment="CENTER" prefHeight="44.0" prefWidth="161.0" styleClass="friends-suggestion-label" text="Acciones" textAlignment="CENTER" />
+            <VBox alignment="CENTER" spacing="10" style="-fx-padding: 10;">
+               <Button fx:id="btnVerGrafo" onMouseClicked="#onVerGrafo" prefHeight="32.0" prefWidth="274.0" styleClass="boton-acciones" text="Ver Grafo de Afinidad" />
+               <Button fx:id="btnReporteValorados" onMouseClicked="#onReporteValorados" prefWidth="274.0" styleClass="boton-acciones" text="Contenidos más valorados" />
+               <Button fx:id="btnReporteConexiones" onMouseClicked="#onReporteConexiones" prefWidth="274.0" styleClass="boton-acciones" text="Estudiantes con más conexiones" />
+               <Button fx:id="btnReporteCaminos" onMouseClicked="#onReporteCaminos" prefHeight="32.0" prefWidth="274.0" styleClass="boton-acciones" text="Caminos más cortos entre estudiantes" />
+               <Button fx:id="btnReporteComunidades" onMouseClicked="#onReporteComunidades" prefWidth="274.0" styleClass="boton-acciones" text="Comunidades de estudio (clústeres)" />
+               <Button fx:id="btnReporteParticipacion" onMouseClicked="#onReporteParticipacion" prefWidth="274.0" styleClass="boton-acciones" text="Participación en grupos" />
+            </VBox>
          </VBox>
         </VBox>
     </left>
 
     <!-- Contenido principal -->
     <center>
-        <ScrollPane fitToWidth="true" styleClass="content-area" BorderPane.alignment="CENTER">
+        <ScrollPane fitToWidth="true" prefHeight="601.0" prefWidth="907.0" styleClass="content-area" BorderPane.alignment="CENTER">
             <content>
                 <VBox alignment="TOP_CENTER" spacing="15">
                     <padding>
                         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
                     </padding>
-                    <HBox prefHeight="100.0" prefWidth="200.0">
-                        <children>
-                            <AnchorPane prefHeight="100.0" prefWidth="122.0">
-                                <children>
-                                    <ImageView fitHeight="64.0" fitWidth="57.0" layoutX="35.0" layoutY="22.0" preserveRatio="true">
-                                        <image>
-                                            <Image url="@../images/usuario.png" />
-                                        </image>
-                                    </ImageView>
-                                </children>
-                            </AnchorPane>
-                            <AnchorPane prefHeight="100.0" prefWidth="535.0">
-                                <children>
-                                    <TextField fx:id="txtPublicacion" layoutX="14.0" layoutY="28.0" prefHeight="42.0" prefWidth="400.0" promptText="Escribe tu publicación aquí..." />
-                                    <Button text="Publicar" layoutX="420.0" layoutY="28.0" prefHeight="42.0" prefWidth="90.0" onAction="#onPublicar" />
-                                </children>
-                            </AnchorPane>
-                        </children>
-                    </HBox>
                <Label alignment="CENTER" prefHeight="41.0" prefWidth="749.0" styleClass="publicaciones-label" text="Gestionar Publicaciones" />
                <VBox fx:id="contenedorPublicaciones" prefHeight="435.0" prefWidth="784.0">
                   <children>
@@ -128,29 +117,5 @@
             </content>
         </ScrollPane>
     </center>
-
-    <!-- Panel derecho -->
-    <right>
-        <VBox alignment="TOP_CENTER" prefHeight="601.0" prefWidth="336.0" spacing="10" styleClass="side-bar" BorderPane.alignment="CENTER">
-            <padding>
-                <Insets bottom="10" left="10" right="10" top="20" />
-            </padding>
-         <VBox fx:id="VBoxAmigosSugeridos" alignment="TOP_CENTER" prefHeight="445.0" prefWidth="194.0">
-            <children>
-               <Label alignment="CENTER" prefHeight="44.0" prefWidth="161.0" styleClass="friends-suggestion-label" text="Amigos Sugeridos" textAlignment="CENTER" />
-            </children>
-         </VBox>
-         <Label alignment="CENTER" prefHeight="44.0" prefWidth="161.0" styleClass="friends-suggestion-label" text="Acciones" textAlignment="CENTER" />
-         <VBox prefHeight="200.0" prefWidth="100.0" />
-         <VBox alignment="CENTER" spacing="10" style="-fx-padding: 10;">
-            <Button fx:id="btnVerGrafo" onMouseClicked="#onVerGrafo" styleClass="boton-acciones" text="Ver Grafo de Afinidad" />
-            <Button fx:id="btnReporteValorados" onMouseClicked="#onReporteValorados" styleClass="boton-acciones" text="Contenidos más valorados" />
-            <Button fx:id="btnReporteConexiones" onMouseClicked="#onReporteConexiones" styleClass="boton-acciones" text="Estudiantes con más conexiones" />
-            <Button fx:id="btnReporteCaminos" onMouseClicked="#onReporteCaminos" styleClass="boton-acciones" text="Caminos más cortos entre estudiantes" />
-            <Button fx:id="btnReporteComunidades" onMouseClicked="#onReporteComunidades" styleClass="boton-acciones" text="Comunidades de estudio (clústeres)" />
-            <Button fx:id="btnReporteParticipacion" onMouseClicked="#onReporteParticipacion" styleClass="boton-acciones" text="Participación en grupos" />
-         </VBox>
-      </VBox>
-   </right>
 
 </BorderPane>

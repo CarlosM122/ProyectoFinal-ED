@@ -52,7 +52,7 @@ public class ModelFactory implements Serializable {
             nuevoEstudiante.setNombre(nombre);
             nuevoEstudiante.setCorreo(correo);
             nuevoEstudiante.setInformacion(informacion);
-            nuevoEstudiante.setContrasenia(RedSocialUtils.encriptarSHA256(contrasenia));
+            nuevoEstudiante.setContrasenia(proyecto.redsocial.utils.RedSocialUtils.encriptarSHA256(contrasenia));
             sistema.guardarEstudiante(nuevoEstudiante);
             guardarRecursosXML();
             registrado = true;

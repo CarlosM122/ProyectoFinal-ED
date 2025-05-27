@@ -26,8 +26,6 @@ import proyecto.redsocial.model.Estudiante;
 import proyecto.redsocial.model.Moderador;
 import proyecto.redsocial.model.Usuario;
 
-import static proyecto.redsocial.utils.RedSocialUtils.mostrarMensaje;
-
 public class PublicacionController {
 
     private Usuario usuario;
@@ -206,5 +204,13 @@ public class PublicacionController {
     private void cerrarVentana() {
         Stage stage = (Stage) btnPublicar.getScene().getWindow();
         stage.close();
+    }
+
+    private void mostrarMensaje(String titulo, String header, String mensaje, Alert.AlertType tipo) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(header);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
     }
 }

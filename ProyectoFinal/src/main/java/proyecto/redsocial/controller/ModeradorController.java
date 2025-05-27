@@ -3,21 +3,21 @@ package proyecto.redsocial.controller;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import proyecto.redsocial.RedSocialApplication;
 import proyecto.redsocial.factory.ModelFactory;
+import proyecto.redsocial.model.EstructurasPropias.ListaEnlazada;
 import proyecto.redsocial.model.Estudiante;
 import proyecto.redsocial.model.Moderador;
 import proyecto.redsocial.model.Publicacion;
@@ -30,6 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static proyecto.redsocial.utils.RedSocialUtils.mostrarMensaje;
 
 public class ModeradorController {
 
@@ -159,7 +161,7 @@ public class ModeradorController {
         sb.append("Top 5 contenidos más valorados:\n");
         for (int i = 0; i < Math.min(5, publicaciones.size()); i++) {
             Publicacion p = publicaciones.get(i);
-            sb.append((i+1)).append(". ").append(p.getTexto()).append(" (Valoraciones: ").append(p.getValoraciones().size()).append(")\n");
+            sb.append((i + 1)).append(". ").append(p.getTexto()).append(" (Valoraciones: ").append(p.getValoraciones().size()).append(")\n");
         }
         mostrarAlerta(sb.toString());
     }
@@ -178,7 +180,7 @@ public class ModeradorController {
         sb.append("Top 5 estudiantes con más conexiones:\n");
         for (int i = 0; i < Math.min(5, estudiantes.size()); i++) {
             Estudiante e = estudiantes.get(i);
-            sb.append((i+1)).append(". ").append(e.getNombre()).append(" (Conexiones: ").append(e.getAmigos().size()).append(")\n");
+            sb.append((i + 1)).append(". ").append(e.getNombre()).append(" (Conexiones: ").append(e.getAmigos().size()).append(")\n");
         }
         mostrarAlerta(sb.toString());
     }
@@ -277,7 +279,7 @@ public class ModeradorController {
         StringBuilder sb = new StringBuilder();
         sb.append("Comunidades de estudio detectadas:\n");
         for (int i = 0; i < comunidades.size(); i++) {
-            sb.append("Comunidad ").append(i+1).append(": ");
+            sb.append("Comunidad ").append(i + 1).append(": ");
             var comunidad = comunidades.get(i);
             for (int j = 0; j < comunidad.size(); j++) {
                 sb.append(comunidad.get(j));
@@ -316,7 +318,7 @@ public class ModeradorController {
         sb.append("Top 5 estudiantes por participación (publicaciones):\n");
         for (int i = 0; i < Math.min(5, estudiantes.size()); i++) {
             Estudiante e = estudiantes.get(i);
-            sb.append((i+1)).append(". ").append(e.getNombre()).append(" (Publicaciones: ").append(e.getContenidosPublicados().size()).append(")\n");
+            sb.append((i + 1)).append(". ").append(e.getNombre()).append(" (Publicaciones: ").append(e.getContenidosPublicados().size()).append(")\n");
         }
         mostrarAlerta(sb.toString());
     }
@@ -327,43 +329,306 @@ public class ModeradorController {
     }
 
     /**
-     * Carga las publicaciones del sistema y las muestra en la vista del moderador.
-     */
-    public void cargarPublicaciones() {
-        if (sistema == null) {
-            sistema = modelFactory.getSistema();
-        }
-        if (contenedorPublicaciones != null) {
-            contenedorPublicaciones.getChildren().clear();
-            var publicaciones = sistema.getListaPublicaciones();
-            for (int i = 0; i < publicaciones.size(); i++) {
-                Publicacion pub = publicaciones.get(i);
-                Label label = new Label(pub.getTexto());
-                contenedorPublicaciones.getChildren().add(label);
-            }
-        }
-    }
-
-    /**
      * Carga los datos de la vista para el moderador, igual que al iniciar sesión.
      */
     public void cargarDatosVista(Moderador moderador) {
         this.moderador = moderador;
+        contenedorPublicaciones.getChildren().clear();
         if (sistema == null) {
             sistema = modelFactory.getSistema();
         }
-        // Cargar nombre e información del moderador
-        if (moderador != null) {
-            txtNombre.setText(moderador.getNombre());
-            txtInformacion.setText("Bienvenido, " + moderador.getNombre());
+        txtNombre.setText(moderador.getNombre());
+        txtInformacion.setText("Bienvenido, " + moderador.getNombre());
+        cargarPublicaciones();
+    }
+
+    protected void cargarPublicaciones() {
+        List<Publicacion> publicaciones = modelFactory.obtenerPublicaciones();
+        for (Publicacion publicacion : publicaciones) {
+            cargarEnVistaModerador(publicacion, this.estudianteActual);
         }
-        // Aquí puedes cargar otras listas o datos que se muestran al moderador
-        // Por ejemplo, publicaciones, grupos, sugerencias, etc.
-        // Si tienes métodos para cargar publicaciones, puedes llamarlos aquí
-        // Ejemplo:
-        // cargarPublicaciones();
-        // cargarGrupos();
-        // cargarAmigosSugeridos();
+    }
+
+    public void cargarEnVistaModerador(Publicacion publicacion, Estudiante usuarioActual) {
+        VBox tarjeta = crearTarjetaPublicacion();
+
+        Label tema = crearLabelTema(publicacion.getTema());
+        Node contenido = crearContenido(publicacion.getTexto());
+        Label info = crearLabelInfo(publicacion);
+
+        tarjeta.getChildren().addAll(tema, contenido);
+
+        if (tieneArchivoAdjunto(publicacion)) {
+            String ruta = publicacion.getRutaArchivoAdjunto();
+            String extension = obtenerExtensionArchivo(ruta);
+
+            if (extension.equals("png") || extension.equals("jpg") || extension.equals("jpeg")) {
+                try {
+                    Image imagen = new Image("file:" + ruta);
+                    ImageView imageView = new ImageView(imagen);
+                    imageView.setFitWidth(200);
+                    imageView.setPreserveRatio(true);
+                    tarjeta.getChildren().add(imageView);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    Button botonAbrirArchivo = crearBotonAbrirArchivo(ruta);
+                    tarjeta.getChildren().add(botonAbrirArchivo);
+                }
+            }
+            Button botonAbrirArchivo = crearBotonAbrirArchivo(ruta);
+            tarjeta.getChildren().add(botonAbrirArchivo);
+        }
+
+        tarjeta.getChildren().add(info);
+
+        Button botonEliminar = crearBotonEliminar(publicacion);
+        tarjeta.getChildren().add(botonEliminar);
+        // No mostrar valoración para moderador
+        // VBox botonValorar = crearValoracionInteractiva(publicacion);
+        // tarjeta.getChildren().add(botonValorar);
+
+        contenedorPublicaciones.getChildren().addFirst(tarjeta);
+    }
+
+    private VBox crearTarjetaPublicacion() {
+        VBox tarjeta = new VBox(8);
+        tarjeta.setStyle("""
+                    -fx-background-color: #ffffff;
+                    -fx-padding: 12;
+                    -fx-background-radius: 12;
+                    -fx-border-color: #dddddd;
+                    -fx-border-radius: 12;
+                    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+                """);
+        return tarjeta;
+    }
+
+    private VBox crearValoracionInteractiva(Publicacion publicacion) {
+        VBox contenedor = new VBox(8);
+        contenedor.setAlignment(Pos.CENTER_LEFT);
+
+        Label label = new Label("Valorar publicación:");
+        label.setStyle("-fx-font-size: 13px; -fx-font-weight: bold;");
+
+        HBox botones = new HBox(10);
+        botones.setAlignment(Pos.CENTER_LEFT);
+
+        ToggleGroup grupoValoracion = new ToggleGroup();
+        List<ToggleButton> botonesLista = new ArrayList<>();
+
+        String estiloNormal =
+                "-fx-background-color: linear-gradient(to right, #f9d423, #ff4e50);" +
+                        "-fx-background-radius: 90;" +
+                        "-fx-padding: 6 16 6 16;" +
+                        "-fx-text-fill: #333333;" +
+                        "-fx-font-weight: bold;" +
+                        "-fx-font-size: 13px;";
+
+        String estiloSeleccionado = estiloNormal +
+                "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 6, 0.0, 0, 1);" +
+                "-fx-border-color: #ff4e50;" +
+                "-fx-border-width: 2;" +
+                "-fx-border-radius: 90;";
+
+        for (int i = 1; i <= 3; i++) {
+            final int valor = i;
+            ToggleButton boton = new ToggleButton("★".repeat(i));
+            boton.setToggleGroup(grupoValoracion);
+            boton.setUserData(valor);
+            boton.setCursor(Cursor.HAND);
+            boton.setStyle(estiloNormal);
+
+            boton.setOnAction(e -> {
+                for (ToggleButton b : botonesLista) {
+                    b.setStyle(estiloNormal);
+                }
+                boton.setStyle(estiloSeleccionado);
+            });
+
+            botonesLista.add(boton);
+            botones.getChildren().add(boton);
+        }
+
+        TextArea comentarioArea = new TextArea();
+        comentarioArea.setPromptText("Deja un comentario (opcional)");
+        comentarioArea.setPrefRowCount(2);
+        comentarioArea.setWrapText(true);
+        comentarioArea.setStyle("-fx-font-size: 12px;");
+
+        Button enviarValoracion = new Button("Enviar valoración");
+        enviarValoracion.setStyle(estiloNormal);
+        enviarValoracion.setCursor(Cursor.HAND);
+
+        enviarValoracion.setOnAction(e -> {
+            Toggle selectedToggle = grupoValoracion.getSelectedToggle();
+            if (selectedToggle == null) {
+                System.out.println("Debe seleccionar una valoración.");
+                return;
+            }
+
+            int valor = (int) selectedToggle.getUserData();
+            String comentario = comentarioArea.getText().trim();
+
+            Valoracion nuevaValoracion = new Valoracion();
+            nuevaValoracion.setValoracion(valor);
+            nuevaValoracion.setComentario(comentario);
+            nuevaValoracion.setPublicacion(publicacion);
+            nuevaValoracion.setEstudiante(estudianteActual);
+
+            ListaEnlazada<Valoracion> listaValoraciones = publicacion.getValoraciones();
+            boolean reemplazada = false;
+
+            for (int i = 0; i < listaValoraciones.size(); i++) {
+                Valoracion existente = listaValoraciones.get(i);
+                if (existente.getEstudiante().equals(estudianteActual)) {
+                    listaValoraciones.reemplazarEn(i, nuevaValoracion);
+                    reemplazada = true;
+                    break;
+                }
+            }
+
+            if (!reemplazada) {
+                listaValoraciones.agregar(nuevaValoracion);
+            }
+
+            estudianteActual.valorarContenido(valor, publicacion, comentario);
+            comentarioArea.clear();
+            mostrarMensaje("Valoracion","Valoracion Guardada","Su valoracion fue correctamente cargada", Alert.AlertType.INFORMATION);
+            modelFactory.guardarRecursosXML();
+        });
+
+        contenedor.getChildren().addAll(label, botones, comentarioArea, enviarValoracion);
+        return contenedor;
+    }
+
+    private Button crearBotonEliminar(Publicacion publicacion) {
+        Button boton = new Button("Eliminar");
+        RedSocialUtils.aplicarEstiloBotonGradiente(boton);
+        boton.setCursor(Cursor.HAND);
+        boton.setOnAction(event -> {
+            modelFactory.eliminarPublicacion(publicacion);
+            contenedorPublicaciones.getChildren().removeIf(child -> child instanceof VBox && ((VBox) child).getChildren().contains(boton));
+        });
+        return boton;
+    }
+
+    private Button crearBotonAbrirArchivo(String rutaArchivo) {
+        Button boton = new Button("Abrir archivo");
+        RedSocialUtils.aplicarEstiloBotonGradiente(boton);
+        boton.setCursor(Cursor.HAND);
+        boton.setOnAction(event -> {
+            try {
+                java.awt.Desktop.getDesktop().open(new java.io.File(rutaArchivo));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        return boton;
+    }
+
+    private String obtenerExtensionArchivo(String ruta) {
+        int lastIndex = ruta.lastIndexOf(".");
+        if (lastIndex == -1) return "";
+        return ruta.substring(lastIndex + 1).toLowerCase();
+    }
+
+    private boolean tieneArchivoAdjunto(Publicacion publicacion) {
+        String ruta = publicacion.getRutaArchivoAdjunto();
+        return ruta != null && !ruta.isEmpty();
+    }
+
+    private Label crearLabelInfo(Publicacion publicacion) {
+        String texto = "Publicado por " + publicacion.getAutor().getNombre() +
+                " | 📅 " + publicacion.getFechaPublicacion();
+        Label info = new Label(texto);
+        info.setStyle("-fx-font-size: 11px; -fx-text-fill: #888888;");
+        return info;
+    }
+
+    private Node crearContenido(String texto) {
+        VBox contenedor = new VBox(6);
+
+        // Regex para encontrar enlaces
+        Pattern pattern = Pattern.compile("(https?://\\S+)");
+        Matcher matcher = pattern.matcher(texto);
+
+        boolean hayEnlace = false;
+        int lastEnd = 0;
+
+        while (matcher.find()) {
+            hayEnlace = true;
+
+            // Agrega texto antes del enlace
+            if (matcher.start() > lastEnd) {
+                String textoAntes = texto.substring(lastEnd, matcher.start()).trim();
+                if (!textoAntes.isEmpty()) {
+                    Label comentario = new Label(textoAntes);
+                    comentario.setWrapText(true);
+                    comentario.setStyle("-fx-font-size: 13px; -fx-text-fill: #444444;");
+                    contenedor.getChildren().add(comentario);
+                }
+            }
+
+            String url = matcher.group();
+            Hyperlink link = new Hyperlink(url);
+            link.setStyle("-fx-font-size: 13px;");
+            link.setOnAction(e -> {
+                try {
+                    java.awt.Desktop.getDesktop().browse(new java.net.URI(url));
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            });
+            contenedor.getChildren().add(link);
+
+            lastEnd = matcher.end();
+        }
+
+        if (lastEnd < texto.length()) {
+            String textoFinal = texto.substring(lastEnd).trim();
+            if (!textoFinal.isEmpty()) {
+                Label comentario = new Label(textoFinal);
+                comentario.setWrapText(true);
+                comentario.setStyle("-fx-font-size: 13px; -fx-text-fill: #444444;");
+                contenedor.getChildren().add(comentario);
+            }
+        }
+
+        if (!hayEnlace) {
+            Label contenido = new Label(texto);
+            contenido.setWrapText(true);
+            contenido.setStyle("-fx-font-size: 13px; -fx-text-fill: #444444;");
+            return contenido;
+        }
+
+        return contenedor;
+    }
+
+    private Label crearLabelTema(String temaTexto) {
+        Label tema = new Label(temaTexto);
+        tema.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2a2a2a;");
+        return tema;
+    }
+
+    private VBox crearTarjetaPublicacion(Publicacion pub) {
+        VBox tarjeta = new VBox(5);
+        tarjeta.setStyle("-fx-background-color: #f4f4f8; -fx-background-radius: 10; -fx-padding: 10;");
+        Label autor = new Label("Autor: " + (pub.getAutor() != null ? pub.getAutor().getNombre() : "Desconocido"));
+        autor.setStyle("-fx-font-weight: bold; -fx-font-size: 13px;");
+        Label texto = new Label(pub.getTexto());
+        texto.setWrapText(true);
+        // Si Publicacion no tiene getFecha(), no mostrar la fecha
+        Label fecha = new Label();
+        try {
+            java.lang.reflect.Method m = pub.getClass().getMethod("getFecha");
+            Object fechaObj = m.invoke(pub);
+            fecha.setText("Fecha: " + (fechaObj != null ? fechaObj.toString() : ""));
+        } catch (Exception e) {
+            fecha.setText("");
+        }
+        fecha.setStyle("-fx-font-size: 11px; -fx-text-fill: #888;");
+        tarjeta.getChildren().addAll(autor, texto, fecha);
+        return tarjeta;
     }
 
     private void mostrarAlerta(String mensaje) {

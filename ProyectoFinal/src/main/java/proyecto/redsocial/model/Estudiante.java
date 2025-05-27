@@ -23,6 +23,7 @@ public class Estudiante extends Usuario implements Serializable {
     private ListaEnlazada<SolicitudAyuda> solicitudesAyuda;
     private ListaEnlazada<GrupoEstudio> gruposEstudio;
     private ListaEnlazada<Mensaje> ListMensajes;
+    private String contraseniaVisible;
 
     public Estudiante() {
         this.solicitudesAyuda = new ListaEnlazada<>();
@@ -74,5 +75,13 @@ public class Estudiante extends Usuario implements Serializable {
             }
         }
         return false;
+    }
+
+    public String getContraseniaVisible() {
+        return contraseniaVisible;
+    }
+
+    public void setContraseniaVisible(String contraseniaVisible) {
+        this.contraseniaVisible = contraseniaVisible;
     }
 }

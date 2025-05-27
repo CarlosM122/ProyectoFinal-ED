@@ -53,6 +53,27 @@ public class GestionarUsuariosController {
     private TableColumn<Estudiante, String> colContrasena; // Nueva columna
 
     @FXML
+    private TableColumn<Estudiante, Integer> colSolicitudesAyuda;
+
+    @FXML
+    private TableColumn<Estudiante, Integer> colMensajes;
+
+    @FXML
+    private TableColumn<Estudiante, Integer> colAmigos;
+
+    @FXML
+    private TableColumn<Estudiante, Integer> colContenidos;
+
+    @FXML
+    private TableColumn<Estudiante, Integer> colValoraciones;
+
+    @FXML
+    private TableColumn<Estudiante, Integer> colGrupos;
+
+    @FXML
+    private TableColumn<Estudiante, Integer> colIntereses;
+
+    @FXML
     private TextField txtBusqueda;
 
     @FXML
@@ -186,7 +207,27 @@ public class GestionarUsuariosController {
         if (colContrasena != null) {
             colContrasena.setCellValueFactory(new PropertyValueFactory<>("contrasenia"));
         }
-
+        if (colSolicitudesAyuda != null) {
+            colSolicitudesAyuda.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getSolicitudesAyuda().size()).asObject());
+        }
+        if (colMensajes != null) {
+            colMensajes.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getListMensajes().size()).asObject());
+        }
+        if (colAmigos != null) {
+            colAmigos.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getAmigos().size()).asObject());
+        }
+        if (colContenidos != null) {
+            colContenidos.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getContenidosPublicados().size()).asObject());
+        }
+        if (colValoraciones != null) {
+            colValoraciones.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getValoracions().size()).asObject());
+        }
+        if (colGrupos != null) {
+            colGrupos.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getGruposEstudio().size()).asObject());
+        }
+        if (colIntereses != null) {
+            colIntereses.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getIntereses().size()).asObject());
+        }
         this.moderador = moderador;
     }
 
