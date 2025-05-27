@@ -2,24 +2,20 @@ package proyecto.redsocial.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import proyecto.redsocial.model.Estudiante;
+import proyecto.redsocial.model.Moderador;
 import proyecto.redsocial.model.Sistema;
-
-import javafx.scene.control.Button;
-import javafx.event.ActionEvent;
 
 import java.io.IOException;
 
@@ -28,14 +24,6 @@ public class GestionarUsuariosController {
     private Sistema sistema;
     private proyecto.redsocial.model.Moderador moderador;
 
-    public void setSistema(Sistema sistema) {
-        this.sistema = sistema;
-        cargarEstudiantes(sistema);
-    }
-
-    public void setModerador(proyecto.redsocial.model.Moderador moderador) {
-        this.moderador = moderador;
-    }
 
     @FXML
     private VBox CerrarSecion;
@@ -62,7 +50,7 @@ public class GestionarUsuariosController {
     private TableColumn<Estudiante, String> colNombre;
 
     @FXML
-    private TableColumn<Estudiante, String> colValoracion;
+    private TableColumn<Estudiante, String> colContrasena; // Nueva columna
 
     @FXML
     private TextField txtBusqueda;
@@ -80,7 +68,7 @@ public class GestionarUsuariosController {
     private TextField txtNombreUsuario;
 
     @FXML
-    private TextField txtValoracionUsuario;
+    private TextField txtContrasenaUsuario; // Nuevo campo
 
     @FXML
     void OnCerrarSesion(MouseEvent event) {
@@ -89,10 +77,8 @@ public class GestionarUsuariosController {
             Parent root = loader.load();
 
             ModeradorController moderadorController = loader.getController();
-            moderadorController.setSistema(sistema);
-            if (moderador != null) {
-                moderadorController.cargarDatosVista(moderador);
-            }
+            moderadorController.cargarDatosVista(moderador);
+
 
             Stage stage = new Stage();
             stage.setScene(new Scene(root));
@@ -105,19 +91,18 @@ public class GestionarUsuariosController {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
-
-
 
     @FXML
     void OnEliminarUsuario(ActionEvent event) {
         Estudiante seleccionado = tablaUsuarios.getSelectionModel().getSelectedItem();
         if (seleccionado != null) {
             sistema.getListaEstudiantes().eliminar(seleccionado);
-            cargarEstudiantes(sistema);
-            txtInformacion.setText("Usuario eliminado correctamente.");
+            tablaUsuarios.getItems().remove(seleccionado);
+            mostrarAlerta("Usuario eliminado correctamente.");
         } else {
-            txtInformacion.setText("Seleccione un usuario para eliminar.");
+            mostrarAlerta("Seleccione un usuario para eliminar.");
         }
     }
 
@@ -125,57 +110,93 @@ public class GestionarUsuariosController {
     void OnEditarUsuario(ActionEvent event) {
         Estudiante seleccionado = tablaUsuarios.getSelectionModel().getSelectedItem();
         if (seleccionado != null) {
-            String nuevoNombre = txtNombreUsuario.getText();
-            if (!nuevoNombre.isEmpty()) {
+            String nuevoNombre = txtNombreUsuario.getText().trim();
+            String nuevoCorreo = txtCorreoUsuario.getText().trim();
+            String nuevaContrasenia = txtContrasenaUsuario.getText().trim();
+
+            if (!nuevoNombre.isEmpty() && nuevoNombre.length() <= 50) {
                 seleccionado.setNombre(nuevoNombre);
+            } else {
+                mostrarAlerta("Nombre inválido. Asegúrese de que no esté vacío y tenga menos de 50 caracteres.");
+                return;
             }
-            cargarEstudiantes(sistema);
-            txtInformacion.setText("Usuario editado correctamente.");
+
+            if (!nuevoCorreo.isEmpty() && nuevoCorreo.length() <= 50) {
+                seleccionado.setCorreo(nuevoCorreo);
+            } else {
+                mostrarAlerta("Correo inválido. Asegúrese de que no esté vacío y tenga menos de 50 caracteres.");
+                return;
+            }
+
+            if (!nuevaContrasenia.isEmpty() && nuevaContrasenia.length() <= 50) {
+                seleccionado.setContrasenia(nuevaContrasenia);
+            } else {
+                mostrarAlerta("Contraseña inválida. Asegúrese de que no esté vacía y tenga menos de 50 caracteres.");
+                return;
+            }
+
+            tablaUsuarios.refresh();
+            cargarEstudiantes(sistema, moderador);
+            mostrarAlerta("Usuario editado correctamente.");
         } else {
-            txtInformacion.setText("Seleccione un usuario para editar.");
+            mostrarAlerta("Seleccione un usuario para editar.");
         }
     }
 
     @FXML
-    public void initialize() {
+    void initialize() {
         tablaUsuarios.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 txtNombreUsuario.setText(newSelection.getNombre());
                 txtCorreoUsuario.setText(newSelection.getCorreo());
-
-                // Calcular promedio de valoraciones
-                double suma = 0;
-                int cantidad = 0;
-                for (var v : newSelection.getValoracions()) {
-                    suma += v.getValoracion();
-                    cantidad++;
-                }
-                double promedio = cantidad > 0 ? (suma / cantidad) : 0.0;
-                txtValoracionUsuario.setText(String.format("%.1f", promedio));
+                txtContrasenaUsuario.setText(newSelection.getContrasenia());
             }
         });
     }
 
-    public void cargarEstudiantes(Sistema sistema) {
-        // Asociar columnas si no se hizo en el FXML
+    /**
+     * Carga los datos de la vista para el moderador, igual que al iniciar sesión.
+     */
+    public void cargarDatosVista(Moderador moderador) {
+        this.moderador = moderador;
+        // Si necesitas cargar datos adicionales del sistema, hazlo aquí
+        // Por ejemplo, cargar la lista de estudiantes:
+        if (sistema == null && moderador != null) {
+            // Si tienes acceso a ModelFactory, puedes obtener el sistema aquí
+            // sistema = ModelFactory.getInstance().getSistema();
+        }
+        cargarEstudiantes(sistema, moderador);
+        // Puedes agregar aquí la carga de otros datos que se muestran al moderador
+        // como nombre, información, etc.
+        if (moderador != null) {
+            txtNombre.setText(moderador.getNombre());
+            txtInformacion.setText("Bienvenido, " + moderador.getNombre());
+        }
+    }
+
+    protected void cargarEstudiantes(Sistema sistema, Moderador moderador) {
+        ObservableList<Estudiante> estudiantes = FXCollections.observableArrayList();
+        var lista = sistema.getListaEstudiantes();
+        for (int i = 0; i < lista.size(); i++) {
+            estudiantes.add(lista.get(i));
+        }
+        tablaUsuarios.setItems(estudiantes);
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colCorreo.setCellValueFactory(new PropertyValueFactory<>("correo"));
-        colValoracion.setCellValueFactory(cellData -> {
-            // Calcular promedio manualmente porque ListaEnlazada no tiene stream()
-            double suma = 0;
-            int cantidad = 0;
-            for (var v : cellData.getValue().getValoracions()) {
-                suma += v.getValoracion();
-                cantidad++;
-            }
-            double promedio = cantidad > 0 ? (suma / cantidad) : 0.0;
-            return new javafx.beans.property.SimpleStringProperty(String.format("%.1f", promedio));
-        });
+        if (colContrasena != null) {
+            colContrasena.setCellValueFactory(new PropertyValueFactory<>("contrasenia"));
+        }
 
-        ObservableList<Estudiante> lista = FXCollections.observableArrayList(sistema.getEstudiantes());
-        tablaUsuarios.setItems(lista);
+        this.moderador = moderador;
     }
 
+    private void mostrarAlerta(String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Información");
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
+        alert.showAndWait();
+    }
 
 }
 

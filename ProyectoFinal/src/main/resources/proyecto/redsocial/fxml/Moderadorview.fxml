@@ -2,6 +2,7 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TextField?>
@@ -111,11 +112,8 @@
                             </AnchorPane>
                             <AnchorPane prefHeight="100.0" prefWidth="535.0">
                                 <children>
-                                    <Label fx:id="LbPublicacion" layoutX="14.0" layoutY="28.0" onMousePressed="#onPublicar" prefHeight="42.0" prefWidth="506.0" style="-fx-border-color: black; -fx-border-radius: 90; -fx-background-color: transparent;" text="    Crear Publicación">
-                              <cursor>
-                                 <Cursor fx:constant="HAND" />
-                              </cursor>
-                           </Label>
+                                    <TextField fx:id="txtPublicacion" layoutX="14.0" layoutY="28.0" prefHeight="42.0" prefWidth="400.0" promptText="Escribe tu publicación aquí..." />
+                                    <Button text="Publicar" layoutX="420.0" layoutY="28.0" prefHeight="42.0" prefWidth="90.0" onAction="#onPublicar" />
                                 </children>
                             </AnchorPane>
                         </children>
@@ -133,7 +131,7 @@
 
     <!-- Panel derecho -->
     <right>
-        <VBox alignment="TOP_CENTER" prefHeight="600.0" prefWidth="235.0" spacing="10" styleClass="side-bar" BorderPane.alignment="CENTER">
+        <VBox alignment="TOP_CENTER" prefHeight="601.0" prefWidth="336.0" spacing="10" styleClass="side-bar" BorderPane.alignment="CENTER">
             <padding>
                 <Insets bottom="10" left="10" right="10" top="20" />
             </padding>
@@ -142,9 +140,17 @@
                <Label alignment="CENTER" prefHeight="44.0" prefWidth="161.0" styleClass="friends-suggestion-label" text="Amigos Sugeridos" textAlignment="CENTER" />
             </children>
          </VBox>
-         <Label alignment="CENTER" prefHeight="44.0" prefWidth="161.0" styleClass="friends-suggestion-label" text="Anuncios" textAlignment="CENTER" />
+         <Label alignment="CENTER" prefHeight="44.0" prefWidth="161.0" styleClass="friends-suggestion-label" text="Acciones" textAlignment="CENTER" />
          <VBox prefHeight="200.0" prefWidth="100.0" />
-        </VBox>
-    </right>
+         <VBox alignment="CENTER" spacing="10" style="-fx-padding: 10;">
+            <Button fx:id="btnVerGrafo" onMouseClicked="#onVerGrafo" styleClass="boton-acciones" text="Ver Grafo de Afinidad" />
+            <Button fx:id="btnReporteValorados" onMouseClicked="#onReporteValorados" styleClass="boton-acciones" text="Contenidos más valorados" />
+            <Button fx:id="btnReporteConexiones" onMouseClicked="#onReporteConexiones" styleClass="boton-acciones" text="Estudiantes con más conexiones" />
+            <Button fx:id="btnReporteCaminos" onMouseClicked="#onReporteCaminos" styleClass="boton-acciones" text="Caminos más cortos entre estudiantes" />
+            <Button fx:id="btnReporteComunidades" onMouseClicked="#onReporteComunidades" styleClass="boton-acciones" text="Comunidades de estudio (clústeres)" />
+            <Button fx:id="btnReporteParticipacion" onMouseClicked="#onReporteParticipacion" styleClass="boton-acciones" text="Participación en grupos" />
+         </VBox>
+      </VBox>
+   </right>
 
 </BorderPane>

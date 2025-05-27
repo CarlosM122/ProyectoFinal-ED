@@ -76,4 +76,3 @@ public class Estudiante extends Usuario implements Serializable {
         return false;
     }
 }
-

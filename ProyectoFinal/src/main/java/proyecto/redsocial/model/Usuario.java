@@ -7,6 +7,7 @@ public abstract class Usuario implements Serializable {
     protected String nombre;
     protected String correo;
     protected String contrasenia;
+    protected String rutaArchivoImagen;
 
     public String getNombre() {
         return nombre;
@@ -26,5 +27,10 @@ public abstract class Usuario implements Serializable {
     public void setContrasenia(String contrasenia) {
         this.contrasenia = contrasenia;
     }
+    public String getRutaArchivoImagen() {
+        return rutaArchivoImagen;
+    }
+    public void setRutaArchivoImagen(String rutaArchivoImagen) {
+        this.rutaArchivoImagen = rutaArchivoImagen;
+    }
 }
-

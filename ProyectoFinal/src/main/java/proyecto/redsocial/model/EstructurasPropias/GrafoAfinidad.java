@@ -76,4 +76,9 @@ public class GrafoAfinidad implements Serializable {
 
         return recomendaciones;
     }
+
+    public ListaEnlazada<NodoGrafo> getNodos() {
+        return nodos;
+    }
 }
+

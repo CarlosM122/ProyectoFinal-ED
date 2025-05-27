@@ -26,6 +26,12 @@ public class ListaEnlazada <T> implements Iterable<T>, Serializable {
         }
     }
 
+    public void insertarInicio(T dato) {
+        Nodo<T> nuevo = new Nodo<>(dato);
+        nuevo.setSiguiente(cabeza);
+        cabeza = nuevo;
+    }
+
     public void eliminar(T nodo){
         if (cabeza.getDato().equals(nodo)) {
             cabeza = cabeza.getSiguiente();

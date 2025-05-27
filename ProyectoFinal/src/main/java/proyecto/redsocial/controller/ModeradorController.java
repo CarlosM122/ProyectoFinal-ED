@@ -1,5 +1,6 @@
 package proyecto.redsocial.controller;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Cursor;
@@ -15,6 +16,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import proyecto.redsocial.RedSocialApplication;
 import proyecto.redsocial.factory.ModelFactory;
 import proyecto.redsocial.model.Estudiante;
 import proyecto.redsocial.model.Moderador;
@@ -24,6 +26,7 @@ import proyecto.redsocial.model.Valoracion;
 import proyecto.redsocial.utils.RedSocialUtils;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,6 +37,7 @@ public class ModeradorController {
     private ModelFactory modelFactory = ModelFactory.getInstance();
     private Moderador moderador;
     private Sistema sistema;
+    private Estudiante estudianteActual;
 
     public void setSistema(Sistema sistema) {
         this.sistema = sistema;
@@ -70,6 +74,19 @@ public class ModeradorController {
     private TextField txtPublicacion;
 
     @FXML
+    private Button btnVerGrafo;
+    @FXML
+    private Button btnReporteValorados;
+    @FXML
+    private Button btnReporteConexiones;
+    @FXML
+    private Button btnReporteCaminos;
+    @FXML
+    private Button btnReporteComunidades;
+    @FXML
+    private Button btnReporteParticipacion;
+
+    @FXML
     void OnCerrarSesion(MouseEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/proyecto/redsocial/fxml/login-view.fxml"));
@@ -96,7 +113,7 @@ public class ModeradorController {
             Parent root = loader.load();
 
             GestionarUsuariosController controller = loader.getController();
-            controller.cargarEstudiantes(modelFactory.getSistema());
+            controller.cargarEstudiantes(modelFactory.getSistema(), moderador);
 
             Stage nuevoStage = new Stage();
             nuevoStage.setScene(new Scene(root));
@@ -112,234 +129,248 @@ public class ModeradorController {
     }
 
     @FXML
-    void onPublicar(MouseEvent event) {
-        String texto = txtPublicacion.getText();
-        if (texto != null && !texto.trim().isEmpty()) {
-            Publicacion publicacion = new Publicacion();
-            publicacion.setTexto(texto);
-            // Solo si el moderador puede publicar, debes cambiar el tipo de autor a Usuario o similar
-            // Por ahora, esto se comentaría o necesita rediseño:
-            // publicacion.setAutor(moderador);
+    void onVerGrafo(MouseEvent event) {
+        // Visualizar el grafo de afinidad (solo ejemplo textual)
+        if (sistema == null) sistema = modelFactory.getSistema();
+        StringBuilder sb = new StringBuilder();
+        sb.append("Grafo de afinidad (conexiones):\n");
+        // Suponiendo que tienes un método para obtener todos los estudiantes y sus amigos
+        for (Estudiante e : sistema.getListaEstudiantes()) {
+            sb.append(e.getNombre()).append(" -> ");
+            for (Estudiante amigo : e.getAmigos()) {
+                sb.append(amigo.getNombre()).append(", ");
+            }
+            sb.append("\n");
+        }
+        mostrarAlerta(sb.toString());
+    }
 
-            modelFactory.getSistema().getListaPublicaciones().agregar(publicacion);
-            txtPublicacion.clear();
-            cargarPublicaciones();
-        } else {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Advertencia");
-            alert.setHeaderText("Campo vacío");
-            alert.setContentText("Por favor, ingrese texto para publicar.");
-            alert.showAndWait();
+    @FXML
+    void onReporteValorados(MouseEvent event) {
+        // Contenidos más valorados usando ListaEnlazada propia
+        if (sistema == null) sistema = modelFactory.getSistema();
+        proyecto.redsocial.model.EstructurasPropias.ListaEnlazada<Publicacion> listaPropia = sistema.getListaPublicaciones();
+        List<Publicacion> publicaciones = new ArrayList<>();
+        for (int i = 0; i < listaPropia.size(); i++) {
+            publicaciones.add(listaPropia.get(i));
+        }
+        publicaciones.sort((a, b) -> Integer.compare(b.getValoraciones().size(), a.getValoraciones().size()));
+        StringBuilder sb = new StringBuilder();
+        sb.append("Top 5 contenidos más valorados:\n");
+        for (int i = 0; i < Math.min(5, publicaciones.size()); i++) {
+            Publicacion p = publicaciones.get(i);
+            sb.append((i+1)).append(". ").append(p.getTexto()).append(" (Valoraciones: ").append(p.getValoraciones().size()).append(")\n");
+        }
+        mostrarAlerta(sb.toString());
+    }
+
+    @FXML
+    void onReporteConexiones(MouseEvent event) {
+        // Estudiantes con más conexiones usando ListaEnlazada propia
+        if (sistema == null) sistema = modelFactory.getSistema();
+        proyecto.redsocial.model.EstructurasPropias.ListaEnlazada<Estudiante> listaPropia = sistema.getListaEstudiantes();
+        List<Estudiante> estudiantes = new ArrayList<>();
+        for (int i = 0; i < listaPropia.size(); i++) {
+            estudiantes.add(listaPropia.get(i));
+        }
+        estudiantes.sort((a, b) -> Integer.compare(b.getAmigos().size(), a.getAmigos().size()));
+        StringBuilder sb = new StringBuilder();
+        sb.append("Top 5 estudiantes con más conexiones:\n");
+        for (int i = 0; i < Math.min(5, estudiantes.size()); i++) {
+            Estudiante e = estudiantes.get(i);
+            sb.append((i+1)).append(". ").append(e.getNombre()).append(" (Conexiones: ").append(e.getAmigos().size()).append(")\n");
+        }
+        mostrarAlerta(sb.toString());
+    }
+
+    @FXML
+    void onReporteCaminos(MouseEvent event) {
+        // Caminos más cortos entre dos estudiantes usando solo estructuras propias
+        if (sistema == null) sistema = modelFactory.getSistema();
+        var grafo = sistema.getRedAfinidad();
+        var nodos = grafo.getNodos();
+        TextInputDialog dialog1 = new TextInputDialog();
+        dialog1.setTitle("Camino más corto");
+        dialog1.setHeaderText("Ingrese el nombre del estudiante de origen:");
+        dialog1.setContentText("Nombre origen:");
+        String origenNombre = dialog1.showAndWait().orElse("").trim();
+        if (origenNombre.isEmpty()) return;
+        TextInputDialog dialog2 = new TextInputDialog();
+        dialog2.setTitle("Camino más corto");
+        dialog2.setHeaderText("Ingrese el nombre del estudiante de destino:");
+        dialog2.setContentText("Nombre destino:");
+        String destinoNombre = dialog2.showAndWait().orElse("").trim();
+        if (destinoNombre.isEmpty()) return;
+        // Buscar nodos
+        proyecto.redsocial.model.EstructurasPropias.NodoGrafo origen = null, destino = null;
+        for (int i = 0; i < nodos.size(); i++) {
+            var nodo = nodos.get(i);
+            if (nodo.getEstudiante().getNombre().equalsIgnoreCase(origenNombre)) origen = nodo;
+            if (nodo.getEstudiante().getNombre().equalsIgnoreCase(destinoNombre)) destino = nodo;
+        }
+        if (origen == null || destino == null) {
+            mostrarAlerta("Uno o ambos estudiantes no existen.");
+            return;
+        }
+        // BFS con estructuras propias
+        proyecto.redsocial.model.EstructurasPropias.ListaEnlazada<proyecto.redsocial.model.EstructurasPropias.NodoGrafo> cola = new proyecto.redsocial.model.EstructurasPropias.ListaEnlazada<>();
+        proyecto.redsocial.model.EstructurasPropias.ConjuntoEnlazado<proyecto.redsocial.model.Estudiante> visitados = new proyecto.redsocial.model.EstructurasPropias.ConjuntoEnlazado<>();
+        proyecto.redsocial.model.EstructurasPropias.Mapa<proyecto.redsocial.model.EstructurasPropias.NodoGrafo, proyecto.redsocial.model.EstructurasPropias.NodoGrafo> predecesor = new proyecto.redsocial.model.EstructurasPropias.Mapa<>();
+        cola.agregar(origen);
+        visitados.agregar(origen.getEstudiante());
+        boolean encontrado = false;
+        while (cola.size() > 0 && !encontrado) {
+            var actual = cola.get(0);
+            cola.eliminar(0);
+            if (actual == destino) {
+                encontrado = true;
+                break;
+            }
+            var adyacentes = actual.getAdyacentes();
+            for (int i = 0; i < adyacentes.size(); i++) {
+                var vecino = adyacentes.get(i);
+                if (!visitados.contiene(vecino.getEstudiante())) {
+                    cola.agregar(vecino);
+                    visitados.agregar(vecino.getEstudiante());
+                    predecesor.put(vecino, actual);
+                }
+            }
+        }
+        if (!encontrado) {
+            mostrarAlerta("No existe un camino entre los estudiantes seleccionados.");
+            return;
+        }
+        // Reconstruir camino
+        proyecto.redsocial.model.EstructurasPropias.ListaEnlazada<String> camino = new proyecto.redsocial.model.EstructurasPropias.ListaEnlazada<>();
+        var actual = destino;
+        while (actual != null) {
+            camino.insertarInicio(actual.getEstudiante().getNombre());
+            actual = predecesor.get(actual);
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("Camino más corto: ");
+        for (int i = 0; i < camino.size(); i++) {
+            sb.append(camino.get(i));
+            if (i < camino.size() - 1) sb.append(" -> ");
+        }
+        mostrarAlerta(sb.toString());
+    }
+
+    @FXML
+    void onReporteComunidades(MouseEvent event) {
+        // Detección de comunidades de estudio (clústeres) usando solo estructuras propias
+        if (sistema == null) sistema = modelFactory.getSistema();
+        var grafo = sistema.getRedAfinidad();
+        var nodos = grafo.getNodos(); // ListaEnlazada propia
+        proyecto.redsocial.model.EstructurasPropias.ListaEnlazada<proyecto.redsocial.model.EstructurasPropias.ListaEnlazada<String>> comunidades = new proyecto.redsocial.model.EstructurasPropias.ListaEnlazada<>();
+        proyecto.redsocial.model.EstructurasPropias.ConjuntoEnlazado<proyecto.redsocial.model.Estudiante> visitados = new proyecto.redsocial.model.EstructurasPropias.ConjuntoEnlazado<>();
+
+        for (int i = 0; i < nodos.size(); i++) {
+            var nodo = nodos.get(i);
+            var estudiante = nodo.getEstudiante();
+            if (!visitados.contiene(estudiante)) {
+                var comunidad = new proyecto.redsocial.model.EstructurasPropias.ListaEnlazada<String>();
+                dfsComunidadesPropio(nodo, visitados, comunidad);
+                if (comunidad.size() > 0) comunidades.agregar(comunidad);
+            }
+        }
+        StringBuilder sb = new StringBuilder();
+        sb.append("Comunidades de estudio detectadas:\n");
+        for (int i = 0; i < comunidades.size(); i++) {
+            sb.append("Comunidad ").append(i+1).append(": ");
+            var comunidad = comunidades.get(i);
+            for (int j = 0; j < comunidad.size(); j++) {
+                sb.append(comunidad.get(j));
+                if (j < comunidad.size() - 1) sb.append(", ");
+            }
+            sb.append("\n");
+        }
+        mostrarAlerta(sb.toString());
+    }
+
+    private void dfsComunidadesPropio(proyecto.redsocial.model.EstructurasPropias.NodoGrafo nodo, proyecto.redsocial.model.EstructurasPropias.ConjuntoEnlazado<proyecto.redsocial.model.Estudiante> visitados, proyecto.redsocial.model.EstructurasPropias.ListaEnlazada<String> comunidad) {
+        var estudiante = nodo.getEstudiante();
+        visitados.agregar(estudiante);
+        comunidad.agregar(estudiante.getNombre());
+        var adyacentes = nodo.getAdyacentes();
+        for (int i = 0; i < adyacentes.size(); i++) {
+            var ady = adyacentes.get(i);
+            var estAdy = ady.getEstudiante();
+            if (!visitados.contiene(estAdy)) {
+                dfsComunidadesPropio(ady, visitados, comunidad);
+            }
         }
     }
 
+    @FXML
+    void onReporteParticipacion(MouseEvent event) {
+        // Niveles de participación usando ListaEnlazada propia
+        if (sistema == null) sistema = modelFactory.getSistema();
+        proyecto.redsocial.model.EstructurasPropias.ListaEnlazada<Estudiante> listaPropia = sistema.getListaEstudiantes();
+        List<Estudiante> estudiantes = new ArrayList<>();
+        for (int i = 0; i < listaPropia.size(); i++) {
+            estudiantes.add(listaPropia.get(i));
+        }
+        estudiantes.sort((a, b) -> Integer.compare(b.getContenidosPublicados().size(), a.getContenidosPublicados().size()));
+        StringBuilder sb = new StringBuilder();
+        sb.append("Top 5 estudiantes por participación (publicaciones):\n");
+        for (int i = 0; i < Math.min(5, estudiantes.size()); i++) {
+            Estudiante e = estudiantes.get(i);
+            sb.append((i+1)).append(". ").append(e.getNombre()).append(" (Publicaciones: ").append(e.getContenidosPublicados().size()).append(")\n");
+        }
+        mostrarAlerta(sb.toString());
+    }
+
+    @FXML
+    private void onPublicar(ActionEvent event) {
+        // Lógica del botón publicar
+    }
+
+    /**
+     * Carga las publicaciones del sistema y las muestra en la vista del moderador.
+     */
     public void cargarPublicaciones() {
-        contenedorPublicaciones.getChildren().clear();
-        List<Publicacion> publicaciones = modelFactory.getSistema().cargarPublicaciones(); // método correcto
-        for (Publicacion publicacion : publicaciones) {
-            cargarEnVistaPrincipal(publicacion, null);
+        if (sistema == null) {
+            sistema = modelFactory.getSistema();
+        }
+        if (contenedorPublicaciones != null) {
+            contenedorPublicaciones.getChildren().clear();
+            var publicaciones = sistema.getListaPublicaciones();
+            for (int i = 0; i < publicaciones.size(); i++) {
+                Publicacion pub = publicaciones.get(i);
+                Label label = new Label(pub.getTexto());
+                contenedorPublicaciones.getChildren().add(label);
+            }
         }
     }
 
-
+    /**
+     * Carga los datos de la vista para el moderador, igual que al iniciar sesión.
+     */
     public void cargarDatosVista(Moderador moderador) {
         this.moderador = moderador;
-        txtNombre.setText(moderador.getNombre());
-        txtInformacion.setText(moderador.getCorreo());
-        cargarPublicaciones();
-    }
-
-    private Node crearContenido(String texto) {
-        VBox contenedor = new VBox(6);
-
-        Pattern pattern = Pattern.compile("(https?://\\S+)");
-        Matcher matcher = pattern.matcher(texto);
-
-        boolean hayEnlace = false;
-        int lastEnd = 0;
-
-        while (matcher.find()) {
-            hayEnlace = true;
-
-            if (matcher.start() > lastEnd) {
-                String textoAntes = texto.substring(lastEnd, matcher.start()).trim();
-                if (!textoAntes.isEmpty()) {
-                    Label comentario = new Label(textoAntes);
-                    comentario.setWrapText(true);
-                    comentario.setStyle("-fx-font-size: 13px; -fx-text-fill: #444444;");
-                    contenedor.getChildren().add(comentario);
-                }
-            }
-
-            String url = matcher.group();
-            Hyperlink link = new Hyperlink(url);
-            link.setStyle("-fx-font-size: 13px;");
-            link.setOnAction(e -> {
-                try {
-                    java.awt.Desktop.getDesktop().browse(new java.net.URI(url));
-                } catch (Exception ex) {
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Error");
-                    alert.setHeaderText("No se pudo abrir el enlace");
-                    alert.setContentText(ex.getMessage());
-                    alert.showAndWait();
-                }
-            });
-            contenedor.getChildren().add(link);
-
-            lastEnd = matcher.end();
+        if (sistema == null) {
+            sistema = modelFactory.getSistema();
         }
-
-        if (lastEnd < texto.length()) {
-            String textoFinal = texto.substring(lastEnd).trim();
-            if (!textoFinal.isEmpty()) {
-                Label comentario = new Label(textoFinal);
-                comentario.setWrapText(true);
-                comentario.setStyle("-fx-font-size: 13px; -fx-text-fill: #444444;");
-                contenedor.getChildren().add(comentario);
-            }
+        // Cargar nombre e información del moderador
+        if (moderador != null) {
+            txtNombre.setText(moderador.getNombre());
+            txtInformacion.setText("Bienvenido, " + moderador.getNombre());
         }
-
-        if (!hayEnlace) {
-            Label contenido = new Label(texto);
-            contenido.setWrapText(true);
-            contenido.setStyle("-fx-font-size: 13px; -fx-text-fill: #444444;");
-            return contenido;
-        }
-
-        return contenedor;
+        // Aquí puedes cargar otras listas o datos que se muestran al moderador
+        // Por ejemplo, publicaciones, grupos, sugerencias, etc.
+        // Si tienes métodos para cargar publicaciones, puedes llamarlos aquí
+        // Ejemplo:
+        // cargarPublicaciones();
+        // cargarGrupos();
+        // cargarAmigosSugeridos();
     }
 
-    public void cargarEnVistaPrincipal(Publicacion publicacion, Estudiante usuarioActual) {
-        VBox tarjeta = crearTarjetaPublicacion();
-
-        Label tema = crearLabelTema(publicacion.getTema());
-        Node contenido = crearContenido(publicacion.getTexto());
-        Label info = crearLabelInfo(publicacion);
-
-        tarjeta.getChildren().addAll(tema, contenido, info);
-
-        if (tieneArchivoAdjunto(publicacion)) {
-            Button botonAbrirArchivo = crearBotonAbrirArchivo(publicacion.getRutaArchivoAdjunto());
-            tarjeta.getChildren().add(botonAbrirArchivo);
-        }
-
-        Button botonValorar = crearBotonValorar(publicacion);
-        Button botonEliminar = crearBotonEliminar(publicacion, tarjeta);
-
-        tarjeta.getChildren().addAll(botonValorar, botonEliminar);
-
-        contenedorPublicaciones.getChildren().addFirst(tarjeta);
-    }
-
-    private VBox crearTarjetaPublicacion() {
-        VBox tarjeta = new VBox(8);
-        tarjeta.setStyle("""
-            -fx-background-color: #ffffff;
-            -fx-padding: 12;
-            -fx-background-radius: 12;
-            -fx-border-color: #dddddd;
-            -fx-border-radius: 12;
-            -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
-        """);
-        return tarjeta;
-    }
-
-    private Label crearLabelTema(String temaTexto) {
-        Label tema = new Label(temaTexto);
-        tema.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2a2a2a;");
-        return tema;
-    }
-
-    private Label crearLabelInfo(Publicacion publicacion) {
-        String texto = "Publicado por " + publicacion.getAutor().getNombre() +
-                " | 📅 " + publicacion.getFechaPublicacion();
-        Label info = new Label(texto);
-        info.setStyle("-fx-font-size: 11px; -fx-text-fill: #888888;");
-        return info;
-    }
-
-    private boolean tieneArchivoAdjunto(Publicacion publicacion) {
-        String ruta = publicacion.getRutaArchivoAdjunto();
-        return ruta != null && !ruta.isEmpty();
-    }
-
-    private Button crearBotonAbrirArchivo(String rutaArchivo) {
-        Button boton = new Button("Abrir archivo");
-        RedSocialUtils.aplicarEstiloBotonGradiente(boton);
-        boton.setCursor(Cursor.HAND);
-        boton.setOnAction(event -> {
-            try {
-                java.awt.Desktop.getDesktop().open(new java.io.File(rutaArchivo));
-            } catch (IOException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("No se pudo abrir el archivo");
-                alert.setContentText(e.getMessage());
-                alert.showAndWait();
-            }
-        });
-        return boton;
-    }
-
-    private Button crearBotonValorar(Publicacion publicacion) {
-        Button boton = new Button("Valorar");
-        boton.setStyle("-fx-background-color: linear-gradient(to right, #f9d423, #ff4e50);\n" +
-                "    -fx-background-radius: 90;\n" +
-                "    -fx-padding: 6 16 6 16;\n" +
-                "    -fx-text-fill: #333333;\n" +
-                "    -fx-font-weight: bold;\n" +
-                "    -fx-font-size: 13px;");
-        boton.setCursor(Cursor.HAND);
-        boton.setOnAction(event -> {
-            TextInputDialog dialog = new TextInputDialog();
-            dialog.setTitle("Valorar publicación");
-            dialog.setHeaderText("Ingrese una valoración (1-5):");
-            dialog.setContentText("Valoración:");
-            dialog.showAndWait().ifPresent(valor -> {
-                try {
-                    int valoracion = Integer.parseInt(valor);
-                    if (valoracion < 1 || valoracion > 5) {
-                        mostrarAlerta("Valoración fuera de rango", "Ingrese un valor entre 1 y 5.");
-                        return;
-                    }
-                    Valoracion nuevaValoracion = new Valoracion();
-                    nuevaValoracion.setValoracion(valoracion);
-                    nuevaValoracion.setPublicacion(publicacion);
-                    // Puedes agregar más lógica aquí si quieres guardar quién valoró
-                    if (publicacion.getValoraciones() != null) {
-                        publicacion.getValoraciones().agregar(nuevaValoracion);
-                    }
-                    mostrarAlerta("Valoración registrada", "¡Gracias por valorar!");
-                } catch (NumberFormatException e) {
-                    mostrarAlerta("Valor no válido", "Ingrese un número entero entre 1 y 5.");
-                }
-            });
-        });
-        return boton;
-    }
-
-    private void mostrarAlerta(String titulo, String mensaje) {
+    private void mostrarAlerta(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titulo);
+        alert.setTitle("Información");
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
-    }
-
-    private Button crearBotonEliminar(Publicacion publicacion, VBox tarjeta) {
-        Button boton = new Button("Eliminar");
-        boton.setStyle("-fx-background-color: linear-gradient(to right, #f9d423, #ff4e50);\n" +
-                "    -fx-background-radius: 90;\n" +
-                "    -fx-padding: 6 16 6 16;\n" +
-                "    -fx-text-fill: #333333;\n" +
-                "    -fx-font-weight: bold;\n" +
-                "    -fx-font-size: 13px;");
-        boton.setCursor(Cursor.HAND);
-        boton.setOnAction(event -> {
-            modelFactory.eliminarPublicacion(publicacion);
-            contenedorPublicaciones.getChildren().remove(tarjeta);
-        });
-        return boton;
     }
 }

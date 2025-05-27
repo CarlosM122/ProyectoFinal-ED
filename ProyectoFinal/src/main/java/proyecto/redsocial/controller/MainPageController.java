@@ -434,7 +434,7 @@ public class MainPageController {
     }
 
 
-    private void cargarPublicaciones() {
+    public void cargarPublicaciones() {
         List<Publicacion> publicaciones = modelFactory.obtenerPublicaciones();
         for (Publicacion publicacion : publicaciones) {
             cargarEnVistaPrincipal(publicacion, this.estudianteActual);
@@ -732,3 +732,4 @@ public class MainPageController {
         return contenedor;
     }
 }
+
